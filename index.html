@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mast Comms HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Libre Franklin', sans-serif;
+    background: #0a1628;
+    color: #e8e4d9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* subtle grid background */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(184,150,62,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,150,62,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  /* top accent bar */
+  .accent-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8b0000 0%, #b8963e 40%, #6baed6 100%);
+  }
+
+  .gate {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 400px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  /* seal */
+  .seal {
+    width: 64px;
+    height: 64px;
+    background: #b8963e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 900;
+    color: #0a1628;
+    margin: 0 auto 24px;
+    box-shadow: 0 0 0 4px rgba(184,150,62,0.15), 0 0 0 8px rgba(184,150,62,0.06);
+  }
+
+  .gate-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+
+  .gate-sub {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c9a84c;
+    margin-bottom: 32px;
+  }
+
+  .gate-card {
+    background: #111e35;
+    border: 1px solid rgba(184,150,62,0.18);
+    border-radius: 8px;
+    padding: 28px 28px 24px;
+  }
+
+  .gate-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #4a4a42;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  .pin-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .pin-digit {
+    width: 56px;
+    height: 64px;
+    background: #0f1f3d;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 6px;
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+    font-family: 'Libre Franklin', sans-serif;
+    caret-color: #b8963e;
+    transition: border-color 0.15s;
+    outline: none;
+    -webkit-text-security: disc;
+  }
+
+  .pin-digit:focus {
+    border-color: rgba(184,150,62,0.5);
+    background: #162440;
+  }
+
+  .pin-digit.filled {
+    border-color: rgba(184,150,62,0.3);
+  }
+
+  .pin-digit.error {
+    border-color: rgba(139,0,0,0.6);
+    background: rgba(139,0,0,0.08);
+    animation: shake 0.3s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .enter-btn {
+    width: 100%;
+    padding: 13px;
+    background: #b8963e;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #0a1628;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .enter-btn:hover { background: #c9a84c; }
+  .enter-btn:active { transform: scale(0.98); }
+  .enter-btn:disabled { background: #2a2a20; color: #4a4a42; cursor: default; }
+
+  .error-msg {
+    font-size: 11px;
+    color: #d04040;
+    font-weight: 700;
+    margin-top: 12px;
+    min-height: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  .gate-footer {
+    margin-top: 20px;
+    font-size: 10px;
+    color: #4a4a42;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+<div class="accent-bar"></div>
+
+<div class="gate">
+  <div class="seal">M</div>
+  <div class="gate-title">Mast Comms HQ</div>
+  <div class="gate-sub">FL-21 · Internal Access</div>
+
+  <div class="gate-card">
+    <div class="gate-label">Enter access code</div>
+    <div class="pin-row">
+      <input class="pin-digit" id="d0" type="password" inputmode="numeric" maxlength="1" pattern="[0-9]">
+      <input class="pin-digit" id="d1" type="password" inputmode="numeric" maxlength="1" pattern="[0-9]">
+      <input class="pin-digit" id="d2" type="password" inputmode="numeric" maxlength="1" pattern="[0-9]">
+      <input class="pin-digit" id="d3" type="password" inputmode="numeric" maxlength="1" pattern="[0-9]">
+    </div>
+    <button class="enter-btn" id="enter-btn" onclick="checkPin()" disabled>Enter</button>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+
+  <div class="gate-footer">Rep. Brian Mast · Office of Congressional Communications · Internal Use Only</div>
+</div>
+
+<script>
+  const CORRECT = '2182';
+  const SESSION_KEY = 'mast_hq_auth';
+  const DEST = 'dashboard_v2.html';
+
+  // If already authenticated this session, go straight through
+  if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+    window.location.replace(DEST);
+  }
+
+  const digits = [0,1,2,3].map(i => document.getElementById('d'+i));
+  const btn = document.getElementById('enter-btn');
+  const errMsg = document.getElementById('error-msg');
+
+  function getPin() {
+    return digits.map(d => d.value).join('');
+  }
+
+  function updateBtn() {
+    const pin = getPin();
+    btn.disabled = pin.length < 4;
+  }
+
+  function clearErrors() {
+    errMsg.textContent = '';
+    digits.forEach(d => d.classList.remove('error'));
+  }
+
+  digits.forEach((d, i) => {
+    d.addEventListener('input', () => {
+      clearErrors();
+      // Only allow digits
+      d.value = d.value.replace(/[^0-9]/g, '').slice(0,1);
+      d.classList.toggle('filled', d.value !== '');
+      updateBtn();
+      // Auto-advance
+      if (d.value && i < 3) digits[i+1].focus();
+      // Auto-submit when all 4 filled
+      if (getPin().length === 4) setTimeout(checkPin, 120);
+    });
+
+    d.addEventListener('keydown', e => {
+      // Backspace moves back
+      if (e.key === 'Backspace' && !d.value && i > 0) {
+        digits[i-1].focus();
+        digits[i-1].value = '';
+        digits[i-1].classList.remove('filled');
+        updateBtn();
+      }
+      // Enter submits
+      if (e.key === 'Enter' && getPin().length === 4) checkPin();
+    });
+
+    // Paste support — fill all digits from a pasted 4-digit string
+    d.addEventListener('paste', e => {
+      e.preventDefault();
+      const pasted = (e.clipboardData.getData('text') || '').replace(/\D/g,'').slice(0,4);
+      pasted.split('').forEach((ch, j) => {
+        if (digits[j]) { digits[j].value = ch; digits[j].classList.add('filled'); }
+      });
+      updateBtn();
+      const next = Math.min(pasted.length, 3);
+      digits[next].focus();
+      if (pasted.length === 4) setTimeout(checkPin, 120);
+    });
+  });
+
+  function checkPin() {
+    const pin = getPin();
+    if (pin.length < 4) return;
+    if (pin === CORRECT) {
+      sessionStorage.setItem(SESSION_KEY, 'true');
+      window.location.replace(DEST);
+    } else {
+      errMsg.textContent = 'Incorrect code — try again';
+      digits.forEach(d => { d.classList.add('error'); d.value = ''; d.classList.remove('filled'); });
+      updateBtn();
+      setTimeout(() => { digits.forEach(d => d.classList.remove('error')); }, 400);
+      digits[0].focus();
+    }
+  }
+
+  // Focus first digit on load
+  digits[0].focus();
+</script>
+</body>
+</html>
