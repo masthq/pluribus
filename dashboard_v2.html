@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pluribus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
+  --crimson:#8b0000;--crimson-lt:#a31010;
+  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
+  --sky:#6baed6;--white:#fff;
+  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
+  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+  --cal-wh:#b8963e;--cal-vote:#8b0000;--cal-hear:#6baed6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+/* TICKER */
+.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
+.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
+.ticker-wrap{display:flex;animation:ticker 38s linear infinite;width:max-content;padding-left:80px}
+.ticker-item{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95)}
+.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
+nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
+.nav-brand{display:flex;align-items:center;gap:12px;padding:12px 0;margin-right:48px;text-decoration:none}
+.nav-seal{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:var(--navy);flex-shrink:0}
+.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
+.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{display:flex;list-style:none}
+.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
+.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
+.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
+
+/* MAIN */
+main{padding:28px 32px 48px;max-width:1440px;margin:0 auto}
+.page-eyebrow{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+.page-eyebrow::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* TILE GRID */
+.tile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* TILE */
+.tile{aspect-ratio:1/1;border-radius:6px;border:1px solid var(--border-dim);background:var(--navy-card);position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .18s}
+.tile:hover{border-color:var(--border);transform:translateY(-2px)}
+.tile:hover .tile-face{opacity:0;pointer-events:none}
+.tile:hover .tile-hover{opacity:1;pointer-events:auto}
+.tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:2}
+.tile-wh::before{background:var(--cal-wh)}
+.tile-vote::before{background:var(--cal-vote)}
+.tile-hear::before{background:var(--cal-hear)}
+.tile-gold::before{background:var(--gold)}
+.tile-neutral::before{background:rgba(255,255,255,0.08)}
+
+/* TILE FACE */
+.tile-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;transition:opacity .22s ease}
+.tile-icon{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:auto}
+.tile-name{font-size:clamp(17px,2vw,24px);font-weight:900;color:var(--text);line-height:1.1;letter-spacing:-0.3px}
+.tile-sub{font-size:11px;color:var(--text-sec);font-weight:600;margin-top:6px;font-family:'Instrument Serif',serif;font-style:italic}
+
+/* TILE HOVER */
+.tile-hover{position:absolute;inset:0;background:var(--navy-mid);padding:20px;opacity:0;transition:opacity .22s ease;display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.tile-hover-label{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;flex-shrink:0}
+.preview-item{padding:6px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:8px;align-items:flex-start;flex-shrink:0}
+.preview-item:last-of-type{border-bottom:none}
+.preview-dot{width:4px;height:4px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.preview-text{font-size:11px;color:var(--text-sec);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.preview-tag{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:1px}
+.tag-wh{background:rgba(184,150,62,.15);color:var(--gold-lt)}
+.tag-pass{background:rgba(0,120,60,.15);color:#3db87a}
+.tag-fail{background:rgba(139,0,0,.15);color:#d04040}
+.tag-hear{background:rgba(107,174,214,.12);color:var(--sky)}
+.tag-urgent{background:rgba(139,0,0,.2);color:#ff6060}
+.tile-click-hint{margin-top:auto;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:5px;flex-shrink:0}
+.tile-click-hint::after{content:'→'}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(6,12,24,0.97);flex-direction:column}
+.overlay.open{display:flex}
+.overlay-header{background:var(--navy);border-bottom:2px solid var(--gold);padding:16px 32px;display:flex;align-items:center;gap:16px;flex-shrink:0}
+.overlay-back{background:none;border:1px solid var(--border-dim);color:var(--text-sec);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:4px;cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px}
+.overlay-back::before{content:'←'}
+.overlay-back:hover{border-color:var(--gold);color:var(--gold)}
+.overlay-title{font-size:16px;font-weight:900;color:#fff;letter-spacing:0.3px}
+.overlay-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:var(--gold-dim);color:var(--gold-lt)}
+.overlay-body{flex:1;overflow-y:auto;padding:28px 32px}
+
+/* News overlay */
+.ov-news-item{padding:14px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.ov-news-item:hover .ov-news-title{color:var(--gold-lt)}
+.ov-news-item:last-child{border-bottom:none}
+.ov-accent{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:40px}
+.ov-accent-wh{background:var(--cal-wh)}.ov-accent-neutral{background:var(--border)}
+.ov-news-inner{flex:1}
+.ov-news-meta{display:flex;gap:8px;align-items:center;margin-bottom:5px}
+.ov-cat{font-size:8px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:2px}
+.ov-cat-wh{background:rgba(184,150,62,.15);color:var(--gold-lt)}
+.ov-cat-n{background:var(--border-dim);color:var(--text-sec)}
+.ov-date{font-size:10px;color:var(--text-dim);font-weight:600}
+.ov-news-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;transition:color .15s}
+
+/* Talking points */
+.ov-tp{padding:16px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:16px}
+.ov-tp:last-child{border-bottom:none}
+.ov-tp-num{font-size:13px;font-weight:900;color:var(--gold);min-width:24px}
+.ov-tp-text{font-size:16px;color:rgba(232,228,217,.9);line-height:1.6;font-family:'Instrument Serif',serif}
+
+/* Clips */
+.ov-clip{padding:12px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:10px;align-items:flex-start}
+.ov-clip:last-child{border-bottom:none}
+.ov-clip-tag{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:2px;flex-shrink:0}
+.ov-clip-text{font-size:13px;color:var(--text);line-height:1.4}
+.ov-clip-meta{font-size:10px;color:var(--text-dim);margin-top:3px}
+.ov-urgent-dot{width:6px;height:6px;background:var(--crimson-lt);border-radius:50%;margin-top:5px;flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* Hearings */
+.ov-hearing{padding:12px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:12px;align-items:flex-start}
+.ov-hearing:last-child{border-bottom:none}
+.ov-hear-accent{width:3px;border-radius:2px;background:var(--cal-hear);align-self:stretch;min-height:30px;flex-shrink:0}
+.ov-hear-time{font-size:11px;font-weight:700;color:var(--sky);min-width:52px}
+.ov-hear-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.35}
+.ov-hear-cmte{font-size:10px;color:var(--text-dim);margin-top:2px}
+
+/* Votes */
+.ov-vote{padding:12px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:10px;align-items:center}
+.ov-vote:last-child{border-bottom:none}
+.ov-vote-accent{width:3px;border-radius:2px;background:var(--cal-vote);align-self:stretch;flex-shrink:0;min-height:36px}
+.ov-vote-result{font-size:8px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:2px;flex-shrink:0}
+.vpass{background:rgba(0,120,60,.15);color:#3db87a}.vfail{background:rgba(139,0,0,.15);color:#d04040}
+.ov-vote-info{flex:1;min-width:0}
+.ov-vote-title{font-size:13px;font-weight:600;color:var(--text)}
+.ov-vote-tally{font-size:10px;color:var(--text-dim);margin-top:2px}
+
+/* Calendar overlay */
+.cal-overlay-inner{max-width:960px;margin:0 auto}
+.cal-controls{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.cal-nav-btn{background:none;border:1px solid var(--border-dim);color:var(--text-sec);cursor:pointer;font-size:16px;width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'Libre Franklin',sans-serif}
+.cal-nav-btn:hover{border-color:var(--gold);color:var(--gold)}
+.cal-month-label{font-size:20px;font-weight:900;color:#fff;flex:1}
+.cal-legend{display:flex;gap:16px}
+.cal-leg{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:var(--text-sec);letter-spacing:.5px;text-transform:uppercase}
+.cal-leg-dot{width:8px;height:8px;border-radius:50%}
+.big-cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.big-cal-dayname{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);text-align:center;padding:8px 0}
+.big-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.big-cal-day{min-height:90px;border-radius:5px;border:1px solid var(--border-dim);background:var(--navy-card);padding:8px;transition:border-color .15s}
+.big-cal-day.has-events{cursor:pointer}.big-cal-day.has-events:hover{border-color:var(--border)}
+.big-cal-day.empty{background:transparent;border-color:transparent}
+.big-cal-day.today{border-color:var(--gold)}
+.big-cal-num{font-size:12px;font-weight:700;color:var(--text-sec);margin-bottom:6px}
+.big-cal-day.today .big-cal-num{color:var(--gold);font-weight:900}
+.big-cal-event{font-size:10px;font-weight:600;padding:2px 5px;border-radius:2px;margin-bottom:3px;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bce-wh{background:rgba(184,150,62,.15);color:var(--gold-lt)}
+.bce-vote{background:rgba(139,0,0,.18);color:#d04040}
+.bce-hear{background:rgba(107,174,214,.12);color:var(--sky)}
+
+/* Bill lookup */
+.bill-form{max-width:560px;margin:0 auto 32px}
+.bill-row{display:flex;gap:10px;margin-bottom:14px}
+.bill-input{flex:1;border:1px solid var(--border-dim);border-radius:4px;padding:12px 16px;font-size:15px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.bill-input:focus{border-color:var(--gold)}
+.bill-input::placeholder{color:var(--text-dim)}
+.bill-btn{background:var(--crimson);color:#fff;border:none;border-radius:4px;padding:12px 20px;font-size:11px;font-weight:800;letter-spacing:.5px;font-family:'Libre Franklin',sans-serif;cursor:pointer;transition:background .15s}
+.bill-btn:hover{background:var(--crimson-lt)}
+#bill-result-ov{font-size:14px;color:var(--text);font-family:'Instrument Serif',serif;font-style:italic;min-height:20px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto}
+.recent-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);max-width:560px;margin:0 auto 8px}
+.recent-tags{display:flex;gap:6px;flex-wrap:wrap;max-width:560px;margin:0 auto}
+.recent-tag{background:rgba(255,255,255,.05);border:1px solid var(--border-dim);border-radius:3px;padding:4px 12px;font-size:10px;font-weight:700;color:var(--text-sec);cursor:pointer;transition:all .15s}
+.recent-tag:hover{border-color:var(--gold);color:var(--gold-lt)}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
+.footer-text span{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-brand" href="#">
+    <div class="nav-seal">M</div>
+    <div><div class="nav-title">Rep. Brian Mast</div><div class="nav-sub">Pluribus · FL-21</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard_v2.html" class="active">Dashboard</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="clipdrop.html">Clip Drop</a></li>
+  </ul>
+  <div class="nav-right"><span id="nav-date"></span></div>
+</nav>
+
+<main>
+  <div class="page-eyebrow">Command Center</div>
+  <div class="tile-grid">
+
+    <div class="tile tile-wh" onclick="openOverlay('wh')">
+      <div class="tile-face">
+        <div class="tile-icon">Newsroom</div>
+        <div class="tile-name">White House</div>
+        <div class="tile-sub">Press releases, EOs &amp; proclamations</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Latest releases</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">Further Continuance of the FEMA Review Council</div><span class="preview-tag tag-wh">EO</span></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">Tariff Policy and American Manufacturing</div><span class="preview-tag tag-wh">FS</span></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">National Agriculture Day, 2026</div><span class="preview-tag tag-wh">Proc</span></div>
+        <div class="tile-click-hint">Open full feed</div>
+      </div>
+    </div>
+
+    <div class="tile tile-gold" onclick="openOverlay('tp')">
+      <div class="tile-face">
+        <div class="tile-icon">This week</div>
+        <div class="tile-name">Message of the Week</div>
+        <div class="tile-sub">4 active talking points</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Talking Points</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">Trump tariff policy protecting American workers and restoring manufacturing jobs.</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">Big Beautiful Bill: largest middle-class tax cut in American history.</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">Mast secured Everglades restoration funding in FY26.</div></div>
+        <div class="tile-click-hint">Open pinboard</div>
+      </div>
+    </div>
+
+    <div class="tile tile-vote" onclick="window.location.href='affiliations.html'">
+      <div class="tile-face">
+        <div class="tile-icon">Lists · Matrix · Tracker</div>
+        <div class="tile-name">Outreach &amp; Affiliations</div>
+        <div class="tile-sub">35 lists · real send history</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Top gaps</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--crimson-lt)"></span><div class="preview-text">NR (145K) — last hit Jul 2025</div><span class="preview-tag tag-urgent">Overdue</span></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--crimson-lt)"></span><div class="preview-text">BIO.FISHERMAN (87K) — never sent</div><span class="preview-tag tag-urgent">Overdue</span></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">SEN (40K) — zero sends vs. 6 senior blogs</div></div>
+        <div class="tile-click-hint">Open directory →</div>
+      </div>
+    </div>
+
+    <div class="tile tile-hear" onclick="openOverlay('cal')">
+      <div class="tile-face">
+        <div class="tile-icon">Schedule</div>
+        <div class="tile-name">Calendar</div>
+        <div class="tile-sub">Hearings · votes · WH releases</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Today — Apr 8</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">Appropriations Markup 9:00am</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-vote)"></span><div class="preview-text">Floor vote: Budget CR</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">WH Fact Sheet: Tariff Policy</div></div>
+        <div class="tile-click-hint">Open full calendar</div>
+      </div>
+    </div>
+
+    <div class="tile tile-hear" onclick="openOverlay('hearings')">
+      <div class="tile-face">
+        <div class="tile-icon">Today</div>
+        <div class="tile-name">Committee Hearings</div>
+        <div class="tile-sub">4 hearings this week</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Upcoming</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">FY27 Energy Appropriations Markup · 9:00am</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">Trade Adjustment &amp; Tariff Impact · 10:30am</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">Infrastructure Reauthorization Markup · 2:00pm</div></div>
+        <div class="tile-click-hint">Open all hearings</div>
+      </div>
+    </div>
+
+    <div class="tile tile-neutral" onclick="openOverlay('bill')">
+      <div class="tile-face">
+        <div class="tile-icon">Congress.gov</div>
+        <div class="tile-name">Bill Lookup</div>
+        <div class="tile-sub">Search any bill instantly</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Recent lookups</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--text-sec)"></span><div class="preview-text">HR 1 → Passed House · Enrolled</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--text-sec)"></span><div class="preview-text">S. 4138 → Signed into law 3/20/26</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--text-sec)"></span><div class="preview-text">HR 2872 → In committee</div></div>
+        <div class="tile-click-hint">Open search</div>
+      </div>
+    </div>
+
+    <div class="tile tile-vote" onclick="openOverlay('votes')">
+      <div class="tile-face">
+        <div class="tile-icon">House floor</div>
+        <div class="tile-name">Recent Votes</div>
+        <div class="tile-sub">119th Congress</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Latest</div>
+        <div class="preview-item"><span class="preview-tag tag-pass" style="flex-shrink:0">Pass</span><div class="preview-text">Defense Supplemental FY26 · 218–210</div></div>
+        <div class="preview-item"><span class="preview-tag tag-fail" style="flex-shrink:0">Fail</span><div class="preview-text">Motion to Recommit — Energy Pkg · 195–230</div></div>
+        <div class="preview-item"><span class="preview-tag tag-pass" style="flex-shrink:0">Pass</span><div class="preview-text">S. 4138 · 312–112 · Mar 20</div></div>
+        <div class="tile-click-hint">Open vote tracker</div>
+      </div>
+    </div>
+
+    <div class="tile tile-neutral" onclick="openOverlay('socials')">
+      <div class="tile-face">
+        <div class="tile-icon">X / Twitter</div>
+        <div class="tile-name">Member Socials</div>
+        <div class="tile-sub">House &amp; Senate Republicans</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">X List · 35 members</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">25 House Republicans · curated list</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">10 Senate Republicans · curated list</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Single embedded X List feed</div></div>
+        <div class="tile-click-hint">Open feed</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
+  <div class="footer-text">WH RSS · Congress.gov · Google Sheets</div>
+</footer>
+
+<!-- OVERLAYS -->
+<div class="overlay" id="ov-wh">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('wh')">Back</button><div class="overlay-title">White House Newsroom</div><div class="overlay-badge">Live · RSS</div></div>
+  <div class="overlay-body">
+    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Exec. Order</span><span class="ov-date">Apr 7, 2026</span></div><div class="ov-news-title">Further Continuance of the Federal Emergency Management Agency Review Council</div></div></div>
+    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Fact Sheet</span><span class="ov-date">Apr 6, 2026</span></div><div class="ov-news-title">Tariff Policy and American Manufacturing Competitiveness</div></div></div>
+    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Proclamation</span><span class="ov-date">Apr 5, 2026</span></div><div class="ov-news-title">National Agriculture Day, 2026</div></div></div>
+    <div class="ov-news-item"><div class="ov-accent ov-accent-neutral"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-n">Briefing</span><span class="ov-date">Apr 5, 2026</span></div><div class="ov-news-title">First Lady Melania Trump Launches Fostering the Future Together — 45 Member Nations Attend</div></div></div>
+    <div class="ov-news-item"><div class="ov-accent ov-accent-neutral"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-n">Remarks</span><span class="ov-date">Apr 4, 2026</span></div><div class="ov-news-title">President Remarks at Memphis Safe Task Force Briefing</div></div></div>
+    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Exec. Order</span><span class="ov-date">Apr 3, 2026</span></div><div class="ov-news-title">Restoring American Maritime Dominance</div></div></div>
+    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Proclamation</span><span class="ov-date">Mar 24, 2026</span></div><div class="ov-news-title">Greek Independence Day: A National Day of Celebration of Greek and American Democracy, 2026</div></div></div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-tp">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('tp')">Back</button><div class="overlay-title">Message of the Week</div><div class="overlay-badge">Week of Apr 7</div></div>
+  <div class="overlay-body">
+    <div style="max-width:720px;margin:0 auto">
+      <div class="ov-tp"><div class="ov-tp-num">01</div><div class="ov-tp-text">President Trump's tariff policy is protecting American workers and restoring manufacturing jobs lost to unfair trade practices for decades.</div></div>
+      <div class="ov-tp"><div class="ov-tp-num">02</div><div class="ov-tp-text">The Big Beautiful Bill delivers the largest middle-class tax cut in American history while cutting wasteful federal spending and reducing the deficit.</div></div>
+      <div class="ov-tp"><div class="ov-tp-num">03</div><div class="ov-tp-text">Rep. Mast secured funding for Everglades restoration in the FY26 appropriations package — a direct win for FL-21 families.</div></div>
+      <div class="ov-tp"><div class="ov-tp-num">04</div><div class="ov-tp-text">Democrats' continued obstruction on DHS funding has left airports understaffed and American communities less safe.</div></div>
+      <div style="margin-top:28px;padding:14px 18px;background:rgba(184,150,62,.07);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;font-size:12px;color:var(--text-dim);font-style:italic;font-family:'Instrument Serif',serif">Last updated by comms leadership · Edit via shared Google Doc</div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-clips">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('clips')">Back</button><div class="overlay-title">Rapid Response</div><div class="overlay-badge">12 items</div></div>
+  <div class="overlay-body">
+    <div class="ov-clip"><div class="ov-urgent-dot"></div><span class="ov-clip-tag tag-wh" style="background:rgba(107,174,214,.15);color:var(--sky)">Tweet</span><div><div class="ov-clip-text">@SpeakerJohnson on tariffs: "We stand with the President"</div><div class="ov-clip-meta">Sarah · 9:14am · URGENT</div></div></div>
+    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag" style="background:rgba(139,0,0,.15);color:#d04040">Clip</span><div><div class="ov-clip-text">Mast on Fox &amp; Friends — trade/tariff interview segment</div><div class="ov-clip-meta">Marcus · 8:30am</div></div></div>
+    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag tag-wh">News</span><div><div class="ov-clip-text">Palm Beach Post: Local shipyard adds 200 jobs amid tariff boom</div><div class="ov-clip-meta">Jamie · 7:55am</div></div></div>
+    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag" style="background:rgba(107,174,214,.15);color:var(--sky)">Tweet</span><div><div class="ov-clip-text">@RepMast floor speech on border security — 2.1k views</div><div class="ov-clip-meta">Sarah · Yesterday</div></div></div>
+    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag tag-wh">News</span><div><div class="ov-clip-text">Politico: Ways &amp; Means advances reconciliation package</div><div class="ov-clip-meta">Marcus · Yesterday</div></div></div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-cal">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('cal')">Back</button><div class="overlay-title">Calendar</div><div class="overlay-badge" id="cal-ov-badge"></div></div>
+  <div class="overlay-body">
+    <div class="cal-overlay-inner">
+      <div class="cal-controls">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <div class="cal-month-label" id="cal-ov-label"></div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
+        <div class="cal-legend">
+          <div class="cal-leg"><div class="cal-leg-dot" style="background:var(--cal-wh)"></div>WH</div>
+          <div class="cal-leg"><div class="cal-leg-dot" style="background:var(--cal-hear)"></div>Hearing</div>
+          <div class="cal-leg"><div class="cal-leg-dot" style="background:var(--cal-vote)"></div>Vote</div>
+        </div>
+      </div>
+      <div class="big-cal-header">
+        <div class="big-cal-dayname">Sun</div><div class="big-cal-dayname">Mon</div><div class="big-cal-dayname">Tue</div><div class="big-cal-dayname">Wed</div><div class="big-cal-dayname">Thu</div><div class="big-cal-dayname">Fri</div><div class="big-cal-dayname">Sat</div>
+      </div>
+      <div class="big-cal-grid" id="big-cal-days"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-hearings">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('hearings')">Back</button><div class="overlay-title">Committee Hearings</div><div class="overlay-badge">Today &amp; upcoming</div></div>
+  <div class="overlay-body">
+    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">9:00a</div><div><div class="ov-hear-title">Markup: FY27 Energy Appropriations</div><div class="ov-hear-cmte">House Appropriations · Today</div></div></div>
+    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">10:30a</div><div><div class="ov-hear-title">Trade Adjustment &amp; Tariff Impact Hearing</div><div class="ov-hear-cmte">Ways &amp; Means · Today</div></div></div>
+    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">2:00p</div><div><div class="ov-hear-title">Infrastructure Reauthorization Markup</div><div class="ov-hear-cmte">Transportation &amp; Infrastructure · Today</div></div></div>
+    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">Thu</div><div><div class="ov-hear-title">Foreign Aid Oversight Hearing</div><div class="ov-hear-cmte">House Foreign Affairs · Apr 10</div></div></div>
+    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">Thu</div><div><div class="ov-hear-title">Senate Finance: Tax Reconciliation Markup</div><div class="ov-hear-cmte">Senate Finance Committee · Apr 10</div></div></div>
+    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">Next wk</div><div><div class="ov-hear-title">Energy &amp; Commerce: Telecom subcommittee</div><div class="ov-hear-cmte">Energy &amp; Commerce · Apr 15</div></div></div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-bill">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('bill')">Back</button><div class="overlay-title">Bill Status Lookup</div><div class="overlay-badge">Congress.gov</div></div>
+  <div class="overlay-body">
+    <div class="bill-form">
+      <div class="bill-row"><input class="bill-input" type="text" placeholder="Enter bill number — e.g. HR 1234 or S. 456" id="bill-input-ov"><button class="bill-btn" onclick="searchBillOv()">Search</button></div>
+      <div id="bill-result-ov"></div>
+      <div class="recent-label">Recent lookups</div>
+      <div class="recent-tags">
+        <span class="recent-tag" onclick="fillBillOv('HR 1')">HR 1</span>
+        <span class="recent-tag" onclick="fillBillOv('S. 4138')">S. 4138</span>
+        <span class="recent-tag" onclick="fillBillOv('HR 2872')">HR 2872</span>
+        <span class="recent-tag" onclick="fillBillOv('S. 900')">S. 900</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-votes">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('votes')">Back</button><div class="overlay-title">Recent Votes</div><div class="overlay-badge">House Floor · 119th Congress</div></div>
+  <div class="overlay-body">
+    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vpass">Pass</span><div class="ov-vote-info"><div class="ov-vote-title">Defense Supplemental FY26</div><div class="ov-vote-tally">218–210 · Apr 6, 2026</div></div></div>
+    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vfail">Fail</span><div class="ov-vote-info"><div class="ov-vote-title">Motion to Recommit — Energy Package</div><div class="ov-vote-tally">195–230 · Apr 5, 2026</div></div></div>
+    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vpass">Pass</span><div class="ov-vote-info"><div class="ov-vote-title">Congressional Bill S. 4138</div><div class="ov-vote-tally">312–112 · Mar 20, 2026</div></div></div>
+    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vpass">Pass</span><div class="ov-vote-info"><div class="ov-vote-title">School Choice Expansion Act</div><div class="ov-vote-tally">221–207 · Mar 18, 2026</div></div></div>
+    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vfail">Fail</span><div class="ov-vote-info"><div class="ov-vote-title">Amendment — Border Security Supplemental</div><div class="ov-vote-tally">198–228 · Mar 12, 2026</div></div></div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-socials">
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('socials')">Back</button><div class="overlay-title">Member Socials</div><div class="overlay-badge">X List · 35 Members</div></div>
+  <div class="overlay-body" style="display:flex;align-items:flex-start;justify-content:center">
+    <div style="max-width:560px;width:100%;text-align:center;padding-top:40px">
+      <div style="font-size:13px;color:var(--text-sec);font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px">Embed your curated X List below. Add your list URL to activate the live feed.</div>
+      <div style="background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;padding:32px;color:var(--text-dim);font-size:12px">X List embed will appear here once configured.<br><br><span style="color:var(--gold-lt);font-weight:700">Next step:</span> Paste your X List embed code here.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const now = new Date();
+document.getElementById('nav-date').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+function openOverlay(id){document.getElementById('ov-'+id).classList.add('open');document.body.style.overflow='hidden';if(id==='cal')renderBigCal()}
+function closeOverlay(id){document.getElementById('ov-'+id).classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.overlay.open').forEach(o=>{o.classList.remove('open');document.body.style.overflow=''})}});
+
+function fillBillOv(v){document.getElementById('bill-input-ov').value=v;searchBillOv()}
+function searchBillOv(){const v=document.getElementById('bill-input-ov').value.trim(),el=document.getElementById('bill-result-ov');if(!v)return;el.style.color='var(--text-sec)';el.textContent='Looking up '+v+'…';setTimeout(()=>{el.textContent=v+' → Passed House 3/20/26 · Enrolled · Signed into law';el.style.color='#3db87a'},800)}
+
+const EVENTS={'2026-04-07':[{type:'wh',text:'EO: Maritime Dominance'},{type:'hear',text:'Appropriations Markup'}],'2026-04-08':[{type:'vote',text:'Floor vote: Budget CR'},{type:'wh',text:'Fact Sheet: Tariff Policy'}],'2026-04-09':[{type:'hear',text:'Ways & Means: Trade Adjustment'}],'2026-04-10':[{type:'vote',text:'Defense Supplemental'},{type:'hear',text:'T&I Markup'},{type:'hear',text:'Foreign Affairs Oversight'}],'2026-04-14':[{type:'wh',text:'Proclamation: Patriots Day'},{type:'vote',text:'Floor vote: TBD'}],'2026-04-15':[{type:'hear',text:'Energy & Commerce'}],'2026-04-17':[{type:'wh',text:'Fact Sheet: Energy Policy'}],'2026-04-21':[{type:'vote',text:'Floor vote: Reconciliation'},{type:'wh',text:'Proclamation'}],'2026-04-22':[{type:'hear',text:'Senate Finance: Tax markup'}],'2026-04-28':[{type:'hear',text:'Energy & Commerce hearing'},{type:'vote',text:'Floor vote: Foreign Aid'}],'2026-03-20':[{type:'vote',text:'S. 4138 signed into law'}],'2026-03-24':[{type:'wh',text:'EO: FEMA Review Council'},{type:'wh',text:'Proclamation: Greek Independence Day'}],'2026-05-05':[{type:'hear',text:'Appropriations: Defense subcommittee'}],'2026-05-12':[{type:'vote',text:'Floor vote: TBD'},{type:'hear',text:'Ways & Means markup'}]};
+let calYear=now.getFullYear(),calMonth=now.getMonth();
+function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderBigCal()}
+function renderBigCal(){const label=new Date(calYear,calMonth,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});document.getElementById('cal-ov-label').textContent=label;document.getElementById('cal-ov-badge').textContent=label;const first=new Date(calYear,calMonth,1).getDay(),days=new Date(calYear,calMonth+1,0).getDate(),today=now.toISOString().slice(0,10);let h='';for(let i=0;i<first;i++)h+='<div class="big-cal-day empty"></div>';for(let d=1;d<=days;d++){const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,ev=EVENTS[ds]||[],isT=ds===today;let ev2=ev.map(e=>`<div class="big-cal-event bce-${e.type}">${e.text}</div>`).join('');h+=`<div class="big-cal-day${isT?' today':''}${ev.length?' has-events':''}"><div class="big-cal-num">${d}</div>${ev2}</div>`}document.getElementById('big-cal-days').innerHTML=h}
+</script>
+</body>
+</html>

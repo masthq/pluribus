@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messaging Archive · Pluribus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
+  --crimson:#8b0000;--crimson-lt:#a31010;
+  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
+  --sky:#6baed6;--green:#3db87a;
+  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
+  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
+
+/* TICKER */
+.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
+.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
+.ticker-wrap{display:flex;animation:ticker 38s linear infinite;width:max-content;padding-left:80px}
+.ticker-item{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95)}
+.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
+nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
+.nav-brand{display:flex;align-items:center;gap:12px;padding:12px 0;margin-right:48px;text-decoration:none}
+.nav-seal{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:var(--navy);flex-shrink:0}
+.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
+.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{display:flex;list-style:none}
+.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
+.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
+.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
+
+/* PAGE HEADER */
+.page-header{padding:32px 32px 0;max-width:1440px;margin:0 auto}
+.breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.5px;margin-bottom:10px}
+.breadcrumb a{color:var(--gold-lt);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.page-title{font-size:32px;font-weight:900;color:#fff;line-height:1;letter-spacing:-0.5px;margin-bottom:6px}
+.page-desc{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px}
+.page-rule{height:1px;background:var(--border);margin-bottom:0}
+
+/* LAYOUT */
+.archive-layout{display:grid;grid-template-columns:260px 1fr;gap:0;max-width:1440px;margin:0 auto;min-height:calc(100vh - 180px)}
+
+/* LEFT SIDEBAR — PRIORITY INDEX */
+.priority-sidebar{border-right:1px solid var(--border-dim);padding:24px 0;position:sticky;top:62px;height:calc(100vh - 62px);overflow-y:auto;background:var(--navy)}
+.sidebar-section-label{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--gold);padding:0 20px;margin-bottom:8px;margin-top:20px}
+.sidebar-section-label:first-child{margin-top:0}
+.priority-item{display:flex;align-items:center;gap:10px;padding:8px 20px;cursor:pointer;transition:background .15s;border-left:3px solid transparent;text-decoration:none}
+.priority-item:hover{background:var(--navy-hover)}
+.priority-item.active{background:var(--navy-mid);border-left-color:var(--gold)}
+.priority-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.priority-name{font-size:12px;font-weight:600;color:var(--text-sec);line-height:1.3;transition:color .15s}
+.priority-item:hover .priority-name,.priority-item.active .priority-name{color:var(--text)}
+.priority-count{font-size:9px;font-weight:800;color:var(--text-dim);margin-left:auto;padding:1px 5px;border-radius:10px;background:rgba(255,255,255,.05)}
+.priority-item.active .priority-count{background:var(--gold-dim);color:var(--gold-lt)}
+
+/* CONTENT AREA */
+.archive-content{padding:28px 32px;overflow-y:auto}
+.content-header{margin-bottom:24px}
+.content-title{font-size:22px;font-weight:900;color:#fff;margin-bottom:4px}
+.content-meta{font-size:12px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;line-height:1.5;margin-bottom:14px}
+.content-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.content-tag{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:3px 10px;border-radius:2px;border:1px solid var(--border-dim);color:var(--text-sec)}
+.content-tag.tag-brian{background:rgba(184,150,62,.1);border-color:rgba(184,150,62,.3);color:var(--gold-lt)}
+.content-tag.tag-conf{background:rgba(13,32,128,.15);border-color:rgba(13,32,128,.3);color:#7a8aff}
+.content-tag.tag-signed{background:rgba(0,120,60,.1);border-color:rgba(0,120,60,.2);color:var(--green)}
+.content-rule{height:1px;background:var(--border-dim);margin-bottom:24px}
+
+/* ENTRY CARDS */
+.entries-group{margin-bottom:32px}
+.entries-group-label{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border-dim)}
+.entry-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;padding:16px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:border-color .15s}
+.entry-card:hover{border-color:var(--border)}
+.entry-type-badge{font-size:8px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;flex-shrink:0;margin-top:2px}
+.badge-pr{background:rgba(139,0,0,.15);color:#d04040}
+.badge-blog{background:rgba(107,174,214,.12);color:var(--sky)}
+.badge-media{background:rgba(184,150,62,.12);color:var(--gold-lt)}
+.badge-law{background:rgba(0,120,60,.12);color:var(--green)}
+.entry-body{flex:1;min-width:0}
+.entry-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px}
+.entry-title a{color:inherit;text-decoration:none}
+.entry-title a:hover{color:var(--gold-lt)}
+.entry-sub{font-size:11px;color:#cdc8bf;line-height:1.4;margin-bottom:6px;font-family:'Instrument Serif',serif;font-style:italic}
+.entry-footer{display:flex;gap:10px;align-items:center}
+.entry-date{font-size:10px;color:var(--text-dim);font-weight:600}
+.entry-link{font-size:10px;font-weight:700;color:var(--gold-lt);letter-spacing:.5px;text-decoration:none;padding:2px 8px;border:1px solid rgba(184,150,62,.3);border-radius:2px;transition:all .15s}
+.entry-link:hover{background:var(--gold-dim);border-color:var(--gold)}
+
+/* SUBNAV tabs for OBBB */
+.sub-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.sub-tab{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:5px 12px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.sub-tab:hover,.sub-tab.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-lt)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-dim)}
+.empty-state p{font-size:13px;font-family:'Instrument Serif',serif;font-style:italic;color:#cdc8bf}
+
+/* SEARCH */
+.archive-search{width:100%;border:1px solid var(--border-dim);border-radius:4px;padding:9px 14px;font-size:13px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;margin-bottom:20px;transition:border-color .15s}
+.archive-search:focus{border-color:var(--gold)}
+.archive-search::placeholder{color:var(--text-dim)}
+
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
+.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
+.footer-text span{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-brand" href="dashboard_v2.html">
+    <div class="nav-seal">M</div>
+    <div><div class="nav-title">Rep. Brian Mast</div><div class="nav-sub">Pluribus · FL-21</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard_v2.html">Dashboard</a></li>
+    <li><a href="resources.html" class="active">Resources</a></li>
+    <li><a href="clipdrop.html">Clip Drop</a></li>
+  </ul>
+  <div class="nav-right"><span id="nav-date"></span></div>
+</nav>
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="resources.html">Resources</a> › Messaging Archive</div>
+  <div class="page-title">Messaging Archive</div>
+  <div class="page-desc">Press releases, blogs, and media — organized by priority. Click any item to open the source on mast.house.gov.</div>
+  <div class="page-rule"></div>
+</div>
+
+<div class="archive-layout">
+
+  <!-- SIDEBAR -->
+  <div class="priority-sidebar">
+    <div class="sidebar-section-label">Brian's Legislation</div>
+    <a class="priority-item active" onclick="show('medal')" href="#">
+      <div class="priority-dot" style="background:#d04040"></div>
+      <span class="priority-name">Medal of Sacrifice</span>
+      <span class="priority-count">6</span>
+    </a>
+    <a class="priority-item" onclick="show('finalhonors')" href="#">
+      <div class="priority-dot" style="background:#d04040"></div>
+      <span class="priority-name">Final Honors Act</span>
+      <span class="priority-count">3</span>
+    </a>
+    <a class="priority-item" onclick="show('vea')" href="#">
+      <div class="priority-dot" style="background:var(--sky)"></div>
+      <span class="priority-name">Veterans Equal Access Act</span>
+      <span class="priority-count">2</span>
+    </a>
+    <a class="priority-item" onclick="show('udtseal')" href="#">
+      <div class="priority-dot" style="background:var(--sky)"></div>
+      <span class="priority-name">Navy SEAL UDT Museum</span>
+      <span class="priority-count">2</span>
+    </a>
+    <a class="priority-item" onclick="show('dalilah')" href="#">
+      <div class="priority-dot" style="background:#d04040"></div>
+      <span class="priority-name">Dalilah's Law</span>
+      <span class="priority-count">1</span>
+    </a>
+
+    <div class="sidebar-section-label">Water</div>
+    <a class="priority-item" onclick="show('wrda')" href="#">
+      <div class="priority-dot" style="background:var(--sky)"></div>
+      <span class="priority-name">WRDA 2026</span>
+      <span class="priority-count">4</span>
+    </a>
+    <a class="priority-item" onclick="show('everglades')" href="#">
+      <div class="priority-dot" style="background:var(--green)"></div>
+      <span class="priority-name">Everglades Restoration</span>
+      <span class="priority-count">3</span>
+    </a>
+    <a class="priority-item" onclick="show('cab')" href="#">
+      <div class="priority-dot" style="background:var(--green)"></div>
+      <span class="priority-name">CAB Act / Algal Blooms</span>
+      <span class="priority-count">4</span>
+    </a>
+    <a class="priority-item" onclick="show('water-other')" href="#">
+      <div class="priority-dot" style="background:var(--sky)"></div>
+      <span class="priority-name">Water (other)</span>
+      <span class="priority-count">2</span>
+    </a>
+
+    <div class="sidebar-section-label">Brightline</div>
+    <a class="priority-item" onclick="show('brightline')" href="#">
+      <div class="priority-dot" style="background:var(--gold)"></div>
+      <span class="priority-name">Brightline / FEC</span>
+      <span class="priority-count">5</span>
+    </a>
+
+    <div class="sidebar-section-label">Conference / National</div>
+    <a class="priority-item" onclick="show('obbb')" href="#">
+      <div class="priority-dot" style="background:var(--gold)"></div>
+      <span class="priority-name">One Big Beautiful Bill</span>
+      <span class="priority-count">9</span>
+    </a>
+    <a class="priority-item" onclick="show('ndaa')" href="#">
+      <div class="priority-dot" style="background:#7a8aff"></div>
+      <span class="priority-name">NDAA FY26</span>
+      <span class="priority-count">1</span>
+    </a>
+    <a class="priority-item" onclick="show('border')" href="#">
+      <div class="priority-dot" style="background:#d04040"></div>
+      <span class="priority-name">Border Security</span>
+      <span class="priority-count">2</span>
+    </a>
+    <a class="priority-item" onclick="show('doge')" href="#">
+      <div class="priority-dot" style="background:var(--gold)"></div>
+      <span class="priority-name">DOGE / Government Reform</span>
+      <span class="priority-count">1</span>
+    </a>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="archive-content">
+    <input class="archive-search" type="text" placeholder="Search titles, dates, keywords…" id="archive-search" oninput="searchArchive()">
+
+    <!-- ── MEDAL OF SACRIFICE ── -->
+    <div id="panel-medal" class="panel">
+      <div class="content-header">
+        <div class="content-title">Medal of Sacrifice Act</div>
+        <div class="content-meta">Mast-sponsored legislation creating a presidentially-presented medal honoring law enforcement officers and first responders killed in the line of duty. Inspired by three Palm Beach County sheriff's deputies — Deputy Ralph "Butch" Waller, Deputy Ignacio "Dan" Diaz, and Deputy Luis Paez — killed in November 2024. First medals presented by President Trump in the Oval Office. Passed the House unanimously Feb 2026; awaits Senate.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag tag-conf">Bipartisan</span>
+          <span class="content-tag" style="background:rgba(139,0,0,.1);border-color:rgba(139,0,0,.2);color:#c06060">Passed House ✓</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Press Releases</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/press-releases?ID=B9E16848-6CEA-4125-8480-622B7BF32DA3" target="_blank">Medal of Sacrifice Act Passes the House</a></div>
+            <div class="entry-sub">Unanimous passage — includes quotes from FLEOA and NYPD SBA. "This medal was created alongside President Trump as a small way to thank the brave men and women in uniform."</div>
+            <div class="entry-footer"><span class="entry-date">Feb 2, 2026</span><a href="https://mast.house.gov/press-releases?ID=B9E16848-6CEA-4125-8480-622B7BF32DA3" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="entries-group">
+        <div class="entries-group-label">Blog Posts</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/2/breaking-the-medal-of-sacrifice-passes-house" target="_blank">BREAKING: The Medal of Sacrifice Passes House</a></div>
+            <div class="entry-sub">Personal statement on passage — references deputies Waller, Diaz, and Paez and their families.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 2, 2026</span><a href="https://mast.house.gov/2026/2/breaking-the-medal-of-sacrifice-passes-house" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=BCE6CE9A-E208-493B-82AD-DB8A88F6241D" target="_blank">New Endorsement for the Medal of Sacrifice</a></div>
+            <div class="entry-sub">National Police Association endorsement. Describes medal design and criteria.</div>
+            <div class="entry-footer"><span class="entry-date">Jan 16, 2026</span><a href="https://mast.house.gov/blog?ID=BCE6CE9A-E208-493B-82AD-DB8A88F6241D" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/12/the-medal-of-sacrifice-advances" target="_blank">The Medal of Sacrifice Advances</a></div>
+            <div class="entry-sub">Judiciary Committee markup — bill passed unanimously out of committee.</div>
+            <div class="entry-footer"><span class="entry-date">Dec 19, 2025</span><a href="https://mast.house.gov/2025/12/the-medal-of-sacrifice-advances" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-media">Media / ICYMI</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/5/icymi-my-conversation-with-lara-trump-on-the-medal-of-sacrifice" target="_blank">ICYMI: Conversation with Lara Trump on the Medal of Sacrifice</a></div>
+            <div class="entry-sub">TV segment with Lara Trump featuring families of Waller and Paez. Includes YouTube link.</div>
+            <div class="entry-footer"><span class="entry-date">May 27, 2025</span><a href="https://mast.house.gov/2025/5/icymi-my-conversation-with-lara-trump-on-the-medal-of-sacrifice" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=63FFD502-1AEE-4FD0-8BA2-60B5CB66B938" target="_blank">ICYMI: A New Honor for Law Enforcement — Medal of Sacrifice</a></div>
+            <div class="entry-sub">Oval Office introduction alongside President Trump. First medals presented to Palm Beach County deputy families.</div>
+            <div class="entry-footer"><span class="entry-date">May 19, 2025</span><a href="https://mast.house.gov/blog?ID=63FFD502-1AEE-4FD0-8BA2-60B5CB66B938" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FINAL HONORS ACT ── -->
+    <div id="panel-finalhonors" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Final Honors Act</div>
+        <div class="content-meta">Mast-sponsored legislation allowing any U.S. service member killed in action to lie in honor in the U.S. Capitol Rotunda, upon the family's request. Introduced as part of a veterans legislative package in May 2025. Renewed in March 2026 following the deaths of seven soldiers in Operation Epic Fury.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Veterans</span>
+          <span class="content-tag">In progress</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Press Releases</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/5/rep-mast-introduces-legislative-package-honoring-and-supporting-veterans" target="_blank">Mast Introduces Legislative Package Honoring and Supporting Veterans</a></div>
+            <div class="entry-sub">Package introduction: Final Honors Act, Oath of Exit Act, Wounded Warrior Bill of Rights Act.</div>
+            <div class="entry-footer"><span class="entry-date">May 22, 2025</span><a href="https://mast.house.gov/2025/5/rep-mast-introduces-legislative-package-honoring-and-supporting-veterans" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="entries-group">
+        <div class="entries-group-label">Blog Posts</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/3/let-s-honor-our-fallen-hereos" target="_blank">Let's Honor Our Fallen Heroes</a></div>
+            <div class="entry-sub">Renewed call for Final Honors Act after deaths of seven soldiers in Operation Epic Fury. "They're my brothers- and sisters-in-arms."</div>
+            <div class="entry-footer"><span class="entry-date">Mar 2026</span><a href="https://mast.house.gov/2026/3/let-s-honor-our-fallen-hereos" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=1179BB53-BC35-4358-9419-A3FE8D03CE43" target="_blank">It's About Serving Those Who Have Given So Much</a></div>
+            <div class="entry-sub">Year-end military recap featuring the Final Honors Act alongside NDAA and VA reforms.</div>
+            <div class="entry-footer"><span class="entry-date">Jan 6, 2026</span><a href="https://mast.house.gov/blog?ID=1179BB53-BC35-4358-9419-A3FE8D03CE43" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── VETERANS EQUAL ACCESS ── -->
+    <div id="panel-vea" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Veterans Equal Access Act</div>
+        <div class="content-meta">Passed in the House (June 2025). Allows VA doctors to recommend medical cannabis to veterans in states where it is legal. Mast is co-chair of the Cannabis Caucus and a combat veteran. Key talking point: tearing down red tape blocking access to care.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Veterans</span>
+          <span class="content-tag tag-conf">Bipartisan</span>
+          <span class="content-tag" style="background:rgba(139,0,0,.1);border-color:rgba(139,0,0,.2);color:#c06060">Passed House ✓</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Blog Posts</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/6/passed-the-veterans-equal-access-act" target="_blank">PASSED: The Veterans Equal Access Act</a></div>
+            <div class="entry-sub">Announcement of House passage. "As a combat veteran and co-chair of the Cannabis Caucus, I'll keep fighting to tear down the red tape."</div>
+            <div class="entry-footer"><span class="entry-date">Jun 26, 2025</span><a href="https://mast.house.gov/2025/6/passed-the-veterans-equal-access-act" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=AA4ED4EB-1A1E-4F9F-A597-931F8CECBDBD" target="_blank">ICYMI: The Veterans Equal Access Act</a></div>
+            <div class="entry-sub">"Pain, trauma, the uphill battle to heal — it doesn't just end on the battlefield." Background on the bill and Mast's personal case for it.</div>
+            <div class="entry-footer"><span class="entry-date">Jun 30, 2025</span><a href="https://mast.house.gov/blog?ID=AA4ED4EB-1A1E-4F9F-A597-931F8CECBDBD" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NAVY SEAL UDT ── -->
+    <div id="panel-udtseal" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">National Navy UDT-SEAL Museum</div>
+        <div class="content-meta">Mast led a letter from Florida legislators calling for the National Navy UDT-SEAL Museum in Fort Pierce to be included in the newly created U.S. Navy Museum System (authorized by the 2025 NDAA). The museum has historical significance and strong public accessibility.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Veterans</span>
+          <span class="content-tag">District</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Press Releases</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/1/mast-florida" target="_blank">Mast, Florida Legislators Call for Inclusion of National Navy UDT-SEAL Museum in Navy System</a></div>
+            <div class="entry-sub">Bipartisan letter to the Navy. Criteria: historical significance, public accessibility, alignment with Navy heritage mission.</div>
+            <div class="entry-footer"><span class="entry-date">Jan 27, 2026</span><a href="https://mast.house.gov/2026/1/mast-florida" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="entries-group">
+        <div class="entries-group-label">NDAA FY26 Connection</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/7/mast" target="_blank">Mast Provisions Advance in FY26 NDAA Markup — Including Navy SEAL Amendment</a></div>
+            <div class="entry-sub">Five amendments including one honoring the legacy of Navy SEALs. "From honoring the legacy of our Navy SEALs to fixing broken bureaucracies."</div>
+            <div class="entry-footer"><span class="entry-date">Jul 16, 2025</span><a href="https://mast.house.gov/2025/7/mast" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DALILAH'S LAW ── -->
+    <div id="panel-dalilah" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Dalilah's Law</div>
+        <div class="content-meta">T&I Committee advancement (March 2026). Establishes consistent federal CDL standards — ELP requirements, anti-fraud provisions targeting "CDL mills." Directly tied to the August 2025 Treasure Coast tragedy where three Americans were killed by an illegal alien operating a commercial truck.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Border / Public Safety</span>
+          <span class="content-tag">T&I Committee</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Press Releases</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/3/dalilah-s-law-advances" target="_blank">Dalilah's Law Advances Out of T&I Committee</a></div>
+            <div class="entry-sub">"In my district, minutes from my own home, an illegal alien… killed three people." T&I markup advancement. Codifies ELP exams in English for CDL issuance.</div>
+            <div class="entry-footer"><span class="entry-date">Mar 18, 2026</span><a href="https://mast.house.gov/2026/3/dalilah-s-law-advances" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WRDA ── -->
+    <div id="panel-wrda" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">WRDA 2026</div>
+        <div class="content-meta">Water Resources Development Act — biennial bill Mast fights for through his T&I Committee seat. 2026 cycle is active. Priorities: accelerate Everglades restoration, stop harmful discharges, EAA Reservoir, IRL funding, Army Corps accountability. Dedicated page at mast.house.gov/wrda.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Water</span>
+          <span class="content-tag tag-conf">Bipartisan</span>
+          <span class="content-tag">T&I Committee</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">2026 Content</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/2/protecting-our-way-of-life-water" target="_blank">Protecting Our Way of Life: Water</a></div>
+            <div class="entry-sub">Mast's WRDA 2026 priorities: accelerate EAA Reservoir, increase Army Corps accountability, modernize Corps operations and private-sector tools.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 27, 2026</span><a href="https://mast.house.gov/2026/2/protecting-our-way-of-life-water" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=7F2F386A-FECD-4710-92C7-A4BD8D0B87D5" target="_blank">What is WRDA & Why Does It Matter?</a></div>
+            <div class="entry-sub">Constituent explainer on WRDA 2026 — why the T&I seat matters, EAA Reservoir timeline, St. Lucie River and Indian River Lagoon stakes.</div>
+            <div class="entry-footer"><span class="entry-date">Jan 6, 2026</span><a href="https://mast.house.gov/blog?ID=7F2F386A-FECD-4710-92C7-A4BD8D0B87D5" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=B0F8F5A7-4ED6-4163-8CD0-E01B5D4F11EB" target="_blank">Getting Started: WRDA 2026</a></div>
+            <div class="entry-sub">First T&I hearing — commits to EAA Reservoir by 2029, expedited timelines, stop discharges, send water south.</div>
+            <div class="entry-footer"><span class="entry-date">Dec 17, 2025</span><a href="https://mast.house.gov/blog?ID=B0F8F5A7-4ED6-4163-8CD0-E01B5D4F11EB" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="entries-group">
+        <div class="entries-group-label">Resource Page</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Dedicated Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/wrda" target="_blank">WRDA — Mast's Full Priority Page</a></div>
+            <div class="entry-sub">Comprehensive breakdown of all WRDA provisions Mast has fought for: algal bloom tech, legacy nutrient dredging, NERP, EAA Reservoir, $100M for Martin/St. Lucie/Palm Beach water infrastructure.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/wrda" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EVERGLADES ── -->
+    <div id="panel-everglades" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Everglades Restoration</div>
+        <div class="content-meta">Long-running district priority. Key bills: Everglades FIRST Act (expedite EAA Reservoir federal timeline), PROTECT Florida Act (public health as Army Corps priority), support for CERP and Northern Estuaries Restoration Plan. The EAA Reservoir is the single most important restoration project — now slated for 2029 completion.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Water</span>
+          <span class="content-tag">Everglades</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Key Bills & Pages</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Dedicated Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/everglades" target="_blank">Everglades FIRST Act</a></div>
+            <div class="entry-sub">Expedites federal timelines for Everglades restoration projects. Prioritizes EAA Reservoir storage capacity to minimize Lake O discharges east and west.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/everglades" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Dedicated Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/protect-florida" target="_blank">PROTECT Florida Act</a></div>
+            <div class="entry-sub">Adds public health as a priority for Lake Okeechobee management — preventing toxic cyanobacteria discharges into St. Lucie and Caloosahatchee.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/protect-florida" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-media">T&I / Infrastructure</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/7/icymi-my-conversation-with-secretary-duffy" target="_blank">ICYMI: Conversation with Secretary Duffy on Infrastructure</a></div>
+            <div class="entry-sub">T&I hearing — discusses St. Lucie River Railroad Bridge MEGA grants and FDOT capacity for large Florida projects.</div>
+            <div class="entry-footer"><span class="entry-date">Jul 16, 2025</span><a href="https://mast.house.gov/2025/7/icymi-my-conversation-with-secretary-duffy" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CAB ACT ── -->
+    <div id="panel-cab" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">CAB Act / Harmful Algal Blooms</div>
+        <div class="content-meta">Mast co-authored the Harmful Algal Bloom and Hypoxia Research and Control Act (HABHRCA) reauthorization — the foundational federal law. He then passed the South Florida Clean Coastal Waters Act (signed into law June 2022) requiring the first-ever federal action plan for Everglades-region algal blooms. Also introduced the Water Protection Act (Feb 2026) targeting nonpoint source pollution.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag tag-signed">Signed Into Law ✓</span>
+          <span class="content-tag">Water / Environment</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Signed Into Law</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Law ✓</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2022/6/mast-legislation-to-fight-toxic-algal-blooms-signed-into-law" target="_blank">South Florida Clean Coastal Waters Act Signed Into Law</a></div>
+            <div class="entry-sub">First-ever federal action plan for Everglades-region algal blooms. Bipartisan 412-7 passage. Backed by Rubio and Scott in Senate.</div>
+            <div class="entry-footer"><span class="entry-date">Jun 2022</span><a href="https://mast.house.gov/2022/6/mast-legislation-to-fight-toxic-algal-blooms-signed-into-law" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="entries-group">
+        <div class="entries-group-label">2025–2026 Content</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/2/introduced-water-protection-act" target="_blank">INTRODUCED: Water Protection Act</a></div>
+            <div class="entry-sub">Targets nonpoint source pollution — a major driver of toxic algal blooms and declining water quality in FL-21.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 9, 2026</span><a href="https://mast.house.gov/2026/2/introduced-water-protection-act" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Resource Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/habhrca" target="_blank">HABHRCA — Harmful Algal Bloom & Hypoxia Research and Control Act</a></div>
+            <div class="entry-sub">Foundational federal law Mast co-authored. Expands NOAA monitoring, grant eligibility for HAB mitigation, and enables HAB of Significance declarations.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/habhrca" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Resource Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/coastal" target="_blank">South Florida Clean Coastal Waters Act — Background</a></div>
+            <div class="entry-sub">Full bill summary and history — amends HABHRCA to require Everglades-specific assessment and action plan.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/coastal" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WATER OTHER ── -->
+    <div id="panel-water-other" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Water (Other)</div>
+        <div class="content-meta">Additional water-related legislation and advocacy beyond WRDA and the CAB Act — including the Stop Harmful Discharges Act and the Harmful Algal Blooms Solutions Act.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-brian">Brian's Legislation</span>
+          <span class="content-tag">Water</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Key Bills</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Resource Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/stop-discharges" target="_blank">Stop Harmful Discharges Act</a></div>
+            <div class="entry-sub">Makes public health the primary project purpose for Lake Okeechobee management — preventing cyanobacteria discharges into St. Lucie and Caloosahatchee watersheds.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/stop-discharges" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-law">Resource Page</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/algae" target="_blank">Harmful Algal Blooms Solutions Act</a></div>
+            <div class="entry-sub">Creates competitive prize program for innovative HAB-fighting technology — large-scale physical removal, toxin neutralization, nutrient reduction, real-time monitoring.</div>
+            <div class="entry-footer"><span class="entry-date">Evergreen</span><a href="https://mast.house.gov/algae" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BRIGHTLINE ── -->
+    <div id="panel-brightline" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Brightline / FEC</div>
+        <div class="content-meta">Ongoing fight against Brightline's expansion through the Treasure Coast — bridge access, taxpayer subsidies, safety record, and transparency. Most recent development: Brightline/FEC seeking $208.5M federal grant to replace St. Lucie River drawbridge (Feb 2026). History goes back to All Aboard Florida (2018).</div>
+        <div class="content-tags">
+          <span class="content-tag">District Priority</span>
+          <span class="content-tag">T&I Committee</span>
+          <span class="content-tag">Ongoing</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">2025–2026</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/2/mast" target="_blank">Mast Urges Accountability as FEC/Brightline Seeks $208.5M Taxpayer Grant</a></div>
+            <div class="entry-sub">FIND Board meeting — calls for financial transparency. "If a Florida family applies for a mortgage, they must disclose their financial standing. Brightline should too."</div>
+            <div class="entry-footer"><span class="entry-date">Feb 20, 2026</span><a href="https://mast.house.gov/2026/2/mast" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/2/icymi-fec-brightline" target="_blank">ICYMI: FEC & Brightline Must Be Held Accountable</a></div>
+            <div class="entry-sub">Video from FIND meeting. Details: $208.5M grant, double-track fixed bridge, local governments fined $1.8B+ while Brightline seeks public funds.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 23, 2026</span><a href="https://mast.house.gov/2026/2/icymi-fec-brightline" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/9/icymi-st-lucie-railroad-bridge-schedule" target="_blank">ICYMI: St. Lucie Railroad Bridge Schedule — Coast Guard Final Ruling</a></div>
+            <div class="entry-sub">Coast Guard final operating schedule for the St. Lucie River bridge. Daytime: max 50 min closed/hour. Bridge open by default. Key win for boaters.</div>
+            <div class="entry-footer"><span class="entry-date">Sep 24, 2025</span><a href="https://mast.house.gov/2025/9/icymi-st-lucie-railroad-bridge-schedule" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="entries-group">
+        <div class="entries-group-label">Historical (for context)</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2023/6/brightline-is-trying-to-hold-us-hostage" target="_blank">Brightline Is Trying to Hold Us Hostage</a></div>
+            <div class="entry-sub">2023 — ultimatum over bridge schedule. "Brightline needs our community far more than our community needs Brightline."</div>
+            <div class="entry-footer"><span class="entry-date">Jun 2023</span><a href="https://mast.house.gov/2023/6/brightline-is-trying-to-hold-us-hostage" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2023/2/mast-calls-for-pause-of-brightline-expansion-pending-investigation-into-deadly-crash" target="_blank">Mast Calls for Pause of Brightline Expansion Pending NTSB Investigation</a></div>
+            <div class="entry-sub">Deadly crash — Brightline named nation's deadliest train. Letter to FRA urging halt on safety validation plan.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 2023</span><a href="https://mast.house.gov/2023/2/mast-calls-for-pause-of-brightline-expansion-pending-investigation-into-deadly-crash" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ONE BIG BEAUTIFUL BILL ── -->
+    <div id="panel-obbb" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">One Big Beautiful Bill / Working Families Tax Cuts</div>
+        <div class="content-meta">Signed into law July 4, 2025. Permanent extension of 2017 Trump tax cuts, no tax on tips, no tax on overtime, senior deductions, school choice, border funding, energy deregulation. Extensive messaging campaign through August 2025 with audience-specific blogs. Also referenced as "Working Families Tax Cuts" in 2026 content.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-conf">Conference Priority</span>
+          <span class="content-tag tag-signed">Signed Into Law ✓</span>
+          <span class="content-tag">Jul 4, 2025</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="sub-tabs">
+        <button class="sub-tab active" onclick="filterOBBB('all',this)">All</button>
+        <button class="sub-tab" onclick="filterOBBB('general',this)">General</button>
+        <button class="sub-tab" onclick="filterOBBB('seniors',this)">Seniors</button>
+        <button class="sub-tab" onclick="filterOBBB('veterans',this)">Veterans</button>
+        <button class="sub-tab" onclick="filterOBBB('workers',this)">Workers &amp; Families</button>
+        <button class="sub-tab" onclick="filterOBBB('2026',this)">2026 Follow-up</button>
+      </div>
+      <div id="obbb-entries">
+        <div class="entry-card" data-obbb="general">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/7/passed-the-one-big-beautiful-bill" target="_blank">PASSED: The One Big Beautiful Bill</a></div>
+            <div class="entry-sub">Comprehensive passage statement — border, tax cuts, energy, spending. "I came to Congress to fight for the people who work hard, play by the rules, and love this country."</div>
+            <div class="entry-footer"><span class="entry-date">Jul 7, 2025</span><a href="https://mast.house.gov/2025/7/passed-the-one-big-beautiful-bill" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="general">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/8/the-one-big-beautiful-bill-is-a-win-for-all-americans" target="_blank">The One Big Beautiful Bill Is a Win for All Americans</a></div>
+            <div class="entry-sub">Overview covering all audiences: families, seniors, veterans, small businesses. Signed July 4, 2025.</div>
+            <div class="entry-footer"><span class="entry-date">Aug 15, 2025</span><a href="https://mast.house.gov/2025/8/the-one-big-beautiful-bill-is-a-win-for-all-americans" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="workers">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/8/obbb-tax-relief-for-american-workers-families-and-seniors" target="_blank">OBBB: Tax Relief for American Workers, Families, and Seniors</a></div>
+            <div class="entry-sub">No tax on tips, no tax on overtime, standard deduction boost. "Rewarding and lifting up our nation's hardest workers."</div>
+            <div class="entry-footer"><span class="entry-date">Aug 22, 2025</span><a href="https://mast.house.gov/2025/8/obbb-tax-relief-for-american-workers-families-and-seniors" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="workers">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/8/obbb-tax-relief-for-all" target="_blank">OBBB: Tax Relief for All</a></div>
+            <div class="entry-sub">Standard deduction, tips, overtime — shorter version. "From kitchen tables to checkout lines, these tax cuts mean more money in your pocket."</div>
+            <div class="entry-footer"><span class="entry-date">Aug 22, 2025</span><a href="https://mast.house.gov/2025/8/obbb-tax-relief-for-all" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="workers">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/8/why-i-voted-yes-it-expands-the-standard-deduction" target="_blank">Why I Voted YES: It Expands the Standard Deduction</a></div>
+            <div class="entry-sub">Standard deduction detail — $1,500 boost for working households, affects 91% of taxpayers. Includes family and senior breakdowns.</div>
+            <div class="entry-footer"><span class="entry-date">Aug 18, 2025</span><a href="https://mast.house.gov/2025/8/why-i-voted-yes-it-expands-the-standard-deduction" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="seniors">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/8/the-one-big-beautiful-bill-supports-america-s-seniors" target="_blank">The One Big Beautiful Bill Supports America's Seniors</a></div>
+            <div class="entry-sub">$6K individual / $12K married deduction on top of standard deduction. 88% of Social Security recipients pay zero federal income tax on benefits. Zero Medicare or Social Security cuts.</div>
+            <div class="entry-footer"><span class="entry-date">Aug 12, 2025</span><a href="https://mast.house.gov/2025/8/the-one-big-beautiful-bill-supports-america-s-seniors" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="veterans">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/8/the-one-big-beautiful-bill-supports-america-s-veterans" target="_blank">The One Big Beautiful Bill Supports America's Veterans</a></div>
+            <div class="entry-sub">Billions for military quality-of-life, $5B for VA accessibility, 100% disabled veterans exempt from Medicaid work requirements, VA loans and GI Bill preserved.</div>
+            <div class="entry-footer"><span class="entry-date">Aug 13, 2025</span><a href="https://mast.house.gov/2025/8/the-one-big-beautiful-bill-supports-america-s-veterans" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="general">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/blog?ID=35AB474B-91D0-4457-8C80-C0C647C4E78A" target="_blank">ICYMI: The Truth About the One Big Beautiful Bill</a></div>
+            <div class="entry-sub">Op-ed rebuttal to Democratic attacks. No middle-class tax hike, no Medicare cuts, 2.5% Medicare physician payment boost. Tips, overtime, Social Security relief facts.</div>
+            <div class="entry-footer"><span class="entry-date">Aug 29, 2025</span><a href="https://mast.house.gov/blog?ID=35AB474B-91D0-4457-8C80-C0C647C4E78A" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="general">
+          <span class="entry-type-badge badge-media">Radio / Media</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/press-releases?ID=99087DC9-2EB1-4A30-BE60-D80905236797" target="_blank">Mast Joins Brian Mudd Show to Talk the One Big Beautiful Bill</a></div>
+            <div class="entry-sub">Permanent tax relief, debt reduction, Florida waterways. Local radio (WJNO) interview.</div>
+            <div class="entry-footer"><span class="entry-date">Aug 13, 2025</span><a href="https://mast.house.gov/press-releases?ID=99087DC9-2EB1-4A30-BE60-D80905236797" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="2026">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/2/tax-filing-made-easy-for-seniors" target="_blank">Tax Filing Made Easy for Seniors (Working Families Tax Cuts)</a></div>
+            <div class="entry-sub">Tax season 2026 — senior deductions active, SSA wait times down 23%, website now 100% uptime vs. Biden-era 29hrs/week offline.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 18, 2026</span><a href="https://mast.house.gov/2026/2/tax-filing-made-easy-for-seniors" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card" data-obbb="2026">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/3/lower-taxes-for-seniors" target="_blank">Lower Taxes for Seniors</a></div>
+            <div class="entry-sub">Updated senior messaging — deduction retroactive, expected to help tens of millions. "Passed without a single Democrat vote." Contrast: Biden inflation squeeze.</div>
+            <div class="entry-footer"><span class="entry-date">Mar 2026</span><a href="https://mast.house.gov/2026/3/lower-taxes-for-seniors" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── NDAA ── -->
+    <div id="panel-ndaa" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">NDAA FY26</div>
+        <div class="content-meta">Five Mast amendments advanced in the FY26 NDAA markup (July 2025) — Navy SEAL legacy recognition, wounded warrior bureaucracy fixes, and DoD logistics reform.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-conf">Conference Priority</span>
+          <span class="content-tag">Defense</span>
+          <span class="content-tag">Veterans</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Press Releases</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/7/mast" target="_blank">Mast Provisions Advance in FY26 NDAA Markup</a></div>
+            <div class="entry-sub">Five amendments: Navy SEAL legacy, wounded warrior bureaucracy, DoD logistics, and more. "From honoring the legacy of our Navy SEALs to fixing broken bureaucracies."</div>
+            <div class="entry-footer"><span class="entry-date">Jul 16, 2025</span><a href="https://mast.house.gov/2025/7/mast" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── BORDER ── -->
+    <div id="panel-border" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">Border Security</div>
+        <div class="content-meta">Border content ranges from OBBB border provisions to district-specific impacts (Dalilah's Law, DHS funding obstruction). Key talking point: Democrat obstruction on DHS funding leaves airports understaffed and communities less safe.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-conf">Conference Priority</span>
+          <span class="content-tag">Border Security</span>
+          <span class="content-tag">Public Safety</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Key Content</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-blog">Blog</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/7/passed-the-one-big-beautiful-bill" target="_blank">OBBB — Border Provisions</a></div>
+            <div class="entry-sub">10,000 new ICE/Border Patrol agents, wall completion, new facilities, more judges, real enforcement power. See OBBB entry for full context.</div>
+            <div class="entry-footer"><span class="entry-date">Jul 7, 2025</span><a href="https://mast.house.gov/2025/7/passed-the-one-big-beautiful-bill" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-pr">Press Release</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2026/3/dalilah-s-law-advances" target="_blank">Dalilah's Law — District Border Impact</a></div>
+            <div class="entry-sub">Illegal alien killed three FL-21 constituents. Mast's CDL reform bill as border/public safety messaging vehicle. See Dalilah's Law entry.</div>
+            <div class="entry-footer"><span class="entry-date">Mar 18, 2026</span><a href="https://mast.house.gov/2026/3/dalilah-s-law-advances" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DOGE ── -->
+    <div id="panel-doge" class="panel" style="display:none">
+      <div class="content-header">
+        <div class="content-title">DOGE / Government Reform</div>
+        <div class="content-meta">Mast has been a vocal supporter of DOGE efforts and government accountability. Key talking point: waste includes $200K bird-watching groups and gender inclusivity frisbee. Democrats fighting to keep the waste.</div>
+        <div class="content-tags">
+          <span class="content-tag tag-conf">Conference Priority</span>
+          <span class="content-tag">DOGE</span>
+          <span class="content-tag">Spending</span>
+        </div>
+      </div>
+      <div class="content-rule"></div>
+      <div class="entries-group">
+        <div class="entries-group-label">Media</div>
+        <div class="entry-card">
+          <span class="entry-type-badge badge-media">TV / Fox News</span>
+          <div class="entry-body">
+            <div class="entry-title"><a href="https://mast.house.gov/2025/2/mast-joins-fox-news-talks-doge-government-transparency" target="_blank">Mast Joins Fox News, Talks DOGE and Government Transparency</a></div>
+            <div class="entry-sub">America Reports interview. "DOGE has been beyond successful. Every American should be thanking President Trump." Lists specific waste examples including bird-watching groups ($200K) and frisbee programs.</div>
+            <div class="entry-footer"><span class="entry-date">Feb 25, 2025</span><a href="https://mast.house.gov/2025/2/mast-joins-fox-news-talks-doge-government-transparency" target="_blank" class="entry-link">Open ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end archive-content -->
+</div><!-- end archive-layout -->
+
+<footer>
+  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
+  <div class="footer-text">Sources: mast.house.gov · press-releases · blog</div>
+</footer>
+
+<script>
+document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+function show(id) {
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.priority-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('panel-'+id).style.display = 'block';
+  event.currentTarget.classList.add('active');
+  document.getElementById('archive-search').value = '';
+}
+
+function filterOBBB(cat, btn) {
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#obbb-entries .entry-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.obbb === cat) ? '' : 'none';
+  });
+}
+
+function searchArchive() {
+  const q = document.getElementById('archive-search').value.toLowerCase();
+  if (!q) return;
+  // Show all panels temporarily for search
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+  document.querySelectorAll('.entry-card').forEach(card => {
+    card.style.display = card.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+  // Hide panels with no visible cards
+  document.querySelectorAll('.panel').forEach(p => {
+    const visible = p.querySelectorAll('.entry-card:not([style*="display: none"])').length;
+    if (p.querySelectorAll('.entry-card').length > 0) {
+      p.style.display = visible > 0 ? 'block' : 'none';
+    }
+  });
+  if (!q) {
+    document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+    document.getElementById('panel-medal').style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

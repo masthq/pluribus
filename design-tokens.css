@@ -1,0 +1,73 @@
+/*
+ * Mast Comms HQ — Design Tokens
+ * Single source of truth. Import at the top of every page:
+ *   <link rel="stylesheet" href="design-tokens.css">
+ */
+
+:root {
+  /* BACKGROUNDS */
+  --navy:           #0a1628;
+  --navy-mid:       #0f1f3d;
+  --navy-card:      #111e35;
+  --navy-hover:     #162440;
+
+  /* ACCENTS */
+  --crimson:        #8b0000;
+  --crimson-lt:     #a31010;
+  --gold:           #b8963e;
+  --gold-lt:        #c9a84c;
+  --gold-dim:       rgba(184,150,62,0.15);
+  --sky:            #6baed6;
+  --green:          #3db87a;
+  --purple-blue:    #7a8aff;
+  --red-medium:     #d04040;
+  --red-muted:      #c06060;
+
+  /* TEXT */
+  --text:           #e8e4d9;
+  --text-sec:       #9a9585;
+  --text-dim:       #4a4a42;
+
+  /* BORDERS */
+  --border:         rgba(184,150,62,0.18);
+  --border-dim:     rgba(255,255,255,0.06);
+
+  /* TAG BACKGROUNDS */
+  --tag-gold-bg:    rgba(184,150,62,0.12);
+  --tag-sky-bg:     rgba(107,174,214,0.12);
+  --tag-crimson-bg: rgba(139,0,0,0.15);
+  --tag-green-bg:   rgba(0,120,60,0.12);
+  --tag-blue-bg:    rgba(13,32,128,0.15);
+  --tag-neutral-bg: rgba(255,255,255,0.05);
+
+  /* STATUS */
+  --status-fresh-bg:   rgba(61,184,122,0.15);
+  --status-fresh-text: #3db87a;
+  --status-warm-bg:    rgba(184,150,62,0.15);
+  --status-warm-text:  #c9a84c;
+  --status-cold-bg:    rgba(139,0,0,0.15);
+  --status-cold-text:  #d04040;
+
+  /* TYPOGRAPHY */
+  --font-sans:   'Libre Franklin', sans-serif;
+  --font-serif:  'Instrument Serif', serif;
+
+  /* SPACING */
+  --page-pad:  32px;
+  --radius-sm: 3px;
+  --radius-md: 6px;
+
+  /* CALENDAR CATEGORIES */
+  --cal-wh:      #b8963e;
+  --cal-hearing: #6baed6;
+  --cal-vote:    #8b0000;
+  --cal-district:#3db87a;
+}
+
+/*
+ * NOTES:
+ * - Instrument Serif (--font-serif) at color var(--text-sec) or brighter only.
+ *   Never at var(--text-dim) — contrast too low.
+ * - Gold = WH/executive  |  Sky = hearings/water  |  Crimson = votes/urgent
+ *   Green = signed law   |  Purple = conference/national
+ */
