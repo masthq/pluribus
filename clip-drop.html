@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clip Drop — Mast Comms HQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ───────────────────────────────────────────────── */
+    :root {
+      --navy:           #0a1628;
+      --navy-mid:       #0f1f3d;
+      --navy-card:      #111e35;
+      --navy-hover:     #162440;
+      --crimson:        #8b0000;
+      --crimson-lt:     #a31010;
+      --gold:           #b8963e;
+      --gold-lt:        #c9a84c;
+      --gold-dim:       rgba(184,150,62,0.15);
+      --sky:            #6baed6;
+      --green:          #3db87a;
+      --text:           #e8e4d9;
+      --text-sec:       #9a9585;
+      --text-dim:       #4a4a42;
+      --border:         rgba(184,150,62,0.18);
+      --border-dim:     rgba(255,255,255,0.06);
+      --font-sans:      'Libre Franklin', sans-serif;
+      --font-serif:     'Instrument Serif', serif;
+      --page-pad:       32px;
+      --radius-sm:      3px;
+      --radius-md:      6px;
+    }
+
+    /* ─── RESET ────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ─── NAV ──────────────────────────────────────────────────── */
+    nav {
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--border);
+      padding: 0 var(--page-pad);
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      margin-right: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-sec);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); background: var(--border-dim); }
+    .nav-links a.active { color: var(--gold); }
+
+    /* ─── PAGE SHELL ───────────────────────────────────────────── */
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px var(--page-pad) 80px;
+    }
+
+    /* ─── PAGE HEADER ──────────────────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 36px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 20px;
+    }
+
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-sec);
+    }
+
+    .clip-count {
+      margin-left: auto;
+      font-size: 12px;
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── DROP FORM ────────────────────────────────────────────── */
+    .drop-zone {
+      background: var(--navy-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .drop-zone::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    .drop-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .drop-label svg { opacity: 0.7; }
+
+    .drop-row {
+      display: grid;
+      grid-template-columns: 1fr 220px 140px 100px;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-sec);
+    }
+
+    .field-input {
+      background: var(--navy-mid);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+
+    .field-input::placeholder { color: var(--text-dim); }
+    .field-input:focus { border-color: var(--gold); }
+
+    select.field-input {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239a9585' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+
+    .btn-drop {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+      align-self: flex-end;
+    }
+
+    .btn-drop:hover { background: var(--gold-lt); }
+    .btn-drop:active { transform: scale(0.98); }
+    .btn-drop:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* status flash */
+    .drop-status {
+      margin-top: 12px;
+      font-size: 12px;
+      min-height: 16px;
+      transition: opacity 0.3s;
+    }
+    .drop-status.success { color: var(--green); }
+    .drop-status.error   { color: #d04040; }
+
+    /* ─── FILTERS ──────────────────────────────────────────────── */
+    .filters-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-right: 4px;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border-dim);
+      border-radius: 2px;
+      color: var(--text-sec);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-transform: uppercase;
+    }
+
+    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active {
+      background: var(--gold-dim);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .search-input {
+      margin-left: auto;
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      padding: 6px 12px;
+      outline: none;
+      width: 200px;
+      transition: border-color 0.15s;
+    }
+
+    .search-input:focus { border-color: var(--gold); }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    /* ─── CLIP GRID ────────────────────────────────────────────── */
+    .clip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    /* ─── CLIP CARD ────────────────────────────────────────────── */
+    .clip-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, transform 0.2s;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .clip-card:hover {
+      border-color: var(--border);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .clip-thumb {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: var(--navy-mid);
+      display: block;
+    }
+
+    .clip-thumb-placeholder {
+      width: 100%;
+      height: 160px;
+      background: var(--navy-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clip-thumb-placeholder .domain-initial {
+      font-family: var(--font-serif);
+      font-size: 48px;
+      color: var(--border);
+    }
+
+    .clip-body {
+      padding: 16px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .clip-meta-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .clip-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
+
+    .tag-press      { background: rgba(107,174,214,0.12); color: var(--sky); }
+    .tag-social     { background: rgba(122,138,255,0.12); color: #7a8aff; }
+    .tag-opposition { background: rgba(139,0,0,0.15);     color: #d04040; }
+    .tag-research   { background: rgba(184,150,62,0.12);  color: var(--gold); }
+    .tag-other      { background: rgba(255,255,255,0.05); color: var(--text-sec); }
+
+    .clip-domain {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+    }
+
+    .clip-headline {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .clip-note {
+      font-size: 12px;
+      color: var(--text-sec);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-style: italic;
+    }
+
+    .clip-footer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px 14px;
+      margin-top: auto;
+    }
+
+    .clip-added-by {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .clip-date {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+
+    .clip-open-btn {
+      background: transparent;
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      color: var(--sky);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 5px 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .clip-open-btn:hover { border-color: var(--sky); color: var(--sky); }
+
+    /* ─── EMPTY / LOADING ──────────────────────────────────────── */
+    .state-block {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 12px;
+    }
+
+    .state-icon { font-size: 36px; opacity: 0.3; }
+
+    .state-text {
+      font-size: 14px;
+      color: var(--text-sec);
+    }
+
+    .loading-dots span {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: dot-bounce 1.2s ease-in-out infinite;
+    }
+
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes dot-bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40%            { transform: scale(1);   opacity: 1; }
+    }
+
+    /* ─── RESPONSIVE ───────────────────────────────────────────── */
+    @media (max-width: 780px) {
+      .drop-row { grid-template-columns: 1fr 1fr; }
+      .btn-drop { grid-column: 1 / -1; }
+      .clip-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">M</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Dashboard</a></li>
+    <li><a href="press.html">Press</a></li>
+    <li><a href="messaging.html">Messaging</a></li>
+    <li><a href="outreach.html">Outreach</a></li>
+    <li><a href="officials.html">Officials</a></li>
+    <li><a href="map.html">District</a></li>
+    <li><a href="clip-drop.html" class="active">Clip Drop</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1 class="page-title">Clip Drop</h1>
+    <span class="page-subtitle">Shared media & opposition archive</span>
+    <span class="clip-count" id="clip-count"></span>
+  </div>
+
+  <!-- DROP FORM -->
+  <div class="drop-zone">
+    <div class="drop-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+      </svg>
+      Drop a link
+    </div>
+    <div class="drop-row">
+      <div class="field-group">
+        <label class="field-label">URL *</label>
+        <input class="field-input" id="input-url" type="url" placeholder="https://..." />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Headline</label>
+        <input class="field-input" id="input-headline" type="text" placeholder="Optional override" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Category</label>
+        <select class="field-input" id="input-category">
+          <option value="press">Press</option>
+          <option value="social">Social</option>
+          <option value="opposition">Opposition</option>
+          <option value="research">Research</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Added by</label>
+        <input class="field-input" id="input-added-by" type="text" placeholder="Initials" maxlength="10" />
+      </div>
+    </div>
+    <div class="drop-row" style="margin-top:10px;">
+      <div class="field-group" style="grid-column:1/3;">
+        <label class="field-label">Note</label>
+        <input class="field-input" id="input-note" type="text" placeholder="Context, talking points, why this matters..." />
+      </div>
+      <div style="grid-column:4; display:flex; align-items:flex-end;">
+        <button class="btn-drop" id="btn-drop" onclick="dropClip()">+ Drop It</button>
+      </div>
+    </div>
+    <div class="drop-status" id="drop-status"></div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-bar">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+    <button class="filter-btn" data-filter="press"      onclick="setFilter('press', this)">Press</button>
+    <button class="filter-btn" data-filter="social"     onclick="setFilter('social', this)">Social</button>
+    <button class="filter-btn" data-filter="opposition" onclick="setFilter('opposition', this)">Opposition</button>
+    <button class="filter-btn" data-filter="research"   onclick="setFilter('research', this)">Research</button>
+    <button class="filter-btn" data-filter="other"      onclick="setFilter('other', this)">Other</button>
+    <input class="search-input" id="search-input" placeholder="Search clips..." oninput="renderClips()" />
+  </div>
+
+  <!-- CLIP GRID -->
+  <div class="clip-grid" id="clip-grid">
+    <div class="state-block">
+      <div class="loading-dots"><span></span><span></span><span></span></div>
+      <div class="state-text">Loading clips…</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ─── CONFIG ─────────────────────────────────────── */
+  const BASE_ID  = 'appolE86XNzvXlvkZ';
+  const TABLE_ID = 'tblvY3fzQJooFPwAV';
+  const TOKEN    = 'pat2E9mYRTYBc0YSp.50635a1b0ea12ab359362e68f5bb43633c34473a258f86437e6f22755ef35794';
+  const API      = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
+  const HEADERS  = { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json' };
+
+  /* ─── STATE ──────────────────────────────────────── */
+  let allClips     = [];
+  let activeFilter = 'all';
+
+  /* ─── FETCH CLIPS ────────────────────────────────── */
+  async function fetchClips() {
+    try {
+      const params = new URLSearchParams({
+        sort: JSON.stringify([{ field: 'created_at', direction: 'desc' }]),
+        maxRecords: 200
+      });
+      const res = await fetch(`${API}?${params}`, { headers: HEADERS });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Fetch failed');
+      allClips = (data.records || []).map(r => ({ id: r.id, ...r.fields }));
+      renderClips();
+      updateCount();
+    } catch (e) {
+      document.getElementById('clip-grid').innerHTML = `
+        <div class="state-block">
+          <div class="state-icon">⚠</div>
+          <div class="state-text">Could not load clips — ${e.message}</div>
+        </div>`;
+    }
+  }
+
+  /* ─── RENDER ─────────────────────────────────────── */
+  function renderClips() {
+    const query  = document.getElementById('search-input').value.toLowerCase();
+    const grid   = document.getElementById('clip-grid');
+
+    const visible = allClips.filter(c => {
+      const matchFilter = activeFilter === 'all' || (c.category || 'other') === activeFilter;
+      const matchSearch = !query || [c.headline, c.url, c.note, c.added_by]
+        .some(f => (f || '').toLowerCase().includes(query));
+      return matchFilter && matchSearch;
+    });
+
+    if (!visible.length) {
+      grid.innerHTML = `<div class="state-block"><div class="state-icon">📭</div><div class="state-text">No clips match.</div></div>`;
+      return;
+    }
+
+    grid.innerHTML = visible.map((c, i) => buildCard(c, i)).join('');
+  }
+
+  function buildCard(c, i) {
+    const domain    = domainOf(c.url);
+    const initial   = domain.charAt(0).toUpperCase();
+    const tag       = c.category || 'other';
+    const tagClass  = `tag-${tag}`;
+    const tagLabel  = tag.charAt(0).toUpperCase() + tag.slice(1);
+    const headline  = c.headline || domain;
+    const dateStr   = c.created_at ? formatDate(c.created_at) : '';
+    const delay     = Math.min(i * 40, 300);
+
+    const thumb = c.og_image
+      ? `<img class="clip-thumb" src="${escHtml(c.og_image)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=clip-thumb-placeholder><span class=domain-initial>${initial}</span></div>'">`
+      : `<div class="clip-thumb-placeholder"><span class="domain-initial">${initial}</span></div>`;
+
+    return `
+      <div class="clip-card" style="animation-delay:${delay}ms">
+        ${thumb}
+        <div class="clip-body">
+          <div class="clip-meta-top">
+            <span class="clip-tag ${tagClass}">${tagLabel}</span>
+            <span class="clip-domain">${escHtml(domain)}</span>
+          </div>
+          <div class="clip-headline">${escHtml(headline)}</div>
+          ${c.note ? `<div class="clip-note">${escHtml(c.note)}</div>` : ''}
+        </div>
+        <div class="clip-footer">
+          ${c.added_by ? `<span class="clip-added-by">${escHtml(c.added_by)}</span>` : ''}
+          ${dateStr ? `<span class="clip-date">${dateStr}</span>` : ''}
+          <a class="clip-open-btn" href="${escHtml(c.url)}" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+      </div>`;
+  }
+
+  /* ─── DROP ───────────────────────────────────────── */
+  async function dropClip() {
+    const url      = document.getElementById('input-url').value.trim();
+    const headline = document.getElementById('input-headline').value.trim();
+    const category = document.getElementById('input-category').value;
+    const addedBy  = document.getElementById('input-added-by').value.trim();
+    const note     = document.getElementById('input-note').value.trim();
+    const status   = document.getElementById('drop-status');
+    const btn      = document.getElementById('btn-drop');
+
+    if (!url) { flash('Enter a URL first.', 'error'); return; }
+    if (!isValidUrl(url)) { flash('That doesn\'t look like a valid URL.', 'error'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    flash('', '');
+
+    // Try to fetch OG metadata via microlink
+    let ogImage = '';
+    let ogTitle = headline;
+    try {
+      const ml = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}&meta=false`);
+      const md = await ml.json();
+      if (md.status === 'success') {
+        if (!ogTitle) ogTitle = md.data?.title || '';
+        ogImage = md.data?.image?.url || md.data?.screenshot?.url || '';
+      }
+    } catch (_) { /* non-fatal */ }
+
+    const fields = {
+      url,
+      headline: ogTitle,
+      category,
+      note,
+      added_by: addedBy,
+      created_at: new Date().toISOString(),
+      ...(ogImage ? { og_image: ogImage } : {})
+    };
+
+    // Strip empty strings
+    Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
+
+    try {
+      const res = await fetch(API, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({ fields })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message || 'Save failed');
+
+      allClips.unshift({ id: data.id, ...data.fields });
+      renderClips();
+      updateCount();
+
+      // Reset form
+      ['input-url','input-headline','input-note'].forEach(id => document.getElementById(id).value = '');
+      flash('✓ Dropped.', 'success');
+    } catch (e) {
+      flash(`Error: ${e.message}`, 'error');
+    }
+
+    btn.disabled = false;
+    btn.textContent = '+ Drop It';
+  }
+
+  /* ─── FILTER ─────────────────────────────────────── */
+  function setFilter(filter, el) {
+    activeFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderClips();
+  }
+
+  /* ─── HELPERS ────────────────────────────────────── */
+  function domainOf(url) {
+    try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; }
+  }
+
+  function isValidUrl(s) {
+    try { new URL(s); return true; } catch { return false; }
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function flash(msg, type) {
+    const el = document.getElementById('drop-status');
+    el.textContent = msg;
+    el.className = `drop-status ${type}`;
+  }
+
+  function updateCount() {
+    const el = document.getElementById('clip-count');
+    el.textContent = allClips.length ? `${allClips.length} clip${allClips.length !== 1 ? 's' : ''}` : '';
+  }
+
+  /* ─── ENTER KEY ON URL ───────────────────────────── */
+  document.getElementById('input-url').addEventListener('keydown', e => {
+    if (e.key === 'Enter') dropClip();
+  });
+
+  /* ─── INIT ───────────────────────────────────────── */
+  fetchClips();
+</script>
+
+</body>
+</html>
