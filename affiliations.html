@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outreach & Affiliations · Pluribus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
+  --crimson:#8b0000;--crimson-lt:#a31010;
+  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
+  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;--red-medium:#d04040;
+  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
+  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+  --font-sans:'Libre Franklin',sans-serif;
+  --page-pad:32px;--radius-sm:3px;--radius-md:6px;
+  --status-fresh-bg:rgba(61,184,122,0.15);--status-fresh-text:#3db87a;
+  --status-warm-bg:rgba(184,150,62,0.15);--status-warm-text:#c9a84c;
+  --status-cold-bg:rgba(139,0,0,0.15);--status-cold-text:#d04040;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
+
+.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
+.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
+.ticker-wrap{display:flex;animation:ticker 38s linear infinite;width:max-content;padding-left:80px}
+.ticker-item{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95)}
+.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 var(--page-pad);display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
+.nav-brand{display:flex;align-items:center;gap:12px;padding:12px 0;margin-right:48px;text-decoration:none}
+.nav-seal{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:var(--navy);flex-shrink:0}
+.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
+.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{display:flex;list-style:none}
+.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
+.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
+.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
+
+.page-header{padding:32px var(--page-pad) 0;max-width:1440px;margin:0 auto}
+.breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:10px}
+.breadcrumb a{color:var(--gold-lt);text-decoration:none}
+.breadcrumb a:hover{color:var(--gold)}
+.page-title{font-size:32px;font-weight:900;color:#fff;line-height:1;margin-bottom:6px}
+.page-desc{font-size:13px;color:var(--text-sec);line-height:1.55;margin-bottom:24px}
+.page-rule{height:1px;background:var(--border);margin-bottom:28px}
+
+main{padding:0 var(--page-pad) 48px;max-width:1440px;margin:0 auto}
+
+/* TABS */
+.tab-nav{display:flex;gap:6px;border-bottom:1px solid var(--border-dim);padding-bottom:0;margin-bottom:28px}
+.tab-btn{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* CONTROLS */
+.list-controls{display:flex;gap:10px;margin-bottom:20px;align-items:center;flex-wrap:wrap}
+.list-search{flex:1;min-width:200px;max-width:320px;border:1px solid var(--border-dim);border-radius:var(--radius-sm);padding:8px 14px;font-size:13px;font-family:var(--font-sans);color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.list-search:focus{border-color:var(--gold)}
+.list-search::placeholder{color:var(--text-dim)}
+.filter-btns{display:flex;gap:6px;flex-wrap:wrap}
+.flt{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.flt:hover,.flt.active{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
+.flt.flt-fresh.active{border-color:var(--green);color:var(--green);background:var(--status-fresh-bg)}
+.flt.flt-warm.active{border-color:var(--gold);color:var(--gold-lt);background:var(--status-warm-bg)}
+.flt.flt-cold.active{border-color:var(--red-medium);color:var(--red-medium);background:var(--status-cold-bg)}
+.results-ct{font-size:10px;color:var(--text-dim);font-weight:600;margin-left:auto;white-space:nowrap}
+
+/* LIST GRID */
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.list-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:var(--radius-md);padding:16px 18px;transition:border-color .2s,transform .15s;position:relative;overflow:hidden;cursor:default}
+.list-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.list-card.cat-water::before{background:var(--sky)}
+.list-card.cat-vets::before{background:var(--red-medium)}
+.list-card.cat-econ::before{background:var(--gold)}
+.list-card.cat-env::before{background:var(--green)}
+.list-card.cat-pol::before{background:var(--purple-blue)}
+.list-card.cat-bio::before{background:var(--text-sec)}
+.list-card.cat-border::before{background:var(--crimson-lt)}
+.list-card.cat-broad::before{background:var(--gold-lt)}
+.list-card:hover{border-color:var(--border);transform:translateY(-1px)}
+.list-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:8px}
+.list-code{font-size:11px;font-weight:900;letter-spacing:.5px;color:var(--gold-lt);font-family:monospace}
+.list-size{font-size:20px;font-weight:900;color:#fff;line-height:1}
+.list-size-label{font-size:8px;color:var(--text-dim);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.list-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3}
+.list-note{font-size:12px;color:var(--text-sec);line-height:1.45;margin-bottom:10px}
+.list-card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border-dim)}
+.status-badge{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.status-fresh{background:var(--status-fresh-bg);color:var(--status-fresh-text)}
+.status-warm{background:var(--status-warm-bg);color:var(--status-warm-text)}
+.status-cold{background:var(--status-cold-bg);color:var(--status-cold-text)}
+.last-hit{font-size:10px;color:var(--text-dim);font-weight:600}
+
+/* SEND COUNT BAR */
+.send-bar-wrap{margin-top:8px;display:flex;align-items:center;gap:8px}
+.send-bar{height:4px;flex:1;background:var(--border-dim);border-radius:2px;overflow:hidden}
+.send-bar-fill{height:100%;border-radius:2px}
+.send-count-label{font-size:9px;color:var(--text-dim);font-weight:700;white-space:nowrap}
+
+/* RECENT SENDS tooltip */
+.recent-sends{margin-top:8px;display:none}
+.list-card:hover .recent-sends{display:block}
+.recent-send-item{font-size:10px;color:var(--text-sec);line-height:1.5;padding:2px 0;border-top:1px solid var(--border-dim);display:flex;gap:8px}
+.recent-send-item:first-child{border-top:none;padding-top:6px}
+.rsi-date{color:var(--text-dim);flex-shrink:0;font-weight:600;min-width:60px}
+.rsi-subject{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+/* MATRIX */
+.matrix-intro{font-size:13px;color:var(--text-sec);line-height:1.6;margin-bottom:24px;max-width:720px}
+.matrix-grid{display:flex;flex-direction:column;gap:12px}
+.matrix-row{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:var(--radius-md);overflow:hidden}
+.matrix-row-header{padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .15s;user-select:none}
+.matrix-row-header:hover{background:var(--navy-hover)}
+.matrix-topic{font-size:13px;font-weight:800;color:var(--text);flex:1}
+.matrix-reach{font-size:11px;color:var(--text-sec);font-weight:600;white-space:nowrap}
+.matrix-grounded{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--green);margin-left:8px}
+.matrix-arrow{font-size:12px;color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.matrix-row.open .matrix-arrow{transform:rotate(90deg)}
+.matrix-body{display:none;padding:16px 18px;border-top:1px solid var(--border-dim)}
+.matrix-row.open .matrix-body{display:block}
+.matrix-desc{font-size:12px;color:var(--text-sec);line-height:1.5;margin-bottom:14px}
+.matrix-section-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.matrix-lists{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.matrix-tag{font-size:10px;font-weight:800;letter-spacing:.5px;padding:5px 10px;border-radius:3px;border:1px solid var(--border-dim);color:var(--text-sec);background:transparent;display:flex;align-items:center;gap:6px}
+.matrix-tag .mtag-code{color:var(--gold-lt);font-weight:900;font-family:monospace;font-size:11px}
+.matrix-tag .mtag-size{color:var(--text-dim);font-size:9px}
+.matrix-primary{border-color:rgba(184,150,62,.4);background:var(--gold-dim)}
+.matrix-primary .mtag-code{color:var(--gold-lt)}
+.matrix-note{font-size:12px;color:var(--text-sec);line-height:1.5;padding:10px 14px;background:rgba(255,255,255,.03);border-radius:var(--radius-sm);border-left:2px solid var(--border)}
+
+/* TRACKER */
+.tracker-intro{font-size:13px;color:var(--text-sec);line-height:1.6;margin-bottom:20px;max-width:720px}
+.tracker-table-wrap{overflow-x:auto;border-radius:var(--radius-md);border:1px solid var(--border-dim)}
+.tracker-table{width:100%;border-collapse:collapse;min-width:680px}
+.tracker-table th{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border-dim);text-align:left;background:var(--navy-mid);white-space:nowrap;cursor:pointer}
+.tracker-table th:hover{color:var(--gold-lt)}
+.tracker-table td{padding:10px 14px;border-bottom:1px solid var(--border-dim);font-size:12px;color:var(--text-sec);vertical-align:middle}
+.tracker-table tbody tr:last-child td{border-bottom:none}
+.tracker-table tbody tr:hover td{background:var(--navy-hover)}
+.tracker-code{font-size:11px;font-weight:900;color:var(--gold-lt);font-family:monospace}
+.tracker-name{font-size:13px;font-weight:700;color:var(--text)}
+.tracker-size{font-size:12px;font-weight:700;color:var(--text);text-align:right;font-variant-numeric:tabular-nums}
+.cat-pill{font-size:8px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:rgba(255,255,255,.05);color:var(--text-dim)}
+.heat-bar{height:6px;border-radius:3px;background:var(--border-dim);overflow:hidden;width:80px}
+.heat-fill{height:100%;border-radius:3px;transition:width .3s,background .3s}
+.sends-badge{font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;background:var(--gold-dim);color:var(--gold-lt)}
+.sends-badge.sends-high{background:var(--status-fresh-bg);color:var(--status-fresh-text)}
+.sends-badge.sends-none{background:var(--status-cold-bg);color:var(--status-cold-text)}
+.last-send-cell{font-size:11px;color:var(--text-sec);font-weight:600}
+.last-subject{font-size:10px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;display:block}
+
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px var(--page-pad);display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
+.footer-text span{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds heading on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+  </div>
+</div>
+
+<nav>
+  <a class="nav-brand" href="dashboard_v2.html">
+    <div class="nav-seal">M</div>
+    <div><div class="nav-title">Rep. Brian Mast</div><div class="nav-sub">Pluribus · FL-21</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard_v2.html">Dashboard</a></li>
+    <li><a href="resources.html" class="active">Resources</a></li>
+    <li><a href="clipdrop.html">Clip Drop</a></li>
+  </ul>
+  <div class="nav-right"><span id="nav-date"></span></div>
+</nav>
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="resources.html">Resources</a> › Outreach &amp; Affiliations</div>
+  <div class="page-title">Outreach &amp; Affiliations</div>
+  <div class="page-desc">Send counts and last-send dates are real — parsed from 279 blog docs (2025–2026). Excludes VF voter file codes and 499-size test lists.</div>
+  <div class="page-rule"></div>
+</div>
+
+<main>
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('lists',this)">List Directory</button>
+    <button class="tab-btn" onclick="switchTab('matrix',this)">Send Planning Matrix</button>
+    <button class="tab-btn" onclick="switchTab('tracker',this)">Outreach Tracker</button>
+  </div>
+
+  <!-- TAB 1: LIST DIRECTORY -->
+  <div id="tab-lists" class="tab-panel active">
+    <div class="list-controls">
+      <input class="list-search" type="text" placeholder="Search lists…" id="list-search" oninput="renderLists()">
+      <div class="filter-btns">
+        <button class="flt active" onclick="setFilter('all',this)">All</button>
+        <button class="flt" onclick="setFilter('broad',this)">Broad sends</button>
+        <button class="flt" onclick="setFilter('water',this)">Water</button>
+        <button class="flt" onclick="setFilter('vets',this)">Veterans</button>
+        <button class="flt" onclick="setFilter('econ',this)">Economy</button>
+        <button class="flt" onclick="setFilter('env',this)">Environment</button>
+        <button class="flt" onclick="setFilter('border',this)">Border</button>
+        <button class="flt" onclick="setFilter('pol',this)">Political</button>
+        <button class="flt" onclick="setFilter('bio',this)">Bio/Lifestyle</button>
+        <button class="flt flt-fresh" onclick="setStatusFilter('fresh',this)">🟢 Recent</button>
+        <button class="flt flt-warm" onclick="setStatusFilter('warm',this)">🟡 Needs attention</button>
+        <button class="flt flt-cold" onclick="setStatusFilter('cold',this)">🔴 Overdue</button>
+      </div>
+      <div class="results-ct" id="list-count"></div>
+    </div>
+    <div class="list-grid" id="list-grid"></div>
+  </div>
+
+  <!-- TAB 2: SEND MATRIX -->
+  <div id="tab-matrix" class="tab-panel">
+    <p class="matrix-intro">Use this matrix when planning a send. <strong style="color:var(--text)">Bold primary lists</strong> are the core audience. Secondary lists expand reach. Scenarios marked <span style="color:var(--green);font-weight:800;font-size:11px">● GROUNDED</span> are based on actual send patterns from your 2025–2026 blog archive.</p>
+    <div class="matrix-grid" id="matrix-grid"></div>
+  </div>
+
+  <!-- TAB 3: OUTREACH TRACKER -->
+  <div id="tab-tracker" class="tab-panel">
+    <p class="tracker-intro">Send counts and last subjects are pulled from your 2025–2026 blog docs. Heat bars show recency — green ≤30 days, gold 30–90 days, red 90+ days or no tracked sends.</p>
+    <div class="tracker-table-wrap">
+      <table class="tracker-table">
+        <thead>
+          <tr>
+            <th onclick="sortTracker('code')">Code ↕</th>
+            <th onclick="sortTracker('name')">List name ↕</th>
+            <th onclick="sortTracker('size')" style="text-align:right">Size ↕</th>
+            <th>Category</th>
+            <th onclick="sortTracker('sends')">Sends (25–26) ↕</th>
+            <th>Last send &amp; subject</th>
+            <th>Recency</th>
+          </tr>
+        </thead>
+        <tbody id="tracker-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
+  <div class="footer-text">Send data: 279 docs · 2025–2026 archive</div>
+</footer>
+
+<script>
+document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+// ── REAL SEND HISTORY from 279 blog docs ──
+const SEND_HISTORY = {
+  "POL-R":    {count:37, lastDate:"Mar 24, 2026", lastSubject:"PBI? Trump International.", recent:[{date:"Sep 5, 2025",subject:"America's law enforcement officers are being hamstrung"},{date:"Feb 13, 2026",subject:"For you ❤️"},{date:"Feb 24, 2026",subject:"Today's the day!"},{date:"Mar 17, 2026",subject:"Pass the SAVE America Act now"},{date:"Mar 24, 2026",subject:"PBI? Trump International."}]},
+  "VETS":     {count:12, lastDate:"Mar 4, 2026",  lastSubject:"We must do more to honor our fallen heroes.", recent:[{date:"Jun 27, 2025",subject:"It's National PTSD Awareness Day"},{date:"Jul 17, 2025",subject:"This one's for the troops"},{date:"Sep 16, 2025",subject:"PASSED: Servicemember Residence Protection Act"},{date:"Jan 21, 2026",subject:"PASSED: Veteran Scam and Fraud Evasion Act"},{date:"Mar 4, 2026",subject:"We must do more to honor our fallen heroes."}]},
+  "NR":       {count:12, lastDate:"Feb 27, 2026", lastSubject:"My '26 water infrastructure priorities", recent:[{date:"Jul 25, 2025",subject:"Week In Review: Protecting Florida's Water"},{date:"Sep 10, 2025",subject:"ICYMI: My Discussion with the Army Corps"},{date:"Jan 6, 2026",subject:"Clean water priorities for 2026"},{date:"Feb 9, 2026",subject:"More tools for our clean water toolbox"},{date:"Feb 27, 2026",subject:"My '26 water infrastructure priorities"}]},
+  "ENV":      {count:11, lastDate:"Mar 26, 2026", lastSubject:"A win for America's waterways", recent:[{date:"Jul 18, 2025",subject:"Shark Week in FL21!"},{date:"Sep 22, 2025",subject:"It's National Estuaries Week"},{date:"Feb 9, 2026",subject:"More tools for our clean water toolbox"},{date:"Mar 26, 2026",subject:"A win for America's waterways"}]},
+  "EMAIL.OPTIN":{count:10, lastDate:"Mar 23, 2026",lastSubject:"Big tax refund? I want to know.", recent:[{date:"Mar 31, 2025",subject:"Who do you want to see?"},{date:"Sep 19, 2025",subject:"15 Years of Alive Day"},{date:"Jan 29, 2026",subject:"Cold weather safety & shelter resources"},{date:"Mar 3, 2026",subject:"Freeze recovery for FL farmers"},{date:"Mar 23, 2026",subject:"Big tax refund? I want to know."}]},
+  "SAFE":     {count:7,  lastDate:"Apr 7, 2026",  lastSubject:"High surf warning—know before you go.", recent:[{date:"Feb 19, 2025",subject:"A stronger America"},{date:"Mar 10, 2025",subject:"The message is clear: Leave now"},{date:"Mar 2, 2026",subject:"Fund Homeland Security"},{date:"Mar 18, 2026",subject:"BREAKING: Dalilah's Law Advances"},{date:"Apr 7, 2026",subject:"High surf warning—know before you go."}]},
+  "DEF":      {count:5,  lastDate:"Sep 12, 2025", lastSubject:"Supporting the warfighter through the NDAA", recent:[{date:"Jul 15, 2025",subject:"My amendments for our service members"},{date:"Jul 17, 2025",subject:"This one's for the troops"},{date:"Jul 24, 2025",subject:"PASSED: Coast Guard Authorization Act"},{date:"Sep 12, 2025",subject:"Supporting the warfighter through the NDAA"}]},
+  "HEA":      {count:4,  lastDate:"Aug 25, 2025", lastSubject:"We're strengthening Medicaid", recent:[{date:"Jun 4, 2025",subject:"Fighting back against the opioid epidemic"},{date:"Jul 16, 2025",subject:"Today we honor…"},{date:"Aug 25, 2025",subject:"We're strengthening Medicaid"}]},
+  "ECON":     {count:4,  lastDate:"Jan 14, 2026", lastSubject:"PASSED: Save Local Business Act", recent:[{date:"May 8, 2025",subject:"It's Small Business Week!"},{date:"Aug 28, 2025",subject:"Taxes and the deficit: the record"},{date:"Nov 29, 2025",subject:"It's Small Business Saturday!"},{date:"Jan 14, 2026",subject:"PASSED: Save Local Business Act"}]},
+  "GOV":      {count:4,  lastDate:"Oct 2025",     lastSubject:"ICYMI: Our message to Senate Dems", recent:[{date:"Feb 13, 2025",subject:"Week in Review: The Fight Continues"},{date:"Oct 16, 2025",subject:"ICYMI: Our message to Senate Dems"}]},
+  "EDU":      {count:3,  lastDate:"Mar 5, 2026",  lastSubject:"PASSED: Expanding opportunities for homeschoolers", recent:[{date:"Jun 3, 2025",subject:"Getting graduates jobs and businesses staffed"},{date:"Jul 2, 2025",subject:"What they're saying on the Uniform School Mapping Act"},{date:"Mar 5, 2026",subject:"PASSED: Expanding opportunities for homeschoolers"}]},
+  "AN":       {count:3,  lastDate:"Mar 30, 2026", lastSubject:"The FDA is finally moving away from animal testing", recent:[{date:"May 6, 2025",subject:"The lab doors are CLOSED."},{date:"May 28, 2025",subject:"The end of animal testing"},{date:"Mar 30, 2026",subject:"The FDA is finally moving away from animal testing"}]},
+  "BIO.VETERAN":{count:3,lastDate:"Jul 17, 2025", lastSubject:"This one's for the troops", recent:[{date:"May 27, 2025",subject:"Fox News: The True Meaning of 'Back the Blue'"},{date:"Jul 15, 2025",subject:"My amendments for our service members"},{date:"Jul 17, 2025",subject:"This one's for the troops"}]},
+  "TRANS":    {count:3,  lastDate:"Mar 4, 2026",  lastSubject:"More jobs, safer roads, less negligence.", recent:[{date:"Feb 5, 2025",subject:"Get America Moving Again"},{date:"Sep 8, 2025",subject:"PASSED: The Transport Jobs Act"},{date:"Mar 4, 2026",subject:"More jobs, safer roads, less negligence."}]},
+  "PRO.LIFE": {count:2,  lastDate:"Jan 23, 2026", lastSubject:"Fighting for life—every step of the way", recent:[{date:"Jan 24, 2025",subject:"Defending Life"},{date:"Jan 23, 2026",subject:"Fighting for life—every step of the way"}]},
+  "BRIGHTLINE":{count:1, lastDate:"Feb 23, 2026", lastSubject:"ICYMI: Brightline & FEC must be held accountable", recent:[{date:"Feb 23, 2026",subject:"ICYMI: Brightline & FEC must be held accountable"}]},
+  "AGR":      {count:1,  lastDate:"Feb 19, 2026", lastSubject:"Freeze support for FL's farmers", recent:[{date:"Feb 19, 2026",subject:"Freeze support for FL's farmers"}]},
+  "ISRAEL":   {count:1,  lastDate:"Jan 27, 2025", lastSubject:"Remembering the darkest moment in history", recent:[{date:"Jan 27, 2025",subject:"Remembering the darkest moment in history"}]},
+};
+
+// ── LIST DATA ──
+const LISTS = [
+  {code:'EMAIL.OPTIN',  name:'Email Opt-In (Newsletter)',           size:119130, cat:'broad',  note:'Full opt-in subscriber list — used for broad/general sends and surveys'},
+  {code:'NR',           name:"Florida's Natural Resources",         size:145087, cat:'broad',  note:'Largest single list. Water, environment, outdoors. Core FL-21 audience. Always anchor for water content'},
+  {code:'POL-R',        name:'Leans Right',                         size:80327,  cat:'broad',  note:'Most-used list by far — 37 sends. Right-leaning subscribers; anchor for partisan and conference messaging'},
+  {code:'POL-L',        name:'Leans Left',                          size:65308,  cat:'broad',  note:'Use for bipartisan wins, district services, constituent-facing non-partisan content'},
+  {code:'ENV',          name:'Protecting Environment',               size:83817,  cat:'env',    note:'11 tracked sends — Everglades, water quality, wildlife, conservation'},
+  {code:'BIO.FISHERMAN',name:'Fishermen',                           size:86560,  cat:'water',  note:'Huge list, heavily relevant to WRDA, toxic discharges, IRL. Underused — consider pairing with NR+ENV on water sends'},
+  {code:'BIO.OUTDOORS', name:'Outdoors (Camping/Hiking)',            size:96841,  cat:'water',  note:'Near-100K list with no tracked sends. Significant blind spot for water/conservation content'},
+  {code:'BIO.WATERSPORTS',name:'Water Sports Enthusiasts',          size:4101,   cat:'water',  note:'Brightline bridge, St. Lucie access, waterway issues'},
+  {code:'BIO.BOATER-REC',name:'Recreational Boaters',              size:3791,   cat:'water',  note:'Brightline bridge schedule, waterway access'},
+  {code:'BRIGHTLINE',   name:'Opposed to Brightline',               size:732,    cat:'water',  note:'Small but motivated — always include for Brightline updates. 1 tracked send'},
+  {code:'AGR',          name:'Supporting Agriculture',              size:21258,  cat:'env',    note:'1 tracked send (Feb 2026 freeze). Relevant for water runoff, rural economy, WRDA'},
+  {code:'VETS',         name:'Veterans Issues',                     size:86258,  cat:'vets',   note:'12 tracked sends — Medal of Sacrifice, Final Honors, VEA, OBBB veterans. Core veterans list'},
+  {code:'BIO.VETERAN',  name:'Is a Veteran',                        size:30986,  cat:'vets',   note:'3 tracked sends — self-identified veterans; personal/identity angle vs. policy'},
+  {code:'DEF',          name:'National Defense',                    size:55156,  cat:'vets',   note:'5 tracked sends — NDAA, USCG, military policy, defense spending'},
+  {code:'ECON',         name:'Jobs & Economy',                      size:49480,  cat:'econ',   note:'4 tracked sends — small business, tariffs, OBBB workers angle'},
+  {code:'TAX',          name:'Tax/Government Spending',             size:45794,  cat:'econ',   note:'No tracked sends despite OBBB tax content being a major 2025 theme. Significant gap'},
+  {code:'SEN',          name:'Seniors Issues',                      size:40074,  cat:'econ',   note:'No tracked sends. Critical gap — OBBB senior deduction is a major messaging asset'},
+  {code:'GOV',          name:'Government Reform/Accountability',    size:39297,  cat:'econ',   note:'4 tracked sends — DOGE, shutdown, government waste'},
+  {code:'HEA',          name:'Healthcare Reform',                   size:60202,  cat:'econ',   note:'4 tracked sends through Aug 2025, none since. Medicaid, OBBB healthcare angle'},
+  {code:'IMM',          name:'Immigration Reform',                  size:71575,  cat:'border',  note:'1 tracked send (Laken Riley, Jan 2025). 71K subscribers underutilized for border/Dalilah content'},
+  {code:'SAFE',         name:'Community Safety',                    size:46410,  cat:'border',  note:'7 tracked sends — Medal of Sacrifice, Dalilah, DHS. Most active border-adjacent list'},
+  {code:'PRO.WALL',     name:'Support Border Wall',                 size:17595,  cat:'border',  note:'No tracked sends — aligned with OBBB border provisions'},
+  {code:'ANTI.AMNESTY', name:'Opposes Pathway to Citizenship',     size:51267,  cat:'border',  note:'No tracked sends — large list, OBBB/border relevant'},
+  {code:'BIO.PARENT',   name:'Parents',                             size:133189, cat:'bio',    note:'133K subscribers — no tracked sends. Massive gap for school choice, OBBB family angle, education'},
+  {code:'AN',           name:'Animal Owners',                       size:87167,  cat:'bio',    note:'3 tracked sends — FDA animal testing blogs. Good for Everglades/wildlife crossover'},
+  {code:'AN.DOG',       name:'Dog Owners',                          size:47131,  cat:'bio',    note:'No tracked sends — subset of AN. Pets, animal welfare content'},
+  {code:'BIO.GUN',      name:'Gun Owners',                          size:60997,  cat:'bio',    note:'No tracked sends — 2A content opportunity'},
+  {code:'GUN',          name:'Upholding 2nd Amendment',             size:38008,  cat:'bio',    note:'No tracked sends — issue-based 2A list'},
+  {code:'BIO.HUNTER',   name:'Hunters',                             size:49676,  cat:'bio',    note:'No tracked sends — outdoors, conservation, NR crossover'},
+  {code:'EDU',          name:'Education',                           size:43004,  cat:'pol',    note:'3 tracked sends — school choice, CTE, homeschoolers'},
+  {code:'PRO.LIFE',     name:'Pro Life',                            size:22746,  cat:'pol',    note:'2 tracked sends — use for aligned legislation only'},
+  {code:'ISRAEL',       name:'Israel',                              size:48984,  cat:'pol',    note:'1 tracked send (Holocaust Remembrance). Foreign affairs team handles most Israel content'},
+  {code:'TRANS',        name:'Transportation & Infrastructure',     size:28595,  cat:'water',  note:'3 tracked sends — Brightline, T&I, jobs. Useful for Dalilah/CDL and WRDA'},
+];
+
+// ── STATUS LOGIC (based on real send data) ──
+function getStatus(code) {
+  const h = SEND_HISTORY[code];
+  if (!h) return 'cold';
+  const last = h.lastDate;
+  if (!last) return 'cold';
+  // Parse approximate recency
+  if (last.includes('Apr 2026') || last.includes('Mar 2026') || (last.includes('Feb 2026') && parseInt(last) > 15)) return 'fresh';
+  if (last.includes('Feb 2026') || last.includes('Jan 2026') || last.includes('Dec 2025') || last.includes('Nov 2025')) return 'warm';
+  return 'cold';
+}
+
+function maxSends() { return Math.max(...LISTS.map(l => (SEND_HISTORY[l.code]||{count:0}).count)); }
+
+// ── RENDER LISTS ──
+let activeFilter = 'all';
+let activeStatusFilter = null;
+const MAX_SENDS = 37; // POL-R
+
+function formatN(n){return n.toLocaleString()}
+
+function renderLists() {
+  const q = document.getElementById('list-search').value.toLowerCase();
+  const filtered = LISTS.filter(l => {
+    const catOk = activeFilter === 'all' || l.cat === activeFilter;
+    const h = SEND_HISTORY[l.code];
+    const status = getStatus(l.code);
+    const statusOk = !activeStatusFilter || status === activeStatusFilter;
+    const qOk = !q || l.code.toLowerCase().includes(q) || l.name.toLowerCase().includes(q) || (l.note||'').toLowerCase().includes(q);
+    return catOk && statusOk && qOk;
+  });
+  document.getElementById('list-count').textContent = `${filtered.length} lists`;
+
+  document.getElementById('list-grid').innerHTML = filtered.map(l => {
+    const h = SEND_HISTORY[l.code] || {count:0, lastDate:'No tracked sends', lastSubject:'', recent:[]};
+    const status = getStatus(l.code);
+    const fillW = Math.max(4, Math.round((h.count / MAX_SENDS) * 100));
+    const fillColor = h.count >= 10 ? 'var(--green)' : h.count >= 3 ? 'var(--gold)' : h.count >= 1 ? 'var(--sky)' : 'var(--border-dim)';
+    const recentHTML = h.recent.length ? h.recent.slice(-3).map(r =>
+      `<div class="recent-send-item"><span class="rsi-date">${r.date}</span><span class="rsi-subject">${r.subject}</span></div>`
+    ).join('') : '';
+
+    return `<div class="list-card cat-${l.cat}" data-cat="${l.cat}">
+      <div class="list-card-top">
+        <div>
+          <div class="list-code">${l.code}</div>
+          <div class="list-name">${l.name}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="list-size">${formatN(l.size)}</div>
+          <div class="list-size-label">subscribers</div>
+        </div>
+      </div>
+      <div class="list-note">${l.note}</div>
+      <div class="send-bar-wrap">
+        <div class="send-bar"><div style="width:${fillW}%;background:${fillColor};height:100%;border-radius:2px"></div></div>
+        <span class="send-count-label">${h.count} send${h.count!==1?'s':''} tracked</span>
+      </div>
+      ${recentHTML ? `<div class="recent-sends" style="display:block;margin-top:8px">${recentHTML}</div>` : ''}
+      <div class="list-card-footer">
+        <span class="status-badge status-${status}">${status==='fresh'?'● Recent':status==='warm'?'● Needs attention':'● Overdue'}</span>
+        <span class="last-hit">${h.lastDate}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(f, btn) {
+  activeFilter = f; activeStatusFilter = null;
+  document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLists();
+}
+function setStatusFilter(s, btn) {
+  if (activeStatusFilter === s) {
+    activeStatusFilter = null;
+    document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
+    document.querySelector('.flt:first-child').classList.add('active');
+  } else {
+    activeStatusFilter = s; activeFilter = 'all';
+    document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  renderLists();
+}
+
+// ── MATRIX DATA ──
+const MATRIX = [
+  {topic:'Water / WRDA / Everglades', reach:'~350K', grounded:true,
+   desc:'Toxic discharges, WRDA 2026, EAA Reservoir, algal blooms, Everglades restoration.',
+   primary:[{code:'NR',size:'145K'},{code:'ENV',size:'84K'},{code:'BIO.FISHERMAN',size:'87K'}],
+   secondary:[{code:'BIO.OUTDOORS',size:'97K'},{code:'BIO.BOATER-REC',size:'4K'},{code:'TRANS',size:'29K'},{code:'AGR',size:'21K'},{code:'EMAIL.OPTIN',size:'119K'}],
+   note:'NR+ENV is your proven pairing (8 co-sends tracked). BIO.FISHERMAN at 86K is your biggest untapped list for water content — zero tracked sends despite being directly impacted by every discharge event.'},
+  {topic:'Brightline / FEC / St. Lucie Bridge', reach:'~180K', grounded:true,
+   desc:'Bridge schedule, $208.5M federal grant ask, taxpayer accountability, FEC fines.',
+   primary:[{code:'BRIGHTLINE',size:'732'},{code:'NR',size:'145K'},{code:'TRANS',size:'29K'}],
+   secondary:[{code:'BIO.BOATER-REC',size:'4K'},{code:'BIO.WATERSPORTS',size:'4K'},{code:'ENV',size:'84K'}],
+   note:'BRIGHTLINE list is small but the most motivated — always include it. Feb 2026 was the only tracked send to this list in 2 years.'},
+  {topic:'Veterans / Military legislation', reach:'~170K', grounded:true,
+   desc:'Medal of Sacrifice, Final Honors Act, Veterans Equal Access Act, NDAA amendments.',
+   primary:[{code:'VETS',size:'86K'},{code:'BIO.VETERAN',size:'31K'},{code:'DEF',size:'55K'}],
+   secondary:[{code:'POL-R',size:'80K'},{code:'SAFE',size:'46K'}],
+   note:'VETS+DEF+BIO.VETERAN is your proven veterans triple send (July 2025 NDAA blog). POL-R is a natural add for legislation milestones.'},
+  {topic:'One Big Beautiful Bill — General', reach:'~230K', grounded:true,
+   desc:'Overall OBBB passage, spending cuts, border provisions, energy deregulation.',
+   primary:[{code:'POL-R',size:'80K'},{code:'ECON',size:'49K'},{code:'EMAIL.OPTIN',size:'119K'}],
+   secondary:[{code:'GOV',size:'39K'},{code:'TAX',size:'46K'}],
+   note:'POL-R carried all OBBB sends in your archive. TAX (46K) and SEN (40K) were never used for OBBB content — significant missed opportunities.'},
+  {topic:'OBBB — Seniors angle', reach:'~100K', grounded:false,
+   desc:'$6K/$12K senior deduction, Social Security relief, "Working Families Tax Cuts" branding.',
+   primary:[{code:'SEN',size:'40K'},{code:'TAX',size:'46K'}],
+   secondary:[{code:'HEA',size:'60K'},{code:'EMAIL.OPTIN',size:'119K'}],
+   note:'SEN (40K seniors) has ZERO tracked sends despite senior content being one of your most-produced topics in Aug–Mar. This is your single biggest audience gap.'},
+  {topic:'OBBB — Families / Workers / Tips & Overtime', reach:'~280K', grounded:false,
+   desc:'No tax on tips, no tax on overtime, standard deduction boost, school choice, child accounts.',
+   primary:[{code:'BIO.PARENT',size:'133K'},{code:'ECON',size:'49K'},{code:'TAX',size:'46K'}],
+   secondary:[{code:'EDU',size:'43K'},{code:'EMAIL.OPTIN',size:'119K'}],
+   note:'BIO.PARENT at 133K has zero tracked sends. These blogs were sent to POL-R only — families-first framing is underserving the largest available audience.'},
+  {topic:'Law Enforcement / Public Safety', reach:'~130K', grounded:true,
+   desc:'Medal of Sacrifice, Dalilah\'s Law, law enforcement appreciation, community safety.',
+   primary:[{code:'SAFE',size:'46K'},{code:'POL-R',size:'80K'}],
+   secondary:[{code:'VETS',size:'86K'},{code:'IMM',size:'72K'}],
+   note:'SAFE was used for Medal of Sacrifice and Dalilah sends. IMM (71K) is an underutilized add for Dalilah\'s Law — the CDL/illegal alien angle connects directly.'},
+  {topic:'Border Security / Immigration', reach:'~180K', grounded:false,
+   desc:'OBBB border provisions, Dalilah\'s Law, DHS funding, enforcement messaging.',
+   primary:[{code:'IMM',size:'72K'},{code:'SAFE',size:'46K'},{code:'PRO.WALL',size:'18K'}],
+   secondary:[{code:'ANTI.AMNESTY',size:'51K'},{code:'POL-R',size:'80K'}],
+   note:'IMM (71K) had only 1 tracked send in 2 years. Border is a major messaging theme — this list is being left on the table.'},
+  {topic:'Animals / Wildlife / Outdoors', reach:'~280K', grounded:true,
+   desc:'FDA animal testing, Everglades wildlife, manatees, conservation, pets.',
+   primary:[{code:'AN',size:'87K'},{code:'BIO.FISHERMAN',size:'87K'},{code:'BIO.OUTDOORS',size:'97K'}],
+   secondary:[{code:'BIO.HUNTER',size:'50K'},{code:'AN.DOG',size:'47K'},{code:'NR',size:'145K'}],
+   note:'AN had 3 sends for FDA animal testing blogs. BIO.OUTDOORS (97K) and BIO.HUNTER (50K) have zero sends — strong candidates for Everglades and wildlife content.'},
+  {topic:'Government Reform / DOGE', reach:'~120K', grounded:true,
+   desc:'DOGE wins, government waste, transparency, spending accountability.',
+   primary:[{code:'GOV',size:'39K'},{code:'POL-R',size:'80K'}],
+   secondary:[{code:'TAX',size:'46K'},{code:'ECON',size:'49K'}],
+   note:'4 GOV sends tracked. POL-R is the natural anchor for DOGE messaging.'},
+  {topic:'Education / School Choice', reach:'~180K', grounded:true,
+   desc:'School choice, CTE, homeschoolers, Uniform School Mapping Act.',
+   primary:[{code:'EDU',size:'43K'},{code:'BIO.PARENT',size:'133K'}],
+   secondary:[{code:'POL-R',size:'80K'},{code:'EMAIL.OPTIN',size:'119K'}],
+   note:'3 EDU sends tracked, but BIO.PARENT (133K) was never used. Education content sent to EDU alone leaves the biggest parenting audience untouched.'},
+];
+
+function renderMatrix() {
+  document.getElementById('matrix-grid').innerHTML = MATRIX.map((m,i) => `
+    <div class="matrix-row" id="mrow-${i}">
+      <div class="matrix-row-header" onclick="toggleMatrix(${i})">
+        <div class="matrix-topic">${m.topic}</div>
+        ${m.grounded ? '<span class="matrix-grounded">● Grounded</span>' : ''}
+        <div class="matrix-reach">${m.reach}</div>
+        <div class="matrix-arrow">›</div>
+      </div>
+      <div class="matrix-body">
+        <div class="matrix-desc">${m.desc}</div>
+        <div class="matrix-section-label">Primary lists</div>
+        <div class="matrix-lists">${m.primary.map(t=>`<div class="matrix-tag matrix-primary"><span class="mtag-code">${t.code}</span><span class="mtag-size">${t.size}</span></div>`).join('')}</div>
+        <div class="matrix-section-label">Secondary / expand reach</div>
+        <div class="matrix-lists">${m.secondary.map(t=>`<div class="matrix-tag"><span class="mtag-code">${t.code}</span><span class="mtag-size">${t.size}</span></div>`).join('')}</div>
+        <div class="matrix-note">${m.note}</div>
+      </div>
+    </div>`).join('');
+}
+function toggleMatrix(i) { document.getElementById('mrow-'+i).classList.toggle('open'); }
+
+// ── TRACKER ──
+let trackerSort = {col:'sends', asc:false};
+
+function daysSince(dateStr) {
+  if (!dateStr || dateStr.includes('No tracked') || dateStr.includes('Unknown')) return 999;
+  const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  const m = dateStr.match(/(\w+)\s+(\d+)?,?\s*(\d{4})/);
+  if (!m) return 300;
+  const d = new Date(parseInt(m[3]), months[m[1]]||0, parseInt(m[2])||1);
+  return Math.floor((Date.now() - d) / 86400000);
+}
+function heatColor(days) { return days<=30?'var(--green)':days<=90?'var(--gold)':'var(--red-medium)'; }
+function heatWidth(days) { return days>=999?'4%':Math.max(4,Math.min(100,Math.round(100-(days/180)*100)))+'%'; }
+function catLabel(c) { return {broad:'Broad',water:'Water',env:'Environment',vets:'Veterans',econ:'Economy',border:'Border',pol:'Political',bio:'Bio/Lifestyle'}[c]||c; }
+
+function renderTracker() {
+  let rows = [...LISTS];
+  rows.sort((a,b) => {
+    let av, bv;
+    if (trackerSort.col==='sends') { av=(SEND_HISTORY[a.code]||{count:0}).count; bv=(SEND_HISTORY[b.code]||{count:0}).count; }
+    else if (trackerSort.col==='size') { av=a.size; bv=b.size; }
+    else if (trackerSort.col==='code') { av=a.code; bv=b.code; }
+    else { av=a.name; bv=b.name; }
+    if (typeof av==='string') return trackerSort.asc?av.localeCompare(bv):bv.localeCompare(av);
+    return trackerSort.asc?av-bv:bv-av;
+  });
+
+  document.getElementById('tracker-tbody').innerHTML = rows.map(l => {
+    const h = SEND_HISTORY[l.code]||{count:0,lastDate:'No tracked sends',lastSubject:'',recent:[]};
+    const days = daysSince(h.lastDate);
+    const sendClass = h.count>=10?'sends-high':h.count===0?'sends-none':'';
+    return `<tr>
+      <td class="tracker-code">${l.code}</td>
+      <td class="tracker-name">${l.name}</td>
+      <td class="tracker-size">${formatN(l.size)}</td>
+      <td><span class="cat-pill">${catLabel(l.cat)}</span></td>
+      <td><span class="sends-badge ${sendClass}">${h.count} send${h.count!==1?'s':''}</span></td>
+      <td class="last-send-cell">${h.lastDate}<span class="last-subject">${h.lastSubject||''}</span></td>
+      <td><div class="heat-bar"><div class="heat-fill" style="width:${heatWidth(days)};background:${heatColor(days)}"></div></div></td>
+    </tr>`;
+  }).join('');
+}
+function sortTracker(col) {
+  if (trackerSort.col===col) trackerSort.asc=!trackerSort.asc;
+  else { trackerSort.col=col; trackerSort.asc=false; }
+  renderTracker();
+}
+
+// ── TABS ──
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── INIT ──
+renderLists();
+renderMatrix();
+renderTracker();
+</script>
+</body>
+</html>
