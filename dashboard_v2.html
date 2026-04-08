@@ -184,6 +184,24 @@ main{padding:28px 32px 48px;max-width:1440px;margin:0 auto}
 footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
 .footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
 .footer-text span{color:var(--gold)}
+
+/* ── Press Clips overlay ── */
+.clips-date-group { margin-bottom: 32px; }
+.clips-date-label { font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-dim); }
+.clips-section-label { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin: 18px 0 10px; }
+.clip-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; background: var(--navy-card); border: 1px solid var(--border-dim); border-radius: 5px; margin-bottom: 8px; transition: border-color .15s, background .15s; cursor: pointer; text-decoration: none; }
+.clip-row:hover { border-color: var(--border); background: var(--navy-hover); }
+.clip-outlet-badge { font-size: 8px; font-weight: 900; letter-spacing: .8px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+.badge-featured { background: rgba(139,0,0,.15); color: #d04040; }
+.badge-national { background: rgba(184,150,62,.12); color: var(--gold-lt); }
+.badge-local    { background: rgba(107,174,214,.12); color: var(--sky); }
+.clip-content { flex: 1; min-width: 0; }
+.clip-headline { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 3px; }
+.clip-outlet { font-size: 10px; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; }
+.clip-snippet { font-size: 11px; color: var(--text-sec); line-height: 1.45; }
+.clips-empty { color: var(--text-dim); font-size: 13px; padding: 24px 0; font-style: italic; }
+.clips-loading { display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-size: 12px; padding: 20px 0; }
+
 </style>
 </head>
 <body>
@@ -361,11 +379,18 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
       </div>
     </div>
 
-    <div class="tile tile-neutral" style="opacity:0.35;cursor:default">
+    <div class="tile tile-vote" onclick="openOverlay('clips')">
       <div class="tile-face">
-        <div class="tile-icon">Coming soon</div>
-        <div class="tile-name">—</div>
-        <div class="tile-sub"></div>
+        <div class="tile-icon">Daily · Office-wide</div>
+        <div class="tile-name">Press Clips</div>
+        <div class="tile-sub" id="clips-tile-sub">Today's digest</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label" id="clips-tile-label">Latest clips</div>
+        <div id="clips-tile-preview">
+          <div class="preview-item"><span class="preview-dot" style="background:var(--crimson-lt)"></span><div class="preview-text">Loading clips…</div></div>
+        </div>
+        <div class="tile-click-hint">Open full digest →</div>
       </div>
     </div>
 
@@ -405,13 +430,13 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
 </div>
 
 <div class="overlay" id="ov-clips">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('clips')">Back</button><div class="overlay-title">Rapid Response</div><div class="overlay-badge">12 items</div></div>
-  <div class="overlay-body">
-    <div class="ov-clip"><div class="ov-urgent-dot"></div><span class="ov-clip-tag tag-wh" style="background:rgba(107,174,214,.15);color:var(--sky)">Tweet</span><div><div class="ov-clip-text">@SpeakerJohnson on tariffs: "We stand with the President"</div><div class="ov-clip-meta">Sarah · 9:14am · URGENT</div></div></div>
-    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag" style="background:rgba(139,0,0,.15);color:#d04040">Clip</span><div><div class="ov-clip-text">Mast on Fox &amp; Friends — trade/tariff interview segment</div><div class="ov-clip-meta">Marcus · 8:30am</div></div></div>
-    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag tag-wh">News</span><div><div class="ov-clip-text">Palm Beach Post: Local shipyard adds 200 jobs amid tariff boom</div><div class="ov-clip-meta">Jamie · 7:55am</div></div></div>
-    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag" style="background:rgba(107,174,214,.15);color:var(--sky)">Tweet</span><div><div class="ov-clip-text">@RepMast floor speech on border security — 2.1k views</div><div class="ov-clip-meta">Sarah · Yesterday</div></div></div>
-    <div class="ov-clip"><div style="width:6px"></div><span class="ov-clip-tag tag-wh">News</span><div><div class="ov-clip-text">Politico: Ways &amp; Means advances reconciliation package</div><div class="ov-clip-meta">Marcus · Yesterday</div></div></div>
+  <div class="overlay-header">
+    <button class="overlay-back" onclick="closeOverlay('clips')">Back</button>
+    <div class="overlay-title">Press Clips</div>
+    <div class="overlay-badge" id="clips-badge">Loading…</div>
+  </div>
+  <div class="overlay-body" id="clips-body">
+    <div style="color:var(--text-dim);font-size:13px;padding:20px 0">Loading today's clips…</div>
   </div>
 </div>
 
@@ -626,6 +651,145 @@ const EVENTS={'2026-04-07':[{type:'wh',text:'EO: Maritime Dominance'},{type:'hea
 let calYear=now.getFullYear(),calMonth=now.getMonth();
 function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderBigCal()}
 function renderBigCal(){const label=new Date(calYear,calMonth,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});document.getElementById('cal-ov-label').textContent=label;document.getElementById('cal-ov-badge').textContent=label;const first=new Date(calYear,calMonth,1).getDay(),days=new Date(calYear,calMonth+1,0).getDate(),today=now.toISOString().slice(0,10);let h='';for(let i=0;i<first;i++)h+='<div class="big-cal-day empty"></div>';for(let d=1;d<=days;d++){const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,ev=EVENTS[ds]||[],isT=ds===today;let ev2=ev.map(e=>`<div class="big-cal-event bce-${e.type}">${e.text}</div>`).join('');h+=`<div class="big-cal-day${isT?' today':''}${ev.length?' has-events':''}"><div class="big-cal-num">${d}</div>${ev2}</div>`}document.getElementById('big-cal-days').innerHTML=h}
+
+// ── PRESS CLIPS ────────────────────────────────────────────
+const CLIPS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUhXu1o6z68hw9uY1nuAikdoTPswTPxgLcicD8rkz-xm_j_Al3N9U4EJMjtCiTonT0y-22QfS_8R2I/pub?output=csv';
+
+function parseCSV(text) {
+  const rows = [];
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+  for (let i = 1; i < lines.length; i++) {
+    // Handle quoted fields with commas inside
+    const fields = [];
+    let cur = '', inQ = false;
+    for (const ch of lines[i]) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { fields.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    fields.push(cur.trim());
+    if (fields.length >= 5 && fields[0]) {
+      const obj = {};
+      headers.forEach((h, j) => obj[h] = (fields[j] || '').replace(/^"|"$/g, ''));
+      rows.push(obj);
+    }
+  }
+  return rows;
+}
+
+function sectionBadgeClass(section) {
+  if (!section) return 'badge-national';
+  const s = section.toLowerCase();
+  if (s.includes('feature') || s.includes('mast') || s.includes('mention')) return 'badge-featured';
+  if (s.includes('local')) return 'badge-local';
+  return 'badge-national';
+}
+
+function renderClips(rows) {
+  const body = document.getElementById('clips-body');
+  const badge = document.getElementById('clips-badge');
+  if (!body) return;
+
+  if (!rows || rows.length === 0) {
+    body.innerHTML = '<div class="clips-empty">No clips found. Make sure the Apps Script is running and the sheet has data.</div>';
+    if (badge) badge.textContent = 'No clips';
+    return;
+  }
+
+  // Group by date, newest first
+  const byDate = {};
+  rows.forEach(r => {
+    const d = r.date || 'Unknown';
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(r);
+  });
+  const dates = Object.keys(byDate).sort().reverse();
+
+  if (badge) {
+    const latest = dates[0];
+    const count = byDate[latest]?.length || 0;
+    badge.textContent = `${latest} · ${count} clips`;
+  }
+
+  // Update tile preview with latest 3 headlines
+  const latestClips = byDate[dates[0]] || [];
+  const tilePreview = document.getElementById('clips-tile-preview');
+  const tileSub = document.getElementById('clips-tile-sub');
+  const tileLabel = document.getElementById('clips-tile-label');
+  if (tilePreview && latestClips.length) {
+    const dotColor = { Featured: 'var(--crimson-lt)', National: 'var(--gold)', Local: 'var(--sky)' };
+    tilePreview.innerHTML = latestClips.slice(0, 3).map(c =>
+      `<div class="preview-item"><span class="preview-dot" style="background:${dotColor[c.section]||'var(--gold)'}"></span><div class="preview-text">${(c.outlet||'')+': '+(c.headline||'').slice(0,60)}</div></div>`
+    ).join('');
+    if (tileSub) tileSub.textContent = `${dates[0]} · ${latestClips.length} clips`;
+    if (tileLabel) tileLabel.textContent = `${dates[0]}`;
+  }
+
+  // Render full overlay grouped by date → section
+  const SECTION_ORDER = ['Featured', 'National', 'Local'];
+  body.innerHTML = dates.map(date => {
+    const clips = byDate[date];
+    const bySection = {};
+    clips.forEach(c => {
+      const s = c.section || 'National';
+      if (!bySection[s]) bySection[s] = [];
+      bySection[s].push(c);
+    });
+
+    const dateLabel = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+    const sectionsHTML = SECTION_ORDER.filter(s => bySection[s]).map(section => {
+      const clipsHTML = bySection[section].map(c => {
+        const href = c.url || '#';
+        const snippet = c.snippet ? `<div class="clip-snippet">${c.snippet}</div>` : '';
+        return `<a class="clip-row" href="${href}" target="_blank" rel="noopener">
+          <span class="clip-outlet-badge ${sectionBadgeClass(section)}">${section}</span>
+          <div class="clip-content">
+            <div class="clip-outlet">${c.outlet || ''}</div>
+            <div class="clip-headline">${c.headline || ''}</div>
+            ${snippet}
+          </div>
+        </a>`;
+      }).join('');
+      return `<div class="clips-section-label">${section}</div>${clipsHTML}`;
+    }).join('');
+
+    return `<div class="clips-date-group"><div class="clips-date-label">${dateLabel}</div>${sectionsHTML}</div>`;
+  }).join('');
+}
+
+async function loadClips() {
+  const body = document.getElementById('clips-body');
+  if (body) body.innerHTML = '<div class="clips-loading">Loading clips…</div>';
+  try {
+    const res = await fetch(CLIPS_CSV + '&t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('Sheet fetch failed');
+    const text = await res.text();
+    // If sheet is empty or just headers, show setup message
+    const lines = text.trim().split('\n');
+    if (lines.length < 2) {
+      if (body) body.innerHTML = '<div class="clips-empty">No clips yet — paste the Apps Script into your Google Sheet and set the trigger to start auto-populating.</div>';
+      return;
+    }
+    const rows = parseCSV(text);
+    renderClips(rows);
+  } catch(e) {
+    if (body) body.innerHTML = '<div class="clips-empty">Could not load clips. Check that the sheet is published and the Apps Script is running.</div>';
+  }
+}
+
+// Load clips when overlay opens
+const origOpenOverlay = window.openOverlay;
+window.openOverlay = function(id) {
+  origOpenOverlay(id);
+  if (id === 'clips') loadClips();
+};
+
+// Pre-load tile preview on page load
+loadClips();
+// ── END PRESS CLIPS ─────────────────────────────────────────
+
 </script>
 </body>
 </html>
