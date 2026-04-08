@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FL-21 District · Pluribus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<style>
+  :root {
+    --navy: #0a1628;
+    --royal: #0d2080;
+    --crimson: #8b0000;
+    --gold: #b8963e;
+    --gold-light: #c9a84c;
+    --sky: #6baed6;
+    --white: #ffffff;
+    --off-white: #f5f3ee;
+    --text-muted: #8a8a7a;
+    --border: rgba(184,150,62,0.2);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Libre Franklin', sans-serif; background: var(--off-white); color: var(--navy); min-height: 100vh; }
+
+  /* TICKER */
+  .ticker-bar { background: var(--crimson); color: var(--white); padding: 7px 0; overflow: hidden; position: relative; }
+  .ticker-bar::before { content: 'LIVE'; position: absolute; left: 0; top: 0; bottom: 0; background: var(--gold); color: var(--navy); font-size: 10px; font-weight: 800; letter-spacing: 1.5px; padding: 0 14px; display: flex; align-items: center; z-index: 2; }
+  .ticker-wrap { display: flex; animation: ticker 40s linear infinite; width: max-content; padding-left: 80px; }
+  .ticker-item { font-size: 12px; font-weight: 600; letter-spacing: 0.3px; white-space: nowrap; padding-right: 60px; }
+  .ticker-item::after { content: '◆'; margin-left: 60px; color: var(--gold-light); }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* NAV */
+  nav { background: var(--navy); border-bottom: 3px solid var(--gold); padding: 0 32px; display: flex; align-items: stretch; position: sticky; top: 0; z-index: 1000; }
+  .nav-brand { display: flex; align-items: center; gap: 14px; padding: 14px 0; margin-right: 40px; }
+  .nav-seal { width: 38px; height: 38px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: var(--navy); font-family: 'Libre Franklin', sans-serif; flex-shrink: 0; }
+  .nav-title { font-size: 15px; font-weight: 800; color: var(--white); letter-spacing: 0.5px; line-height: 1.1; }
+  .nav-subtitle { font-size: 10px; color: var(--gold-light); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .nav-links { display: flex; list-style: none; gap: 0; flex: 1; }
+  .nav-links li a { display: flex; align-items: center; padding: 0 18px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; height: 100%; border-bottom: 3px solid transparent; margin-bottom: -3px; transition: color 0.2s, border-color 0.2s; }
+  .nav-links li a:hover, .nav-links li a.active { color: var(--white); border-bottom-color: var(--gold); }
+  .nav-links li a.active { color: var(--gold-light); }
+
+  /* PAGE HEADER */
+  .page-header { background: var(--navy); padding: 28px 32px 24px; border-bottom: 1px solid rgba(184,150,62,0.3); }
+  .page-header-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; }
+  .page-eyebrow { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .page-title { font-size: 28px; font-weight: 900; color: var(--white); line-height: 1; }
+  .page-title span { font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic; color: var(--gold-light); font-size: 32px; }
+  .page-meta { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 600; text-align: right; line-height: 1.8; }
+  .page-meta strong { color: var(--gold-light); }
+
+  /* MAIN */
+  main { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
+
+  /* SECTION LABEL */
+  .section-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* LAYOUT */
+  .district-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; margin-bottom: 20px; }
+
+  /* MAP CARD */
+  .map-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .map-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .map-title { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); }
+  .map-controls { display: flex; gap: 8px; }
+  .map-btn { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 3px; border: 1px solid var(--border); background: transparent; color: var(--navy); cursor: pointer; transition: all 0.15s; font-family: 'Libre Franklin', sans-serif; }
+  .map-btn:hover, .map-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  #map { height: 520px; width: 100%; }
+
+  /* MAP LEGEND */
+  .map-legend { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; gap: 20px; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+  .legend-swatch { width: 16px; height: 10px; border-radius: 2px; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+  /* COUNTY CARDS */
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .card-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); }
+  .card-badge { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; background: rgba(184,150,62,0.12); color: var(--gold); }
+  .card-body { padding: 14px 16px; }
+
+  /* COUNTY LIST */
+  .county-item { padding: 9px 0; border-bottom: 1px solid #f0ede6; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.1s; }
+  .county-item:last-child { border-bottom: none; }
+  .county-item:hover { background: var(--off-white); margin: 0 -16px; padding: 9px 16px; }
+  .county-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .county-pop { font-size: 11px; color: var(--text-muted); }
+  .county-bar-wrap { width: 60px; height: 4px; background: #eee; border-radius: 2px; overflow: hidden; }
+  .county-bar { height: 100%; background: var(--gold); border-radius: 2px; }
+
+  /* DISTRICT STATS */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-box { background: var(--off-white); border-radius: 4px; padding: 12px; }
+  .stat-val { font-size: 20px; font-weight: 900; color: var(--navy); line-height: 1; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* LOCAL NEWS */
+  .news-item { padding: 10px 0; border-bottom: 1px solid #f0ede6; cursor: pointer; }
+  .news-item:last-child { border-bottom: none; }
+  .news-item:hover .news-title { color: var(--royal); }
+  .news-source { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+  .news-title { font-size: 12px; font-weight: 600; color: var(--navy); line-height: 1.4; transition: color 0.15s; }
+  .news-date { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+  /* BOTTOM ROW */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* CITY LIST */
+  .city-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .city-tag { background: var(--off-white); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; font-size: 12px; font-weight: 600; color: var(--navy); display: flex; align-items: center; justify-content: space-between; }
+  .city-pop { font-size: 10px; color: var(--text-muted); }
+
+  /* CONTACTS */
+  .contact-item { padding: 9px 0; border-bottom: 1px solid #f0ede6; display: flex; gap: 10px; align-items: flex-start; }
+  .contact-item:last-child { border-bottom: none; }
+  .contact-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; flex-shrink: 0; }
+  .contact-navy { background: rgba(13,32,128,0.1); color: var(--royal); }
+  .contact-gold { background: rgba(184,150,62,0.15); color: #7a6428; }
+  .contact-info { flex: 1; }
+  .contact-name { font-size: 12px; font-weight: 700; color: var(--navy); }
+  .contact-role { font-size: 10px; color: var(--text-muted); }
+  .contact-phone { font-size: 11px; color: var(--royal); font-weight: 600; margin-top: 2px; }
+
+  /* FOOTER */
+  footer { background: var(--navy); border-top: 2px solid var(--gold); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; margin-top: 20px; }
+  .footer-text { font-size: 10px; color: rgba(255,255,255,0.35); font-weight: 600; letter-spacing: 0.5px; }
+  .footer-text span { color: var(--gold-light); }
+
+  /* Leaflet overrides */
+  .leaflet-container { font-family: 'Libre Franklin', sans-serif; }
+  .leaflet-popup-content-wrapper { border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  .leaflet-popup-content { font-family: 'Libre Franklin', sans-serif; font-size: 13px; }
+  .popup-title { font-weight: 800; font-size: 13px; color: var(--navy); margin-bottom: 4px; }
+  .popup-sub { font-size: 11px; color: var(--text-muted); }
+
+  /* Loading state */
+  #map-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; z-index: 999; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 10px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .map-wrapper { position: relative; }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <span class="ticker-item">Palm Beach Post: Mast secures Everglades funding in FY26 appropriations</span>
+    <span class="ticker-item">Stuart News: Infrastructure bill benefits Treasure Coast ports</span>
+    <span class="ticker-item">TC Palm: Martin County unemployment hits record low</span>
+    <span class="ticker-item">Jupiter Courier: New VA clinic opens in Palm Beach Gardens</span>
+    <span class="ticker-item">Palm Beach Post: Mast secures Everglades funding in FY26 appropriations</span>
+    <span class="ticker-item">Stuart News: Infrastructure bill benefits Treasure Coast ports</span>
+    <span class="ticker-item">TC Palm: Martin County unemployment hits record low</span>
+    <span class="ticker-item">Jupiter Courier: New VA clinic opens in Palm Beach Gardens</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-seal">M</div>
+    <div>
+      <div class="nav-title">Rep. Brian Mast</div>
+      <div class="nav-subtitle">Pluribus · FL-21</div>
+    </div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="dashboard_v2.html">Dashboard</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="clipdrop.html">Clip Drop</a></li>
+  </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div>
+      <div class="page-eyebrow">Florida's 21st Congressional District</div>
+      <div class="page-title">District <span>Overview</span></div>
+    </div>
+    <div class="page-meta">
+      <strong>Rep. Brian Mast</strong> · R-FL<br>
+      Palm Beach · Martin · St. Lucie Counties<br>
+      119th Congress · 2025–2026
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- MAP + SIDEBAR -->
+  <div class="district-layout">
+
+    <!-- MAP -->
+    <div>
+      <div class="section-label">Interactive district map</div>
+      <div class="map-card">
+        <div class="map-header">
+          <span class="map-title">FL-21 Boundary · 119th Congress</span>
+          <div class="map-controls">
+            <button class="map-btn active" onclick="setLayer('streets', this)">Streets</button>
+            <button class="map-btn" onclick="setLayer('satellite', this)">Satellite</button>
+            <button class="map-btn" onclick="setLayer('topo', this)">Topo</button>
+            <button class="map-btn" onclick="resetView()">Reset view</button>
+          </div>
+        </div>
+        <div class="map-wrapper">
+          <div id="map-loading">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading FL-21 boundary data…</div>
+          </div>
+          <div id="map"></div>
+        </div>
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:rgba(184,150,62,0.35);border:2px solid #b8963e;"></div>
+            FL-21 District
+          </div>
+          <div class="legend-item">
+            <div class="legend-swatch" style="background:rgba(13,32,128,0.15);border:2px solid #0d2080;"></div>
+            Adjacent districts
+          </div>
+          <div class="legend-item" style="margin-left:auto;font-size:10px;color:var(--text-muted);">
+            Source: U.S. Census Bureau · 119th Congress
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- DISTRICT STATS -->
+      <div>
+        <div class="section-label">District snapshot</div>
+        <div class="card">
+          <div class="card-body">
+            <div class="stat-grid">
+              <div class="stat-box">
+                <div class="stat-val">~770K</div>
+                <div class="stat-label">Population</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val">3</div>
+                <div class="stat-label">Counties</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val">R+16</div>
+                <div class="stat-label">Cook PVI</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val">2024</div>
+                <div class="stat-label">Last elected</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COUNTIES -->
+      <div>
+        <div class="section-label">County breakdown</div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">FL-21 Counties</span>
+            <span class="card-badge">Click to zoom</span>
+          </div>
+          <div class="card-body">
+            <div class="county-item" onclick="zoomCounty('Palm Beach', 26.65, -80.25)">
+              <div>
+                <div class="county-name">Palm Beach County</div>
+                <div class="county-pop">~1.5M total pop.</div>
+              </div>
+              <div>
+                <div class="county-bar-wrap"><div class="county-bar" style="width:100%"></div></div>
+              </div>
+            </div>
+            <div class="county-item" onclick="zoomCounty('Martin', 27.1, -80.35)">
+              <div>
+                <div class="county-name">Martin County</div>
+                <div class="county-pop">~170K total pop.</div>
+              </div>
+              <div>
+                <div class="county-bar-wrap"><div class="county-bar" style="width:45%"></div></div>
+              </div>
+            </div>
+            <div class="county-item" onclick="zoomCounty('St. Lucie', 27.38, -80.45)">
+              <div>
+                <div class="county-name">St. Lucie County</div>
+                <div class="county-pop">~340K total pop.</div>
+              </div>
+              <div>
+                <div class="county-bar-wrap"><div class="county-bar" style="width:65%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOCAL NEWS -->
+      <div>
+        <div class="section-label">Local news</div>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">District coverage</span>
+          </div>
+          <div class="card-body">
+            <div class="news-item">
+              <div class="news-source">Palm Beach Post</div>
+              <div class="news-title">Mast secures Everglades funding in FY26 appropriations package</div>
+              <div class="news-date">Apr 7, 2026</div>
+            </div>
+            <div class="news-item">
+              <div class="news-source">TC Palm</div>
+              <div class="news-title">Treasure Coast ports to benefit from infrastructure authorization bill</div>
+              <div class="news-date">Apr 5, 2026</div>
+            </div>
+            <div class="news-item">
+              <div class="news-source">Stuart News</div>
+              <div class="news-title">Martin County unemployment reaches record low under Trump economy</div>
+              <div class="news-date">Apr 3, 2026</div>
+            </div>
+            <div class="news-item">
+              <div class="news-source">Jupiter Courier</div>
+              <div class="news-title">New VA clinic opens in Palm Beach Gardens, serving 12,000 veterans</div>
+              <div class="news-date">Mar 28, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM ROW -->
+  <div class="bottom-grid">
+
+    <!-- KEY CITIES -->
+    <div>
+      <div class="section-label">Key cities &amp; communities</div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">FL-21 communities</span></div>
+        <div class="card-body">
+          <div class="city-grid">
+            <div class="city-tag">Palm Beach Gardens <span class="city-pop">~60K</span></div>
+            <div class="city-tag">Port St. Lucie <span class="city-pop">~240K</span></div>
+            <div class="city-tag">Stuart <span class="city-pop">~17K</span></div>
+            <div class="city-tag">Jupiter <span class="city-pop">~70K</span></div>
+            <div class="city-tag">Hobe Sound <span class="city-pop">~14K</span></div>
+            <div class="city-tag">Palm City <span class="city-pop">~25K</span></div>
+            <div class="city-tag">Tequesta <span class="city-pop">~5K</span></div>
+            <div class="city-tag">Jensen Beach <span class="city-pop">~12K</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISTRICT OFFICES -->
+    <div>
+      <div class="section-label">District offices</div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Office locations</span></div>
+        <div class="card-body">
+          <div class="contact-item">
+            <div class="contact-icon contact-navy">PBG</div>
+            <div class="contact-info">
+              <div class="contact-name">Palm Beach Gardens Office</div>
+              <div class="contact-role">2301 PGA Blvd, Suite 212 · Main district office</div>
+              <div class="contact-phone">(561) 625-6330</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon contact-gold">STU</div>
+            <div class="contact-info">
+              <div class="contact-name">Stuart Office</div>
+              <div class="contact-role">121 SW Flagler Ave · Treasure Coast office</div>
+              <div class="contact-phone">(772) 403-0900</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon contact-navy">DC</div>
+            <div class="contact-info">
+              <div class="contact-name">Washington, D.C.</div>
+              <div class="contact-role">2182 Rayburn HOB · Capitol Hill</div>
+              <div class="contact-phone">(202) 225-3026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KEY ORGS -->
+    <div>
+      <div class="section-label">Key stakeholders</div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">District organizations</span></div>
+        <div class="card-body">
+          <div class="contact-item">
+            <div class="contact-icon contact-navy">VA</div>
+            <div class="contact-info">
+              <div class="contact-name">West Palm Beach VA Medical Center</div>
+              <div class="contact-role">Veterans services · major district stakeholder</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon contact-gold">PBI</div>
+            <div class="contact-info">
+              <div class="contact-name">Palm Beach Intl Airport</div>
+              <div class="contact-role">T&amp;I Committee nexus · regional economic driver</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon contact-navy">EV</div>
+            <div class="contact-info">
+              <div class="contact-name">Everglades Foundation</div>
+              <div class="contact-role">Appropriations priority · environmental advocacy</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon contact-gold">PBC</div>
+            <div class="contact-info">
+              <div class="contact-name">Palm Beach County GOP</div>
+              <div class="contact-role">Party organization · constituent coordination</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
+  <div class="footer-text">Map data: U.S. Census Bureau · 119th Congress boundaries</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// FL-21 approximate center and bounds
+const FL21_CENTER = [27.05, -80.35];
+const FL21_ZOOM = 9;
+
+// Init map
+const map = L.map('map', {
+  center: FL21_CENTER,
+  zoom: FL21_ZOOM,
+  zoomControl: true,
+  scrollWheelZoom: true
+});
+
+// Base layers
+const streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 18
+});
+
+const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution: '© Esri',
+  maxZoom: 18
+});
+
+const topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenTopoMap',
+  maxZoom: 17
+});
+
+streets.addTo(map);
+let currentLayer = streets;
+
+function setLayer(type, btn) {
+  document.querySelectorAll('.map-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  map.removeLayer(currentLayer);
+  if (type === 'streets') currentLayer = streets;
+  else if (type === 'satellite') currentLayer = satellite;
+  else if (type === 'topo') currentLayer = topo;
+  currentLayer.addTo(map);
+}
+
+function resetView() {
+  map.setView(FL21_CENTER, FL21_ZOOM);
+}
+
+function zoomCounty(name, lat, lng) {
+  map.setView([lat, lng], 11);
+}
+
+// Fetch FL-21 GeoJSON from Census TIGERweb
+// Using the public ArcGIS REST endpoint for 119th congressional districts
+let districtLayer = null;
+let adjacentLayer = null;
+
+async function loadDistrict() {
+  try {
+    // Query Census TIGERweb for FL congressional districts (state FIPS 12 = Florida)
+    const url = 'https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/54/query?where=STATE%3D%2712%27&outFields=BASENAME,DISTRICT,STATE&outSR=4326&f=geojson';
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('TIGERweb fetch failed');
+    const data = await res.json();
+
+    // Hide loader
+    document.getElementById('map-loading').style.display = 'none';
+
+    // Separate FL-21 from adjacent FL districts
+    adjacentLayer = L.geoJSON(data, {
+      filter: f => f.properties.DISTRICT !== '21',
+      style: {
+        color: '#0d2080',
+        weight: 1,
+        fillColor: '#0d2080',
+        fillOpacity: 0.04,
+        dashArray: '3 3'
+      },
+      onEachFeature: (feature, layer) => {
+        const d = feature.properties.DISTRICT;
+        layer.bindPopup(`<div class="popup-title">FL-${d}</div><div class="popup-sub">Florida's ${d}th Congressional District</div>`);
+      }
+    }).addTo(map);
+
+    districtLayer = L.geoJSON(data, {
+      filter: f => f.properties.DISTRICT === '21',
+      style: {
+        color: '#b8963e',
+        weight: 3,
+        fillColor: '#b8963e',
+        fillOpacity: 0.18,
+        dashArray: null
+      },
+      onEachFeature: (feature, layer) => {
+        layer.bindPopup(`
+          <div class="popup-title">Florida's 21st Congressional District</div>
+          <div class="popup-sub">Rep. Brian Mast (R) · Palm Beach, Martin, St. Lucie Counties</div>
+        `);
+        layer.on('mouseover', function() {
+          this.setStyle({ fillOpacity: 0.3, weight: 4 });
+        });
+        layer.on('mouseout', function() {
+          this.setStyle({ fillOpacity: 0.18, weight: 3 });
+        });
+      }
+    }).addTo(map);
+
+    // Fit map to FL-21
+    if (districtLayer.getBounds().isValid()) {
+      map.fitBounds(districtLayer.getBounds(), { padding: [30, 30] });
+    }
+
+  } catch (err) {
+    console.error('GIS load error:', err);
+    // Fallback: show hand-drawn FL-21 approximate polygon
+    document.getElementById('map-loading').style.display = 'none';
+    showFallbackBoundary();
+  }
+}
+
+function showFallbackBoundary() {
+  // Approximate FL-21 boundary coordinates (Palm Beach northern portion, Martin, St. Lucie)
+  const approxBoundary = [
+    [27.65, -80.87], [27.65, -80.10], [27.55, -80.05],
+    [27.40, -80.09], [27.20, -80.12], [27.05, -80.10],
+    [26.85, -80.08], [26.75, -80.10], [26.70, -80.18],
+    [26.68, -80.35], [26.70, -80.55], [26.75, -80.72],
+    [26.85, -80.87], [27.00, -80.90], [27.20, -80.92],
+    [27.45, -80.90], [27.65, -80.87]
+  ];
+
+  districtLayer = L.polygon(approxBoundary, {
+    color: '#b8963e',
+    weight: 3,
+    fillColor: '#b8963e',
+    fillOpacity: 0.18
+  }).addTo(map);
+
+  districtLayer.bindPopup('<div class="popup-title">FL-21 · Approximate boundary</div><div class="popup-sub">Rep. Brian Mast · Palm Beach, Martin, St. Lucie</div>');
+  map.fitBounds(districtLayer.getBounds(), { padding: [30, 30] });
+
+  // Add note
+  const note = document.createElement('div');
+  note.style.cssText = 'position:absolute;bottom:40px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.9);padding:6px 14px;border-radius:4px;font-size:11px;font-weight:600;color:#8a8a7a;z-index:999;border:1px solid rgba(184,150,62,0.3)';
+  note.textContent = 'Approximate boundary shown — connect to Census API for exact GIS data';
+  document.querySelector('.map-wrapper').appendChild(note);
+}
+
+loadDistrict();
+</script>
+</body>
+</html>
