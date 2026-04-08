@@ -499,121 +499,123 @@ function fillBillOv(v){document.getElementById('bill-input-ov').value=v;searchBi
 function searchBillOv(){const v=document.getElementById('bill-input-ov').value.trim(),el=document.getElementById('bill-result-ov');if(!v)return;el.style.color='var(--text-sec)';el.textContent='Looking up '+v+'…';setTimeout(()=>{el.textContent=v+' → Passed House 3/20/26 · Enrolled · Signed into law';el.style.color='#3db87a'},800)}
 
 // ── LIVE RSS TICKER ──────────────────────────────────────────
-// Uses corsproxy.io (primary) + allorigins.win (fallback) to bypass CORS
-// Parses RSS XML directly — no API key needed
+// Primary: The Guardian API (free, CORS-native, reliable)
+// Fallback: NPR RSS (one of the only feeds with native CORS headers)
+// Replace GUARDIAN_API_KEY with your free key from open-platform.theguardian.com
 
-const TICKER_FEEDS = [
-  { url: 'https://feeds.reuters.com/reuters/topNews',                        label: 'REUTERS'  },
-  { url: 'https://thehill.com/feed/',                                        label: 'THE HILL' },
-  { url: 'https://www.politico.com/rss/politicopicks.xml',                   label: 'POLITICO' },
-  { url: 'https://feeds.npr.org/1001/rss.xml',                               label: 'NPR'      },
-  { url: 'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',        label: 'NYT'      },
-  { url: 'https://www.c-span.org/common/generic/rss.php?catid=Events',       label: 'C-SPAN'   },
+const GUARDIAN_API_KEY = '94981b8b-9fdc-4fa5-bb48-1992aad9bfa6'; // ← paste key here
+
+const GUARDIAN_SECTIONS = [
+  { tag: 'us-news',      label: 'US NEWS'   },
+  { tag: 'politics',     label: 'POLITICS'  },
+  { tag: 'world',        label: 'WORLD'     },
+  { tag: 'business',     label: 'BUSINESS'  },
 ];
 
-const PROXIES = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+const NPR_FEEDS = [
+  { url: 'https://feeds.npr.org/1001/rss.xml',  label: 'NPR'     },
+  { url: 'https://feeds.npr.org/1014/rss.xml',  label: 'NPR POL' },
 ];
 
-async function fetchXML(feedUrl) {
-  for (const makeProxy of PROXIES) {
+// ── Guardian fetch ──
+async function fetchGuardian() {
+  const items = [];
+  const requests = GUARDIAN_SECTIONS.map(({ tag, label }) =>
+    fetch(
+      `https://content.guardianapis.com/search?section=${tag}&api-key=${GUARDIAN_API_KEY}&page-size=8&order-by=newest&show-fields=headline`,
+      { cache: 'no-store' }
+    )
+    .then(r => r.json())
+    .then(data => {
+      (data?.response?.results || []).forEach(r => {
+        items.push({
+          title: (r.fields?.headline || r.webTitle || '').replace(/ \| .*/,'').trim(),
+          link:  r.webUrl || '#',
+          label,
+        });
+      });
+    })
+    .catch(() => {})
+  );
+  await Promise.allSettled(requests);
+  return items;
+}
+
+// ── NPR direct fetch (native CORS) ──
+async function fetchNPR() {
+  const items = [];
+  for (const { url, label } of NPR_FEEDS) {
     try {
-      const res = await fetch(makeProxy(feedUrl), { cache: 'no-store' });
-      if (!res.ok) continue;
-      const text = await res.text();
-      // allorigins wraps response in JSON {contents: "..."}
-      const xml = text.startsWith('{') ? JSON.parse(text).contents : text;
-      if (!xml || xml.length < 100) continue;
-      const doc = new DOMParser().parseFromString(xml, 'text/xml');
+      const res = await fetch(url, { cache: 'no-store' });
+      const xml  = await res.text();
+      const doc  = new DOMParser().parseFromString(xml, 'text/xml');
       if (doc.querySelector('parsererror')) continue;
-      const items = [...doc.querySelectorAll('item')].slice(0, 7);
-      if (items.length) return items;
-    } catch(e) { /* try next proxy */ }
+      [...doc.querySelectorAll('item')].slice(0, 8).forEach(item => {
+        const title = (item.querySelector('title')?.textContent || '')
+          .replace(/<![CDATA[|]]>/g, '').replace(/&amp;/g,'&').trim();
+        const link  = (item.querySelector('link')?.textContent || '#').trim();
+        if (title.length > 8) items.push({ title, link, label });
+      });
+    } catch(e) {}
   }
-  return [];
+  return items;
 }
 
-function getItemTitle(item) {
-  // Handle CDATA and plain text title nodes
-  const t = item.querySelector('title');
-  if (!t) return null;
-  const raw = t.textContent || t.innerHTML || '';
-  return raw
-    .replace(/<!\[CDATA\[|\]\]>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&#039;/g, "'").replace(/&apos;/g, "'")
-    .trim();
-}
-
-function getItemLink(item) {
-  const link = item.querySelector('link');
-  if (link && link.textContent.startsWith('http')) return link.textContent.trim();
-  const guid = item.querySelector('guid');
-  if (guid && guid.textContent.startsWith('http')) return guid.textContent.trim();
-  return '#';
-}
-
-async function fetchFeed(feed) {
-  try {
-    const items = await fetchXML(feed.url);
-    return items
-      .map(item => ({ title: getItemTitle(item), link: getItemLink(item), label: feed.label }))
-      .filter(i => i.title && i.title.length > 10);
-  } catch(e) { return []; }
-}
-
-const TICKER_FALLBACK = [
-  { title: 'House floor schedule updated for this week',                      label: 'CONGRESS', link: 'https://www.congress.gov' },
-  { title: 'Senate Finance Committee advances reconciliation markup',          label: 'CONGRESS', link: 'https://www.congress.gov' },
-  { title: 'White House releases fact sheet on tariff policy',                label: 'WH',       link: 'https://www.whitehouse.gov' },
-  { title: 'Ways & Means Committee markup scheduled this week',               label: 'CONGRESS', link: 'https://www.congress.gov' },
-  { title: 'T&I Committee advances infrastructure authorization bill',        label: 'CONGRESS', link: 'https://www.congress.gov' },
-  { title: 'Senate votes on defense supplemental appropriations package',     label: 'CONGRESS', link: 'https://www.congress.gov' },
-  { title: 'Administration releases guidance on domestic energy production',  label: 'WH',       link: 'https://www.whitehouse.gov' },
-];
-
+// ── Ticker render ──
 function buildTickerHTML(items) {
   const makeSpan = ({ title, label, link }) => {
-    const safe = (title || '').replace(/"/g, '&quot;').toUpperCase().slice(0, 120);
-    const href = link || '#';
+    const safe = title.replace(/"/g,'&quot;').toUpperCase().slice(0, 130);
+    const href = (link || '#').replace(/'/g, '%27');
     return `<span class="ticker-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" title="${safe}"><span class="ticker-source">${label}</span>${safe}</span>`;
   };
   const half = items.map(makeSpan).join('');
-  return half + half; // duplicate for seamless loop
+  return half + half;
 }
 
 function setTickerSpeed(items) {
-  const totalChars = items.reduce((n, i) => n + (i.title || '').length, 0);
-  const duration = Math.max(45, Math.min(100, totalChars * 0.25));
-  document.getElementById('ticker-wrap').style.animationDuration = duration + 's';
+  const totalChars = items.reduce((n, i) => n + (i.title||'').length, 0);
+  const secs = Math.max(50, Math.min(110, Math.round(totalChars * 0.28)));
+  document.getElementById('ticker-wrap').style.animationDuration = secs + 's';
 }
+
+const TICKER_FALLBACK = [
+  { title: 'Connect your Guardian API key for live headlines',             label: 'SETUP',    link: 'https://open-platform.theguardian.com/access/register' },
+  { title: 'House floor schedule — check congress.gov for latest',        label: 'CONGRESS', link: 'https://www.congress.gov'  },
+  { title: 'Senate Finance Committee — reconciliation markup this week',  label: 'CONGRESS', link: 'https://www.congress.gov'  },
+  { title: 'White House briefing room — latest releases',                 label: 'WH',       link: 'https://www.whitehouse.gov/news/' },
+  { title: 'Ways & Means Committee — markup schedule pending',            label: 'CONGRESS', link: 'https://waysandmeans.house.gov' },
+];
 
 async function initTicker() {
   const wrap = document.getElementById('ticker-wrap');
-
-  // Fetch all feeds in parallel with a 6-second timeout each
-  const timeout = ms => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
-  const results = await Promise.allSettled(
-    TICKER_FEEDS.map(feed => Promise.race([fetchFeed(feed), timeout(6000)]))
-  );
+  const timer = ms => new Promise((_, rej) => setTimeout(() => rej('timeout'), ms));
 
   let items = [];
-  results.forEach(r => { if (r.status === 'fulfilled' && Array.isArray(r.value)) items = items.concat(r.value); });
 
-  if (items.length < 4) {
-    // All feeds failed — use fallback
-    items = TICKER_FALLBACK;
-  } else {
-    // Shuffle so sources mix
-    items = items.sort(() => Math.random() - 0.5);
+  // Try Guardian first (fast, reliable, CORS-native)
+  if (GUARDIAN_API_KEY !== '94981b8b-9fdc-4fa5-bb48-1992aad9bfa6') {
+    try {
+      items = await Promise.race([fetchGuardian(), timer(8000)]);
+    } catch(e) {}
   }
+
+  // If Guardian failed or no key, try NPR directly
+  if (items.length < 4) {
+    try {
+      const npr = await Promise.race([fetchNPR(), timer(6000)]);
+      items = items.concat(npr);
+    } catch(e) {}
+  }
+
+  // Final fallback
+  if (items.length < 4) items = TICKER_FALLBACK;
+  else items = items.sort(() => Math.random() - 0.5);
 
   wrap.innerHTML = buildTickerHTML(items);
   setTickerSpeed(items);
 }
 
-function pauseTicker() { document.getElementById('ticker-wrap').classList.add('paused'); }
+function pauseTicker()  { document.getElementById('ticker-wrap').classList.add('paused'); }
 function resumeTicker() { document.getElementById('ticker-wrap').classList.remove('paused'); }
 
 initTicker();
