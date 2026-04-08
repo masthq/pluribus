@@ -24,10 +24,10 @@ body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--
 .ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
 .ticker-wrap{display:flex;animation:ticker 60s linear infinite;width:max-content;padding-left:80px}
 .ticker-wrap.paused{animation-play-state:paused}
-.ticker-item{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95);cursor:pointer;transition:color .15s}
+.ticker-item{font-size:11px;font-weight:700;letter-spacing:0px;text-transform:uppercase;white-space:nowrap;padding-right:32px;color:rgba(255,255,255,.95);cursor:pointer;transition:color .15s}
 .ticker-item:hover{color:var(--gold-lt)}
 .ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
-.ticker-source{font-size:9px;font-weight:600;color:rgba(255,255,255,.45);margin-right:6px;letter-spacing:.5px}
+.ticker-source{font-size:9px;font-weight:700;color:rgba(255,255,255,.32);margin-right:6px;letter-spacing:0px;text-transform:uppercase}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* NAV */
@@ -591,7 +591,8 @@ function buildTickerHTML(items) {
   const makeSpan = ({ title, label, link }) => {
     const safe = title.replace(/"/g,'&quot;').toUpperCase().slice(0, 130);
     const href = (link || '#').replace(/'/g, '%27');
-    return `<span class="ticker-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" title="${safe}"><span class="ticker-source">${label}</span>${safe}</span>`;
+    const src  = label ? `<span class="ticker-source">${label.toUpperCase()}</span>` : '';
+    return `<span class="ticker-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" title="${safe}">${src}${safe}</span>`;
   };
   const half = items.map(makeSpan).join('');
   return half + half;
@@ -599,7 +600,7 @@ function buildTickerHTML(items) {
 
 function setTickerSpeed(items) {
   const totalChars = items.reduce((n, i) => n + (i.title||'').length, 0);
-  const secs = Math.max(50, Math.min(110, Math.round(totalChars * 0.28)));
+  const secs = Math.max(90, Math.min(180, Math.round(totalChars * 0.48)));
   document.getElementById('ticker-wrap').style.animationDuration = secs + 's';
 }
 
@@ -617,14 +618,43 @@ async function initTicker() {
 
   let items = [];
 
-  // Try Guardian first (fast, reliable, CORS-native)
-  if (GUARDIAN_API_KEY !== '94981b8b-9fdc-4fa5-bb48-1992aad9bfa6') {
+  // ── 1. Pull from clips spreadsheet (most reliable — your team's own data) ──
+  try {
+    const res = await Promise.race([
+      fetch(CLIPS_CSV + '&t=' + Date.now(), { cache: 'no-store' }),
+      timer(6000)
+    ]);
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n');
+      if (lines.length > 1) {
+        const rows = parseCSV(text);
+        // Sort by date descending, take most recent date only
+        const dates = [...new Set(rows.map(r => r.date))].sort().reverse();
+        const latest = dates[0];
+        const todayRows = rows.filter(r => r.date === latest);
+        todayRows.forEach(r => {
+          if (r.headline && r.headline.length > 8) {
+            items.push({
+              title: r.headline,
+              label: r.outlet || r.section || 'CLIPS',
+              link:  r.url || '#',
+            });
+          }
+        });
+      }
+    }
+  } catch(e) {}
+
+  // ── 2. Try Guardian API if clips didn't load enough ──
+  if (items.length < 4 && GUARDIAN_API_KEY !== 'YOUR_GUARDIAN_API_KEY') {
     try {
-      items = await Promise.race([fetchGuardian(), timer(8000)]);
+      const guardianItems = await Promise.race([fetchGuardian(), timer(8000)]);
+      items = items.concat(guardianItems);
     } catch(e) {}
   }
 
-  // If Guardian failed or no key, try NPR directly
+  // ── 3. Try NPR direct (native CORS) ──
   if (items.length < 4) {
     try {
       const npr = await Promise.race([fetchNPR(), timer(6000)]);
@@ -632,16 +662,13 @@ async function initTicker() {
     } catch(e) {}
   }
 
-  // Final fallback
+  // ── 4. Static fallback ──
   if (items.length < 4) items = TICKER_FALLBACK;
   else items = items.sort(() => Math.random() - 0.5);
 
   wrap.innerHTML = buildTickerHTML(items);
   setTickerSpeed(items);
 }
-
-function pauseTicker()  { document.getElementById('ticker-wrap').classList.add('paused'); }
-function resumeTicker() { document.getElementById('ticker-wrap').classList.remove('paused'); }
 
 initTicker();
 setInterval(initTicker, 15 * 60 * 1000);
