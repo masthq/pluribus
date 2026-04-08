@@ -58,6 +58,7 @@ main{padding:28px 32px 48px;max-width:1440px;margin:0 auto}
 .tile-hear::before{background:var(--cal-hear)}
 .tile-gold::before{background:var(--gold)}
 .tile-neutral::before{background:rgba(255,255,255,0.08)}
+.tile-sky::before{background:var(--sky)}
 
 /* TILE FACE */
 .tile-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;transition:opacity .22s ease}
@@ -323,6 +324,36 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
       </div>
     </div>
 
+    <!-- ROW 3 -->
+    <div class="tile tile-sky" onclick="window.location.href='district.html'">
+      <div class="tile-face">
+        <div class="tile-icon">FL-21 · GIS Map</div>
+        <div class="tile-name">District</div>
+        <div class="tile-sub">Palm Beach · Martin · St. Lucie</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">District at a glance</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">Live FL-21 boundary map</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">County breakdown + local officials</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--green)"></span><div class="preview-text">District office contacts</div></div>
+        <div class="tile-click-hint">Open map →</div>
+      </div>
+    </div>
+
+    <div class="tile tile-neutral" onclick="window.location.href='clipdrop.html'">
+      <div class="tile-face">
+        <div class="tile-icon">Media · Assets</div>
+        <div class="tile-name">Clip Drop</div>
+        <div class="tile-sub">Coming soon</div>
+      </div>
+      <div class="tile-hover">
+        <div class="tile-hover-label">Clip Drop</div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Media asset management</div></div>
+        <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Press clips and screenshots</div></div>
+        <div class="tile-click-hint">Coming soon</div>
+      </div>
+    </div>
+
     <div class="tile tile-neutral" onclick="openOverlay('socials')">
       <div class="tile-face">
         <div class="tile-icon">X / Twitter</div>
@@ -335,6 +366,14 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
         <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">10 Senate Republicans · curated list</div></div>
         <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Single embedded X List feed</div></div>
         <div class="tile-click-hint">Open feed</div>
+      </div>
+    </div>
+
+    <div class="tile tile-neutral" style="opacity:0.35;cursor:default">
+      <div class="tile-face">
+        <div class="tile-icon">Coming soon</div>
+        <div class="tile-name">—</div>
+        <div class="tile-sub"></div>
       </div>
     </div>
 
