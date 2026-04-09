@@ -1,776 +1,502 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clip Drop — Mast Comms HQ</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
-  <style>
-    /* ─── TOKENS ───────────────────────────────────────────────── */
-    :root {
-      --navy:           #0a1628;
-      --navy-mid:       #0f1f3d;
-      --navy-card:      #111e35;
-      --navy-hover:     #162440;
-      --crimson:        #8b0000;
-      --crimson-lt:     #a31010;
-      --gold:           #b8963e;
-      --gold-lt:        #c9a84c;
-      --gold-dim:       rgba(184,150,62,0.15);
-      --sky:            #6baed6;
-      --green:          #3db87a;
-      --text:           #e8e4d9;
-      --text-sec:       #9a9585;
-      --text-dim:       #4a4a42;
-      --border:         rgba(184,150,62,0.18);
-      --border-dim:     rgba(255,255,255,0.06);
-      --font-sans:      'Libre Franklin', sans-serif;
-      --font-serif:     'Instrument Serif', serif;
-      --page-pad:       32px;
-      --radius-sm:      3px;
-      --radius-md:      6px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clip Drop · Pluribus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
+  --crimson:#8b0000;--crimson-lt:#a31010;
+  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
+  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;--red-medium:#d04040;
+  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
+  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
 
-    /* ─── RESET ────────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+/* TICKER */
+.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
+.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
+.ticker-wrap{display:flex;animation:ticker 90s linear infinite;width:max-content;padding-left:80px}
+.ticker-item{font-size:11px;font-weight:700;letter-spacing:0px;text-transform:uppercase;white-space:nowrap;padding-right:32px;color:rgba(255,255,255,.95)}
+.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-    body {
-      background: var(--navy);
-      color: var(--text);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+/* NAV */
+nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
+.nav-brand{display:flex;align-items:center;gap:12px;padding:12px 0;margin-right:48px;text-decoration:none}
+.nav-seal{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:middle;font-size:16px;font-weight:900;color:var(--navy);flex-shrink:0;align-items:center;justify-content:center}
+.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
+.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.nav-links{display:flex;list-style:none}
+.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
+.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
+.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
 
-    /* ─── NAV ──────────────────────────────────────────────────── */
-    nav {
-      background: var(--navy-mid);
-      border-bottom: 1px solid var(--border);
-      padding: 0 var(--page-pad);
-      height: 52px;
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+/* PAGE */
+.page-header{padding:32px 32px 0;max-width:1440px;margin:0 auto}
+.breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.5px;margin-bottom:10px}
+.breadcrumb a{color:var(--gold-lt);text-decoration:none}
+.page-title{font-size:32px;font-weight:900;color:#fff;margin-bottom:4px}
+.page-desc{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px}
+.page-rule{height:1px;background:var(--border);margin-bottom:28px}
+main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 
-    .nav-logo {
-      font-family: var(--font-serif);
-      font-size: 18px;
-      color: var(--gold);
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      margin-right: 8px;
-    }
+/* SECTION LABEL */
+.section-label{font-size:9px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-    .nav-links {
-      display: flex;
-      gap: 4px;
-      list-style: none;
-    }
+/* ADD PANEL — two columns */
+.add-panel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px}
 
-    .nav-links a {
-      color: var(--text-sec);
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 6px 10px;
-      border-radius: var(--radius-sm);
-      transition: color 0.15s, background 0.15s;
-    }
+/* URL INPUT CARD */
+.input-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:8px;padding:22px 24px}
+.input-card-title{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.url-row{display:flex;gap:8px;margin-bottom:10px}
+.url-input{flex:1;border:1px solid var(--border-dim);border-radius:4px;padding:9px 14px;font-size:13px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.url-input:focus{border-color:var(--gold)}
+.url-input::placeholder{color:var(--text-dim)}
+.note-input{width:100%;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:12px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s;margin-bottom:10px;resize:none}
+.note-input:focus{border-color:var(--gold)}
+.note-input::placeholder{color:var(--text-dim)}
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tag-btn{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:2px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.tag-btn:hover,.tag-btn.selected{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
+.tag-btn.t-tweet.selected{border-color:var(--sky);color:var(--sky);background:rgba(107,174,214,.1)}
+.tag-btn.t-clip.selected{border-color:var(--green);color:var(--green);background:rgba(61,184,122,.1)}
+.tag-btn.t-article.selected{border-color:var(--gold-lt);color:var(--gold-lt);background:var(--gold-dim)}
+.tag-btn.t-urgent.selected{border-color:var(--red-medium);color:var(--red-medium);background:rgba(139,0,0,.1)}
+.add-btn{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:9px 20px;border-radius:4px;border:none;background:var(--gold);color:var(--navy);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;width:100%}
+.add-btn:hover{background:var(--gold-lt)}
+.add-btn:disabled{background:var(--navy-hover);color:var(--text-dim);cursor:default}
 
-    .nav-links a:hover { color: var(--text); background: var(--border-dim); }
-    .nav-links a.active { color: var(--gold); }
+/* UPLOAD ZONE */
+.upload-zone{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:8px;padding:22px 24px;cursor:pointer;transition:border-color .2s,background .2s;display:flex;flex-direction:column}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--gold);background:var(--navy-hover)}
+.upload-zone-title{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.upload-drop-area{flex:1;border:2px dashed rgba(184,150,62,0.2);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;text-align:center;transition:border-color .2s}
+.upload-zone:hover .upload-drop-area,.upload-zone.drag-over .upload-drop-area{border-color:rgba(184,150,62,0.5)}
+.upload-icon{font-size:28px;margin-bottom:8px;opacity:.5}
+.upload-hint{font-size:12px;color:var(--text-sec);margin-bottom:12px}
+.upload-btn-sm{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:7px 16px;border-radius:3px;border:1px solid var(--gold);background:var(--gold-dim);color:var(--gold-lt);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.upload-btn-sm:hover{background:var(--gold);color:var(--navy)}
+.upload-types{font-size:10px;color:var(--text-dim);margin-top:10px}
+#file-input{display:none}
 
-    /* ─── PAGE SHELL ───────────────────────────────────────────── */
-    .page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px var(--page-pad) 80px;
-    }
+/* FILTER ROW */
+.filter-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+.clip-search{flex:1;min-width:200px;max-width:300px;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:13px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.clip-search:focus{border-color:var(--gold)}
+.clip-search::placeholder{color:var(--text-dim)}
+.flt{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.flt:hover,.flt.active{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
+.clip-count{font-size:10px;color:var(--text-dim);font-weight:600;margin-left:auto}
 
-    /* ─── PAGE HEADER ──────────────────────────────────────────── */
-    .page-header {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 36px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 20px;
-    }
+/* CLIPS GRID */
+.clips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
 
-    .page-title {
-      font-family: var(--font-serif);
-      font-size: 28px;
-      color: var(--text);
-      font-weight: 400;
-    }
+/* URL CARD */
+.clip-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;overflow:hidden;transition:border-color .2s,transform .15s}
+.clip-card:hover{border-color:var(--border);transform:translateY(-1px)}
+.clip-card-top{padding:14px 16px}
+.clip-badge-row{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.clip-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:2px}
+.badge-tweet{background:rgba(107,174,214,.15);color:var(--sky)}
+.badge-clip{background:rgba(61,184,122,.1);color:var(--green)}
+.badge-article{background:rgba(184,150,62,.12);color:var(--gold-lt)}
+.badge-urgent{background:rgba(139,0,0,.15);color:#d04040}
+.badge-image{background:rgba(107,174,214,.12);color:var(--sky)}
+.badge-video{background:rgba(139,0,0,.12);color:#d04040}
+.badge-doc{background:rgba(184,150,62,.12);color:var(--gold-lt)}
+.badge-file{background:rgba(255,255,255,.05);color:var(--text-sec)}
+.clip-date{font-size:10px;color:var(--text-dim);font-weight:600;margin-left:auto}
+.clip-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;word-break:break-word}
+.clip-url{font-size:10px;color:var(--sky);word-break:break-all;margin-bottom:6px;opacity:.7}
+.clip-note{font-size:12px;color:var(--text-sec);line-height:1.45;font-style:italic}
+.clip-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid var(--border-dim)}
+.clip-thumb-ph{width:100%;aspect-ratio:16/9;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--text-dim);border-bottom:1px solid var(--border-dim)}
+.clip-actions{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--border-dim)}
+.clip-action-btn{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.clip-action-btn:hover{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
+.clip-action-btn.danger:hover{border-color:var(--red-medium);color:var(--red-medium);background:rgba(139,0,0,.1)}
 
-    .page-subtitle {
-      font-size: 13px;
-      color: var(--text-sec);
-    }
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:64px 20px;color:var(--text-dim)}
+.empty-icon{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-title{font-size:16px;font-weight:800;color:var(--text-sec);margin-bottom:6px}
+.empty-sub{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic}
 
-    .clip-count {
-      margin-left: auto;
-      font-size: 12px;
-      color: var(--text-dim);
-      font-weight: 500;
-      letter-spacing: 0.04em;
-    }
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy-card);border:1px solid var(--border);border-radius:6px;padding:12px 18px;font-size:12px;font-weight:700;color:var(--text);z-index:999;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-color:var(--green);color:var(--green)}
 
-    /* ─── DROP FORM ────────────────────────────────────────────── */
-    .drop-zone {
-      background: var(--navy-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px 28px;
-      margin-bottom: 40px;
-      position: relative;
-    }
-
-    .drop-zone::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
-      border-radius: var(--radius-md) var(--radius-md) 0 0;
-    }
-
-    .drop-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .drop-label svg { opacity: 0.7; }
-
-    .drop-row {
-      display: grid;
-      grid-template-columns: 1fr 220px 140px 100px;
-      gap: 10px;
-      align-items: end;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .field-label {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-sec);
-    }
-
-    .field-input {
-      background: var(--navy-mid);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: var(--font-sans);
-      font-size: 13px;
-      padding: 9px 12px;
-      outline: none;
-      transition: border-color 0.15s;
-      width: 100%;
-    }
-
-    .field-input::placeholder { color: var(--text-dim); }
-    .field-input:focus { border-color: var(--gold); }
-
-    select.field-input {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239a9585' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 28px;
-    }
-
-    .btn-drop {
-      background: var(--gold);
-      color: var(--navy);
-      border: none;
-      border-radius: var(--radius-sm);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 10px 16px;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
-      white-space: nowrap;
-      align-self: flex-end;
-    }
-
-    .btn-drop:hover { background: var(--gold-lt); }
-    .btn-drop:active { transform: scale(0.98); }
-    .btn-drop:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    /* status flash */
-    .drop-status {
-      margin-top: 12px;
-      font-size: 12px;
-      min-height: 16px;
-      transition: opacity 0.3s;
-    }
-    .drop-status.success { color: var(--green); }
-    .drop-status.error   { color: #d04040; }
-
-    /* ─── FILTERS ──────────────────────────────────────────────── */
-    .filters-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-
-    .filter-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-right: 4px;
-    }
-
-    .filter-btn {
-      background: transparent;
-      border: 1px solid var(--border-dim);
-      border-radius: 2px;
-      color: var(--text-sec);
-      font-family: var(--font-sans);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      padding: 5px 12px;
-      cursor: pointer;
-      transition: all 0.15s;
-      text-transform: uppercase;
-    }
-
-    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
-    .filter-btn.active {
-      background: var(--gold-dim);
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
-    .search-input {
-      margin-left: auto;
-      background: var(--navy-card);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      padding: 6px 12px;
-      outline: none;
-      width: 200px;
-      transition: border-color 0.15s;
-    }
-
-    .search-input:focus { border-color: var(--gold); }
-    .search-input::placeholder { color: var(--text-dim); }
-
-    /* ─── CLIP GRID ────────────────────────────────────────────── */
-    .clip-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 16px;
-    }
-
-    /* ─── CLIP CARD ────────────────────────────────────────────── */
-    .clip-card {
-      background: var(--navy-card);
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: border-color 0.2s, transform 0.2s;
-      animation: fadeUp 0.3s ease both;
-    }
-
-    .clip-card:hover {
-      border-color: var(--border);
-      transform: translateY(-2px);
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .clip-thumb {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
-      background: var(--navy-mid);
-      display: block;
-    }
-
-    .clip-thumb-placeholder {
-      width: 100%;
-      height: 160px;
-      background: var(--navy-mid);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .clip-thumb-placeholder .domain-initial {
-      font-family: var(--font-serif);
-      font-size: 48px;
-      color: var(--border);
-    }
-
-    .clip-body {
-      padding: 16px 18px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .clip-meta-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .clip-tag {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 2px;
-    }
-
-    .tag-press      { background: rgba(107,174,214,0.12); color: var(--sky); }
-    .tag-social     { background: rgba(122,138,255,0.12); color: #7a8aff; }
-    .tag-opposition { background: rgba(139,0,0,0.15);     color: #d04040; }
-    .tag-research   { background: rgba(184,150,62,0.12);  color: var(--gold); }
-    .tag-other      { background: rgba(255,255,255,0.05); color: var(--text-sec); }
-
-    .clip-domain {
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 0.02em;
-    }
-
-    .clip-headline {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .clip-note {
-      font-size: 12px;
-      color: var(--text-sec);
-      line-height: 1.5;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      font-style: italic;
-    }
-
-    .clip-footer {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 18px 14px;
-      margin-top: auto;
-    }
-
-    .clip-added-by {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .clip-date {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-left: auto;
-    }
-
-    .clip-open-btn {
-      background: transparent;
-      border: 1px solid var(--border-dim);
-      border-radius: var(--radius-sm);
-      color: var(--sky);
-      font-family: var(--font-sans);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      padding: 5px 10px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.15s, color 0.15s;
-    }
-
-    .clip-open-btn:hover { border-color: var(--sky); color: var(--sky); }
-
-    /* ─── EMPTY / LOADING ──────────────────────────────────────── */
-    .state-block {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 20px;
-      gap: 12px;
-    }
-
-    .state-icon { font-size: 36px; opacity: 0.3; }
-
-    .state-text {
-      font-size: 14px;
-      color: var(--text-sec);
-    }
-
-    .loading-dots span {
-      display: inline-block;
-      width: 6px; height: 6px;
-      background: var(--gold);
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: dot-bounce 1.2s ease-in-out infinite;
-    }
-
-    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes dot-bounce {
-      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-      40%            { transform: scale(1);   opacity: 1; }
-    }
-
-    /* ─── RESPONSIVE ───────────────────────────────────────────── */
-    @media (max-width: 780px) {
-      .drop-row { grid-template-columns: 1fr 1fr; }
-      .btn-drop { grid-column: 1 / -1; }
-      .clip-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
+.footer-text span{color:var(--gold)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+</style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="index.html">M</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Dashboard</a></li>
-    <li><a href="press.html">Press</a></li>
-    <li><a href="messaging.html">Messaging</a></li>
-    <li><a href="outreach.html">Outreach</a></li>
-    <li><a href="officials.html">Officials</a></li>
-    <li><a href="map.html">District</a></li>
-    <li><a href="clip-drop.html" class="active">Clip Drop</a></li>
-  </ul>
-</nav>
-
-<!-- PAGE -->
-<div class="page">
-
-  <!-- HEADER -->
-  <div class="page-header">
-    <h1 class="page-title">Clip Drop</h1>
-    <span class="page-subtitle">Shared media & opposition archive</span>
-    <span class="clip-count" id="clip-count"></span>
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <span class="ticker-item">Clip Drop · Media &amp; link library · Rep. Brian Mast FL-21</span>
+    <span class="ticker-item">Paste tweet URLs, articles, and clips · Drop images and documents</span>
+    <span class="ticker-item">Stored locally in browser · Private to this device</span>
+    <span class="ticker-item">Clip Drop · Media &amp; link library · Rep. Brian Mast FL-21</span>
+    <span class="ticker-item">Paste tweet URLs, articles, and clips · Drop images and documents</span>
+    <span class="ticker-item">Stored locally in browser · Private to this device</span>
   </div>
-
-  <!-- DROP FORM -->
-  <div class="drop-zone">
-    <div class="drop-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
-      </svg>
-      Drop a link
-    </div>
-    <div class="drop-row">
-      <div class="field-group">
-        <label class="field-label">URL *</label>
-        <input class="field-input" id="input-url" type="url" placeholder="https://..." />
-      </div>
-      <div class="field-group">
-        <label class="field-label">Headline</label>
-        <input class="field-input" id="input-headline" type="text" placeholder="Optional override" />
-      </div>
-      <div class="field-group">
-        <label class="field-label">Category</label>
-        <select class="field-input" id="input-category">
-          <option value="press">Press</option>
-          <option value="social">Social</option>
-          <option value="opposition">Opposition</option>
-          <option value="research">Research</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Added by</label>
-        <input class="field-input" id="input-added-by" type="text" placeholder="Initials" maxlength="10" />
-      </div>
-    </div>
-    <div class="drop-row" style="margin-top:10px;">
-      <div class="field-group" style="grid-column:1/3;">
-        <label class="field-label">Note</label>
-        <input class="field-input" id="input-note" type="text" placeholder="Context, talking points, why this matters..." />
-      </div>
-      <div style="grid-column:4; display:flex; align-items:flex-end;">
-        <button class="btn-drop" id="btn-drop" onclick="dropClip()">+ Drop It</button>
-      </div>
-    </div>
-    <div class="drop-status" id="drop-status"></div>
-  </div>
-
-  <!-- FILTERS -->
-  <div class="filters-bar">
-    <span class="filter-label">Filter:</span>
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
-    <button class="filter-btn" data-filter="press"      onclick="setFilter('press', this)">Press</button>
-    <button class="filter-btn" data-filter="social"     onclick="setFilter('social', this)">Social</button>
-    <button class="filter-btn" data-filter="opposition" onclick="setFilter('opposition', this)">Opposition</button>
-    <button class="filter-btn" data-filter="research"   onclick="setFilter('research', this)">Research</button>
-    <button class="filter-btn" data-filter="other"      onclick="setFilter('other', this)">Other</button>
-    <input class="search-input" id="search-input" placeholder="Search clips..." oninput="renderClips()" />
-  </div>
-
-  <!-- CLIP GRID -->
-  <div class="clip-grid" id="clip-grid">
-    <div class="state-block">
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div class="state-text">Loading clips…</div>
-    </div>
-  </div>
-
 </div>
 
+<nav>
+  <a class="nav-brand" href="dashboard_v2.html">
+    <div class="nav-seal">M</div>
+    <div><div class="nav-title">Rep. Brian Mast</div><div class="nav-sub">Pluribus · FL-21</div></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard_v2.html">Dashboard</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="clipdrop.html" class="active">Clip Drop</a></li>
+  </ul>
+  <div class="nav-right"><span id="nav-date"></span></div>
+</nav>
+
+<div class="page-header">
+  <div class="breadcrumb"><a href="dashboard_v2.html">Dashboard</a> › Clip Drop</div>
+  <div class="page-title">Clip Drop</div>
+  <div class="page-desc">Paste tweet URLs, articles, and clips — or drop files directly. Shared library for the comms team.</div>
+  <div class="page-rule"></div>
+</div>
+
+<main>
+  <div class="section-label">Add to Library</div>
+  <div class="add-panel">
+
+    <!-- URL INPUT -->
+    <div class="input-card">
+      <div class="input-card-title">📎 Paste a URL</div>
+      <div class="url-row">
+        <input class="url-input" id="url-input" type="url" placeholder="https://x.com/… or any link" oninput="onUrlInput()">
+      </div>
+      <textarea class="note-input" id="note-input" placeholder="Note or context (optional)" rows="2"></textarea>
+      <div class="tag-row" id="tag-row">
+        <button class="tag-btn t-tweet" onclick="selectTag('Tweet',this)">Tweet</button>
+        <button class="tag-btn t-clip"  onclick="selectTag('Clip',this)">Clip</button>
+        <button class="tag-btn t-article" onclick="selectTag('Article',this)">Article</button>
+        <button class="tag-btn t-urgent" onclick="selectTag('Urgent',this)">Urgent</button>
+      </div>
+      <button class="add-btn" id="add-btn" onclick="addURL()" disabled>Save to Library</button>
+    </div>
+
+    <!-- FILE DROP -->
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="upload-zone-title">📁 Drop Files</div>
+      <div class="upload-drop-area">
+        <div class="upload-icon">⬇</div>
+        <div class="upload-hint">Drag &amp; drop images, video, PDFs, or documents</div>
+        <button class="upload-btn-sm" onclick="event.stopPropagation();document.getElementById('file-input').click()">Choose Files</button>
+        <div class="upload-types">JPG · PNG · MP4 · MOV · PDF · DOCX · PPTX</div>
+      </div>
+      <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+    </div>
+
+  </div>
+
+  <!-- LIBRARY -->
+  <div class="section-label">Library</div>
+  <div class="filter-row">
+    <input class="clip-search" type="text" placeholder="Search…" id="clip-search" oninput="renderClips()">
+    <button class="flt active" onclick="setFilter('all',this)">All</button>
+    <button class="flt" onclick="setFilter('Tweet',this)">Tweets</button>
+    <button class="flt" onclick="setFilter('Clip',this)">Clips</button>
+    <button class="flt" onclick="setFilter('Article',this)">Articles</button>
+    <button class="flt" onclick="setFilter('Urgent',this)">Urgent</button>
+    <button class="flt" onclick="setFilter('file',this)">Files</button>
+    <span class="clip-count" id="clip-count"></span>
+  </div>
+  <div class="clips-grid" id="clips-grid"></div>
+  <div class="empty-state" id="empty-state" style="display:none">
+    <div class="empty-icon">📂</div>
+    <div class="empty-title">Library is empty</div>
+    <div class="empty-sub">Paste a tweet or article URL, or drop a file above to get started.</div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
+  <div class="footer-text">Clip Drop · Browser storage</div>
+</footer>
+
 <script>
-  /* ─── CONFIG ─────────────────────────────────────── */
-  const BASE_ID  = 'appolE86XNzvXIvkZ';
-  const TABLE_ID = 'Clips';
-  const TOKEN    = 'pat2E9mYRTYBc0YSp.50635a1b0ea12ab359362e68f5bb43633c34473a258f86437e6f22755ef35794';
-  const API      = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
-  const HEADERS  = { Authorization: `Bearer ${TOKEN}`, 'Content-Type': 'application/json' };
+document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
-  /* ─── STATE ──────────────────────────────────────── */
-  let allClips     = [];
-  let activeFilter = 'all';
+const STORAGE_KEY = 'pluribus_clipdrop_v2';
+let selectedTag = 'Clip';
 
-  /* ─── FETCH CLIPS ────────────────────────────────── */
-  async function fetchClips() {
+// ── STORAGE ──────────────────────────────────────────────────
+function loadClips() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveClips(clips) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(clips)); }
+  catch(e) { showToast('Storage full — remove some items first', false); }
+}
+
+// ── URL INPUT ────────────────────────────────────────────────
+function onUrlInput() {
+  const val = document.getElementById('url-input').value.trim();
+  document.getElementById('add-btn').disabled = !val;
+  // Auto-detect tweet and set tag
+  if (val.match(/x\.com|twitter\.com/i)) {
+    selectTagByName('Tweet');
+  } else if (val.match(/youtube\.com|youtu\.be|vimeo\.com/i)) {
+    selectTagByName('Clip');
+  }
+}
+
+function selectTagByName(name) {
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.querySelector(`.tag-btn.t-${name.toLowerCase()}`);
+  if (btn) btn.classList.add('selected');
+  selectedTag = name;
+}
+
+function selectTag(name, btn) {
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedTag = name;
+}
+
+function isTweet(url) {
+  return /x\.com|twitter\.com/.test(url);
+}
+
+async function getTweetTitle(url) {
+  try {
+    const res = await fetch(`https://publish.twitter.com/oembed?url=${encodeURIComponent(url)}&omit_script=true`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Strip HTML tags from tweet html to get text
+    const tmp = document.createElement('div');
+    tmp.innerHTML = data.html || '';
+    return tmp.textContent.trim().slice(0, 200) || null;
+  } catch(e) { return null; }
+}
+
+async function addURL() {
+  const url  = document.getElementById('url-input').value.trim();
+  const note = document.getElementById('note-input').value.trim();
+  if (!url) return;
+
+  const btn = document.getElementById('add-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  let title = url;
+  // Try to get tweet text for tweets
+  if (isTweet(url)) {
+    const tweetText = await getTweetTitle(url);
+    if (tweetText) title = tweetText;
+    else title = url;
+  } else {
+    // For non-tweets, use the URL itself as title — clean it up
     try {
-      const params = new URLSearchParams({
-        sort: JSON.stringify([{ field: 'created_at', direction: 'desc' }]),
-        maxRecords: 200
+      const u = new URL(url);
+      title = u.hostname.replace('www.','') + u.pathname;
+    } catch(e) {}
+  }
+
+  const clips = loadClips();
+  clips.unshift({
+    id: Date.now() + Math.random(),
+    kind: 'url',
+    tag: selectedTag,
+    url,
+    title,
+    note,
+    added: Date.now(),
+  });
+  saveClips(clips);
+  renderClips();
+
+  // Reset form
+  document.getElementById('url-input').value = '';
+  document.getElementById('note-input').value = '';
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+  selectedTag = 'Clip';
+  btn.disabled = false;
+  btn.textContent = 'Save to Library';
+  showToast('Saved to library', true);
+}
+
+// ── FILE HANDLING ─────────────────────────────────────────────
+function fileKindTag(mime, name) {
+  if (mime.startsWith('image/')) return 'image';
+  if (mime.startsWith('video/')) return 'video';
+  if (name.match(/\.pdf$/i)) return 'doc';
+  if (name.match(/\.(doc|docx|xls|xlsx|ppt|pptx|txt)$/i)) return 'doc';
+  return 'file';
+}
+
+function processFiles(files) {
+  const clips = loadClips();
+  let count = 0;
+  const promises = [...files].map(file => new Promise(resolve => {
+    const tag = fileKindTag(file.type, file.name);
+    const reader = new FileReader();
+    reader.onload = e => {
+      clips.unshift({
+        id: Date.now() + Math.random(),
+        kind: 'file',
+        tag,
+        name: file.name,
+        mime: file.type,
+        size: file.size,
+        data: e.target.result,
+        note: '',
+        added: Date.now(),
       });
-      const res = await fetch(`${API}?${params}`, { headers: HEADERS });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || 'Fetch failed');
-      allClips = (data.records || []).map(r => ({ id: r.id, ...r.fields }));
-      renderClips();
-      updateCount();
-    } catch (e) {
-      document.getElementById('clip-grid').innerHTML = `
-        <div class="state-block">
-          <div class="state-icon">⚠</div>
-          <div class="state-text">Could not load clips — ${e.message}</div>
-        </div>`;
-    }
-  }
-
-  /* ─── RENDER ─────────────────────────────────────── */
-  function renderClips() {
-    const query  = document.getElementById('search-input').value.toLowerCase();
-    const grid   = document.getElementById('clip-grid');
-
-    const visible = allClips.filter(c => {
-      const matchFilter = activeFilter === 'all' || (c.category || 'other') === activeFilter;
-      const matchSearch = !query || [c.headline, c.url, c.note, c.added_by]
-        .some(f => (f || '').toLowerCase().includes(query));
-      return matchFilter && matchSearch;
-    });
-
-    if (!visible.length) {
-      grid.innerHTML = `<div class="state-block"><div class="state-icon">📭</div><div class="state-text">No clips match.</div></div>`;
-      return;
-    }
-
-    grid.innerHTML = visible.map((c, i) => buildCard(c, i)).join('');
-  }
-
-  function buildCard(c, i) {
-    const domain    = domainOf(c.url);
-    const initial   = domain.charAt(0).toUpperCase();
-    const tag       = c.category || 'other';
-    const tagClass  = `tag-${tag}`;
-    const tagLabel  = tag.charAt(0).toUpperCase() + tag.slice(1);
-    const headline  = c.headline || domain;
-    const dateStr   = c.created_at ? formatDate(c.created_at) : '';
-    const delay     = Math.min(i * 40, 300);
-
-    const thumb = c.og_image
-      ? `<img class="clip-thumb" src="${escHtml(c.og_image)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<div class=clip-thumb-placeholder><span class=domain-initial>${initial}</span></div>'">`
-      : `<div class="clip-thumb-placeholder"><span class="domain-initial">${initial}</span></div>`;
-
-    return `
-      <div class="clip-card" style="animation-delay:${delay}ms">
-        ${thumb}
-        <div class="clip-body">
-          <div class="clip-meta-top">
-            <span class="clip-tag ${tagClass}">${tagLabel}</span>
-            <span class="clip-domain">${escHtml(domain)}</span>
-          </div>
-          <div class="clip-headline">${escHtml(headline)}</div>
-          ${c.note ? `<div class="clip-note">${escHtml(c.note)}</div>` : ''}
-        </div>
-        <div class="clip-footer">
-          ${c.added_by ? `<span class="clip-added-by">${escHtml(c.added_by)}</span>` : ''}
-          ${dateStr ? `<span class="clip-date">${dateStr}</span>` : ''}
-          <a class="clip-open-btn" href="${escHtml(c.url)}" target="_blank" rel="noopener">Open ↗</a>
-        </div>
-      </div>`;
-  }
-
-  /* ─── DROP ───────────────────────────────────────── */
-  async function dropClip() {
-    const url      = document.getElementById('input-url').value.trim();
-    const headline = document.getElementById('input-headline').value.trim();
-    const category = document.getElementById('input-category').value;
-    const addedBy  = document.getElementById('input-added-by').value.trim();
-    const note     = document.getElementById('input-note').value.trim();
-    const status   = document.getElementById('drop-status');
-    const btn      = document.getElementById('btn-drop');
-
-    if (!url) { flash('Enter a URL first.', 'error'); return; }
-    if (!isValidUrl(url)) { flash('That doesn\'t look like a valid URL.', 'error'); return; }
-
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
-    flash('', '');
-
-    // Try to fetch OG metadata via microlink
-    let ogImage = '';
-    let ogTitle = headline;
-    try {
-      const ml = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}&meta=false`);
-      const md = await ml.json();
-      if (md.status === 'success') {
-        if (!ogTitle) ogTitle = md.data?.title || '';
-        ogImage = md.data?.image?.url || md.data?.screenshot?.url || '';
-      }
-    } catch (_) { /* non-fatal */ }
-
-    const fields = {
-      url,
-      headline: ogTitle,
-      category,
-      note,
-      added_by: addedBy,
-      ...(ogImage ? { og_image: ogImage } : {})
+      count++;
+      resolve();
     };
-
-    // Strip empty strings
-    Object.keys(fields).forEach(k => { if (fields[k] === '') delete fields[k]; });
-
-    try {
-      const res = await fetch(API, {
-        method: 'POST',
-        headers: HEADERS,
-        body: JSON.stringify({ fields })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error?.message || 'Save failed');
-
-      allClips.unshift({ id: data.id, ...data.fields });
-      renderClips();
-      updateCount();
-
-      // Reset form
-      ['input-url','input-headline','input-note'].forEach(id => document.getElementById(id).value = '');
-      flash('✓ Dropped.', 'success');
-    } catch (e) {
-      flash(`Error: ${e.message}`, 'error');
-    }
-
-    btn.disabled = false;
-    btn.textContent = '+ Drop It';
-  }
-
-  /* ─── FILTER ─────────────────────────────────────── */
-  function setFilter(filter, el) {
-    activeFilter = filter;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
+    reader.readAsDataURL(file);
+  }));
+  Promise.all(promises).then(() => {
+    saveClips(clips);
     renderClips();
-  }
+    showToast(`${count} file${count !== 1 ? 's' : ''} added`, true);
+  });
+}
 
-  /* ─── HELPERS ────────────────────────────────────── */
-  function domainOf(url) {
-    try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return url; }
-  }
+// ── RENDER ────────────────────────────────────────────────────
+let activeFilter = 'all';
 
-  function isValidUrl(s) {
-    try { new URL(s); return true; } catch { return false; }
-  }
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderClips();
+}
 
-  function formatDate(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
+function badgeClass(tag) {
+  const map = { Tweet:'badge-tweet', Clip:'badge-clip', Article:'badge-article', Urgent:'badge-urgent', image:'badge-image', video:'badge-video', doc:'badge-doc', file:'badge-file' };
+  return map[tag] || 'badge-file';
+}
 
-  function escHtml(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
+}
+function formatSize(b) {
+  if (!b) return '';
+  if (b < 1024*1024) return (b/1024).toFixed(0) + 'KB';
+  return (b/1024/1024).toFixed(1) + 'MB';
+}
 
-  function flash(msg, type) {
-    const el = document.getElementById('drop-status');
-    el.textContent = msg;
-    el.className = `drop-status ${type}`;
-  }
-
-  function updateCount() {
-    const el = document.getElementById('clip-count');
-    el.textContent = allClips.length ? `${allClips.length} clip${allClips.length !== 1 ? 's' : ''}` : '';
-  }
-
-  /* ─── ENTER KEY ON URL ───────────────────────────── */
-  document.getElementById('input-url').addEventListener('keydown', e => {
-    if (e.key === 'Enter') dropClip();
+function renderClips() {
+  const q = (document.getElementById('clip-search').value || '').toLowerCase();
+  const all = loadClips().filter(c => {
+    const matchFilter = activeFilter === 'all' || c.tag === activeFilter || (activeFilter === 'file' && c.kind === 'file');
+    const searchStr = [c.title||'', c.name||'', c.url||'', c.note||'', c.tag||''].join(' ').toLowerCase();
+    return matchFilter && (!q || searchStr.includes(q));
   });
 
-  /* ─── INIT ───────────────────────────────────────── */
-  fetchClips();
-</script>
+  document.getElementById('clip-count').textContent = `${all.length} item${all.length !== 1 ? 's' : ''}`;
+  document.getElementById('empty-state').style.display = all.length ? 'none' : 'block';
 
+  document.getElementById('clips-grid').innerHTML = all.map(c => {
+    const badge = `<span class="clip-badge ${badgeClass(c.tag)}">${c.tag||c.kind}</span>`;
+    const dateStr = `<span class="clip-date">${formatDate(c.added)}</span>`;
+
+    if (c.kind === 'file') {
+      const thumb = c.tag === 'image'
+        ? `<img class="clip-thumb" src="${c.data}" alt="${c.name}" loading="lazy">`
+        : `<div class="clip-thumb-ph">${c.tag==='video'?'🎬':c.tag==='doc'?'📄':'📎'}</div>`;
+      return `<div class="clip-card">
+        ${thumb}
+        <div class="clip-card-top">
+          <div class="clip-badge-row">${badge}${dateStr}</div>
+          <div class="clip-title">${c.name}</div>
+          ${c.note ? `<div class="clip-note">${c.note}</div>` : ''}
+          <div class="clip-url">${formatSize(c.size)}</div>
+        </div>
+        <div class="clip-actions">
+          <button class="clip-action-btn" onclick="downloadFile('${c.id}')">Download</button>
+          <button class="clip-action-btn danger" onclick="deleteClip('${c.id}')">Remove</button>
+        </div>
+      </div>`;
+    } else {
+      // URL card
+      const domain = (() => { try { return new URL(c.url).hostname.replace('www.',''); } catch(e) { return c.url; } })();
+      return `<div class="clip-card">
+        <div class="clip-card-top">
+          <div class="clip-badge-row">${badge}${dateStr}</div>
+          <div class="clip-title">${c.title||c.url}</div>
+          <div class="clip-url">${domain}</div>
+          ${c.note ? `<div class="clip-note">${c.note}</div>` : ''}
+        </div>
+        <div class="clip-actions">
+          <button class="clip-action-btn" onclick="window.open('${c.url.replace(/'/g,'%27')}','_blank')">Open ↗</button>
+          <button class="clip-action-btn" onclick="copyURL('${c.url.replace(/'/g,'%27')}')">Copy URL</button>
+          <button class="clip-action-btn danger" onclick="deleteClip('${c.id}')">Remove</button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function downloadFile(id) {
+  const c = loadClips().find(x => String(x.id) === String(id));
+  if (!c) return;
+  const a = document.createElement('a');
+  a.href = c.data; a.download = c.name; a.click();
+}
+
+function copyURL(url) {
+  navigator.clipboard.writeText(url).then(() => showToast('URL copied', true));
+}
+
+function deleteClip(id) {
+  saveClips(loadClips().filter(c => String(c.id) !== String(id)));
+  renderClips();
+  showToast('Removed', false);
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag-over');
+  if (e.dataTransfer.files.length) processFiles(e.dataTransfer.files);
+});
+document.getElementById('file-input').addEventListener('change', e => {
+  if (e.target.files.length) processFiles(e.target.files);
+});
+
+// Keyboard shortcut — Enter to save URL
+document.getElementById('url-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addURL();
+});
+
+// ── TOAST ─────────────────────────────────────────────────────
+function showToast(msg, success = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (success ? ' success' : '');
+  setTimeout(() => { t.className = 'toast'; }, 2500);
+}
+
+renderClips();
+</script>
 </body>
 </html>
