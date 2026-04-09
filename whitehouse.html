@@ -22,8 +22,10 @@ body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--
 .ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
 .ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
 .ticker-wrap{display:flex;animation:ticker 90s linear infinite;width:max-content;padding-left:80px}
+.ticker-wrap.paused{animation-play-state:paused}
 .ticker-item{font-size:11px;font-weight:700;letter-spacing:0px;text-transform:uppercase;white-space:nowrap;padding-right:32px;color:rgba(255,255,255,.95)}
 .ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
+.ticker-source{font-size:9px;font-weight:700;color:rgba(255,255,255,.32);margin-right:6px;letter-spacing:0px;text-transform:uppercase}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* NAV */
@@ -119,14 +121,9 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
 </head>
 <body>
 
-<div class="ticker-bar">
+<div class="ticker-bar" onmouseenter="document.getElementById('wh-ticker').classList.add('paused')" onmouseleave="document.getElementById('wh-ticker').classList.remove('paused')">
   <div class="ticker-wrap" id="wh-ticker">
-    <span class="ticker-item">Administration Hub · Federal Cabinet Agencies · FL-21</span>
-    <span class="ticker-item">White House press releases update automatically via email</span>
-    <span class="ticker-item">Subscribe to agency newsletters to populate individual tiles</span>
-    <span class="ticker-item">Administration Hub · Federal Cabinet Agencies · FL-21</span>
-    <span class="ticker-item">White House press releases update automatically via email</span>
-    <span class="ticker-item">Subscribe to agency newsletters to populate individual tiles</span>
+    <span class="ticker-item">Loading White House releases…</span>
   </div>
 </div>
 
@@ -405,7 +402,72 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
   <div class="footer-text">Administration Hub · Federal Cabinet</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
+// ── WH TICKER ──────────────────────────────────────────────
+function parseCSVTicker(text) {
+  const rows = [];
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
+  for (let i = 1; i < lines.length; i++) {
+    const fields = [];
+    let cur = '', inQ = false;
+    for (const ch of lines[i]) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { fields.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    fields.push(cur.trim());
+    if (fields.length >= 2 && fields[0]) {
+      const obj = {};
+      headers.forEach((h, j) => obj[h] = (fields[j]||'').replace(/^"|"$/g,''));
+      rows.push(obj);
+    }
+  }
+  return rows;
+}
+
+async function initWHTicker() {
+  const wrap = document.getElementById('wh-ticker');
+  if (!wrap) return;
+  const FALLBACK = [
+    { title: 'White House releases will appear here automatically', label: 'WH', link: 'https://www.whitehouse.gov/news/' },
+    { title: 'Set up the Apps Script and Gmail filter to populate this feed', label: 'SETUP', link: '#' },
+    { title: 'Administration Hub · Federal Cabinet · FL-21', label: 'PLURIBUS', link: '#' },
+  ];
+  let items = [];
+  try {
+    const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTqGKG1uKOtR6Q3Hvyr0rQvm85TufTTA9XWSprDYbD_RE1zVtladWACO5LTPSpjBgbNKxrNF40glAsa/pub?output=csv&t=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) {
+      const text = await res.text();
+      const lines = text.trim().split('\n');
+      if (lines.length > 1) {
+        const rows = parseCSVTicker(text);
+        const dates = [...new Set(rows.map(r => r.date))].sort().reverse();
+        const latest = dates[0];
+        rows.filter(r => r.date === latest).forEach(r => {
+          if (r.title && r.title.length > 5) {
+            items.push({ title: r.title, label: r.type || 'WH', link: r.url || 'https://www.whitehouse.gov/news/' });
+          }
+        });
+      }
+    }
+  } catch(e) {}
+  if (items.length < 2) items = FALLBACK;
+  const makeSpan = ({title, label, link}) => {
+    const safe = title.replace(/"/g,'&quot;').toUpperCase().slice(0,130);
+    const href = (link||'#').replace(/'/g,'%27');
+    return `<span class="ticker-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" title="${safe}"><span class="ticker-source">${label}</span>${safe}</span>`;
+  };
+  const half = items.map(makeSpan).join('');
+  wrap.innerHTML = half + half;
+  const totalChars = items.reduce((n,i) => n + i.title.length, 0);
+  wrap.style.animationDuration = Math.max(60, Math.min(120, Math.round(totalChars * 0.45))) + 's';
+}
+initWHTicker();
+setInterval(initWHTicker, 15 * 60 * 1000);
+// ── END WH TICKER ───────────────────────────────────────────
+
+</script><script>
 document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
 // ── WH RELEASES from spreadsheet ──
@@ -448,4 +510,3 @@ function parseCSVSimple(text) {
 
 async function loadWHReleases() {
   const list = document.getElementById('wh-releases-list');
- 
