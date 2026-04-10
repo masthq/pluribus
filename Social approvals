@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Approvals · Pluribus</title>
+<link rel="stylesheet" href="design-tokens.css">
+<style>
+/* ── Only styles NOT already in design-tokens.css ─────────── */
+
+/* Stats — left border variants (extend shared .stat-card) */
+.stat-card { border-left: 3px solid; }
+.stat-card.s-ideas    { border-left-color: rgba(255,255,255,.12); }
+.stat-card.s-review   { border-left-color: var(--gold); }
+.stat-card.s-approved { border-left-color: var(--green); }
+.stat-card.s-scheduled{ border-left-color: var(--sky); }
+.stat-card.s-posted   { border-left-color: rgba(255,255,255,.12); }
+.stat-card.s-ideas    .stat-n { color: var(--text-sec); }
+.stat-card.s-review   .stat-n { color: var(--gold-lt); }
+.stat-card.s-approved .stat-n { color: var(--green); }
+.stat-card.s-scheduled .stat-n { color: var(--sky); }
+.stat-card.s-posted   .stat-n { color: var(--text-dim); }
+
+/* Toolbar (page-specific variant of filter-bar) */
+.toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.tb-label { font-size: 9px; font-weight: 700; letter-spacing: .10em; color: var(--text-sec); text-transform: uppercase; }
+.tb-btn {
+  font-family: var(--font-sans); font-size: 10px; font-weight: 600;
+  padding: 5px 11px; border-radius: var(--radius-sm);
+  border: 1px solid rgba(184,150,62,.18); background: transparent;
+  color: var(--text-sec); cursor: pointer; letter-spacing: .04em; transition: all .15s;
+}
+.tb-btn:hover { border-color: rgba(184,150,62,.4); color: var(--text); }
+.tb-btn.active { background: rgba(184,150,62,.12); border-color: rgba(184,150,62,.4); color: var(--gold-lt); }
+.tb-sep { width: 1px; height: 16px; background: rgba(255,255,255,.08); margin: 0 2px; }
+.tb-add {
+  margin-left: auto; font-family: var(--font-sans); font-size: 10px; font-weight: 700;
+  letter-spacing: .07em; text-transform: uppercase; padding: 6px 14px;
+  border-radius: var(--radius-sm); border: 1px solid rgba(184,150,62,.4);
+  background: rgba(184,150,62,.10); color: var(--gold-lt); cursor: pointer; transition: all .15s;
+}
+.tb-add:hover { background: rgba(184,150,62,.18); border-color: var(--gold); }
+
+/* Swim lanes */
+.lanes { display: flex; flex-direction: column; gap: 6px; }
+.lane { border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(255,255,255,.05); }
+
+.lane-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; cursor: pointer; user-select: none; transition: filter .15s;
+}
+.lane-header:hover { filter: brightness(1.08); }
+.lane-pip { width: 3px; height: 22px; border-radius: 2px; flex-shrink: 0; }
+.lane-title { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.lane-count { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+.lane-chevron { margin-left: auto; font-size: 10px; transition: transform .2s; opacity: .5; }
+.lane.collapsed .lane-chevron { transform: rotate(-90deg); }
+
+.lane-ideas    .lane-header { background: #0e0e0e; }
+.lane-review   .lane-header { background: #16110a; }
+.lane-approved .lane-header { background: #091109; }
+.lane-scheduled .lane-header { background: #080e14; }
+.lane-posted   .lane-header { background: #0a0a0a; }
+
+.lane-ideas    .lane-pip   { background: rgba(255,255,255,.15); }
+.lane-ideas    .lane-title { color: var(--text-sec); }
+.lane-ideas    .lane-count { background: rgba(255,255,255,.06); color: var(--text-sec); }
+.lane-review   .lane-pip   { background: var(--gold); }
+.lane-review   .lane-title { color: var(--gold-lt); }
+.lane-review   .lane-count { background: rgba(184,150,62,.18); color: var(--gold-lt); }
+.lane-approved .lane-pip   { background: var(--green); }
+.lane-approved .lane-title { color: var(--green); }
+.lane-approved .lane-count { background: rgba(61,184,122,.15); color: var(--green); }
+.lane-scheduled .lane-pip  { background: var(--sky); }
+.lane-scheduled .lane-title{ color: var(--sky); }
+.lane-scheduled .lane-count{ background: rgba(107,174,214,.15); color: var(--sky); }
+.lane-posted   .lane-pip   { background: rgba(255,255,255,.1); }
+.lane-posted   .lane-title { color: var(--text-dim); }
+.lane-posted   .lane-count { background: rgba(255,255,255,.04); color: var(--text-dim); }
+
+.lane-body {
+  background: rgba(0,0,0,.25); padding: 10px 12px;
+  overflow-x: auto; display: flex; gap: 10px; align-items: flex-start;
+  min-height: 140px; scrollbar-width: thin; scrollbar-color: rgba(184,150,62,.2) transparent;
+}
+.lane-body::-webkit-scrollbar { height: 4px; }
+.lane-body::-webkit-scrollbar-thumb { background: rgba(184,150,62,.2); border-radius: 2px; }
+.lane.collapsed .lane-body { display: none; }
+.lane-body.drag-active { outline: 1px dashed rgba(184,150,62,.3); outline-offset: -4px; }
+
+/* Cards */
+.card {
+  flex-shrink: 0; width: 210px;
+  background: var(--navy-card); border: 1px solid var(--border-card);
+  border-radius: var(--radius-md); padding: 12px 13px 10px;
+  cursor: grab; transition: border-color .15s, transform .15s, box-shadow .15s;
+  user-select: none; display: flex; flex-direction: column; gap: 7px;
+}
+.card:hover { border-color: rgba(184,150,62,.28); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+.card.dragging { opacity: .35; transform: scale(.96); cursor: grabbing; }
+.card.drag-target { border-color: var(--gold); background: var(--navy-hover); }
+
+.lane-ideas    .card { border-left: 2px solid rgba(255,255,255,.1); }
+.lane-review   .card { border-left: 2px solid var(--gold); }
+.lane-approved .card { border-left: 2px solid var(--green); }
+.lane-scheduled .card { border-left: 2px solid var(--sky); }
+.lane-posted   .card { border-left: 2px solid rgba(255,255,255,.1); opacity: .55; }
+
+.card-platforms { display: flex; gap: 4px; flex-wrap: wrap; }
+.plat { font-size: 7.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 2px 5px; border-radius: 2px; }
+.plat-fb { background: rgba(59,89,152,.25); color: #6b8fd4; }
+.plat-tw { background: rgba(29,161,242,.15); color: #5ab4e8; }
+.plat-tr { background: rgba(139,0,0,.20); color: var(--red-muted); }
+
+.card-copy { font-size: 11.5px; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: 9.5px; color: var(--text-dim); font-weight: 600; }
+.card-author { display: flex; align-items: center; gap: 4px; }
+.card-author-chip { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; flex-shrink: 0; }
+.card-date { font-size: 9px; color: var(--text-dim); }
+
+.card-actions { display: flex; gap: 5px; margin-top: 2px; }
+.card-btn { font-family: var(--font-sans); font-size: 8.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; border: none; cursor: pointer; transition: all .12s; flex: 1; text-align: center; }
+.card-btn-move    { background: rgba(184,150,62,.12); color: var(--gold-lt); }
+.card-btn-move:hover { background: rgba(184,150,62,.22); }
+.card-btn-approve { background: rgba(61,184,122,.1); color: var(--green); }
+.card-btn-approve:hover { background: rgba(61,184,122,.22); }
+.card-btn-more    { background: rgba(255,255,255,.05); color: var(--text-sec); flex: 0; padding: 3px 6px; }
+.card-btn-more:hover { background: rgba(255,255,255,.1); color: var(--text); }
+
+/* Modal save/cancel — not in tokens yet */
+.btn-save { font-family: var(--font-sans); font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 8px 18px; border-radius: var(--radius-sm); border: none; background: var(--gold); color: var(--navy); cursor: pointer; transition: all .15s; }
+.btn-save:hover { background: var(--gold-lt); }
+.btn-cancel { font-family: var(--font-sans); font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,.1); background: transparent; color: var(--text-sec); cursor: pointer; }
+.btn-cancel:hover { color: var(--text); }
+
+/* Platform toggles */
+.plat-toggles { display: flex; gap: 6px; }
+.plat-toggle { font-family: var(--font-sans); font-size: 9px; font-weight: 700; padding: 5px 10px; border-radius: 2px; border: 1px solid rgba(255,255,255,.1); background: transparent; color: var(--text-sec); cursor: pointer; transition: all .12s; }
+.plat-toggle.on-fb { background: rgba(59,89,152,.25); border-color: rgba(59,89,152,.5); color: #6b8fd4; }
+.plat-toggle.on-tw { background: rgba(29,161,242,.15); border-color: rgba(29,161,242,.4); color: #5ab4e8; }
+.plat-toggle.on-tr { background: rgba(139,0,0,.20); border-color: rgba(139,0,0,.4); color: var(--red-muted); }
+
+/* Detail modal */
+.detail-copy { font-size: 13px; color: var(--text); line-height: 1.6; white-space: pre-wrap; margin-bottom: 14px; }
+.detail-note { font-size: 11px; color: var(--text-sec); background: rgba(255,255,255,.03); border-left: 2px solid rgba(184,150,62,.3); padding: 8px 10px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 14px; line-height: 1.5; }
+.detail-meta { font-size: 10px; color: var(--text-dim); margin-bottom: 16px; }
+.detail-move { display: flex; gap: 6px; flex-wrap: wrap; }
+.stage-btn { font-family: var(--font-sans); font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,.1); background: transparent; color: var(--text-sec); cursor: pointer; transition: all .12s; }
+.stage-btn:hover { color: var(--text); border-color: rgba(255,255,255,.25); }
+.stage-btn.current { border-color: var(--gold); color: var(--gold-lt); background: rgba(184,150,62,.1); }
+</style>
+</head>
+<body>
+
+<!-- CHYRON -->
+<div class="chyron">
+  <div class="chyron-inner">
+    <div class="chyron-item"><span class="chyron-label">SOCIAL</span> Approvals Pipeline · Rep. Brian Mast FL-21</div>
+    <div class="chyron-dot"></div>
+    <div class="chyron-item"><span class="chyron-label">PLATFORMS</span> Facebook · X / Twitter · Truth Social</div>
+    <div class="chyron-dot"></div>
+    <div class="chyron-item"><span class="chyron-label">SOCIAL</span> Approvals Pipeline · Rep. Brian Mast FL-21</div>
+    <div class="chyron-dot"></div>
+    <div class="chyron-item"><span class="chyron-label">PLATFORMS</span> Facebook · X / Twitter · Truth Social</div>
+    <div class="chyron-dot"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="dashboard_v2.html" class="nav-logo">P</a>
+    <a href="dashboard_v2.html" class="nav-link">Dashboard</a>
+    <a href="resources.html" class="nav-link">Resources</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <div class="nav-date" id="nav-date"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-outer">
+  <div class="main-inner">
+
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div class="page-eyebrow">Comms · Social Media</div>
+        <div class="page-title">Approvals Pipeline</div>
+        <div class="page-sub">Ideas → Review → Approved → Scheduled → Posted</div>
+      </div>
+    </div>
+
+    <div class="stats-row" id="stats-row"></div>
+
+    <div class="toolbar">
+      <span class="tb-label">Filter</span>
+      <button class="tb-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="tb-btn" onclick="setFilter('fb',this)">Facebook</button>
+      <button class="tb-btn" onclick="setFilter('tw',this)">X / Twitter</button>
+      <button class="tb-btn" onclick="setFilter('tr',this)">Truth</button>
+      <div class="tb-sep"></div>
+      <button class="tb-btn" onclick="collapseAll()">Collapse All</button>
+      <button class="tb-btn" onclick="expandAll()">Expand All</button>
+      <button class="tb-add" onclick="openAddModal()">+ New Post</button>
+    </div>
+
+    <div class="lanes" id="lanes"></div>
+
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modal-title-text">New Post</span>
+      <button class="modal-close" onclick="closeAddModal()">×</button>
+    </div>
+    <div class="field"><label>Copy</label><textarea id="f-copy" placeholder="Paste or type the post copy…" rows="5"></textarea></div>
+    <div class="field">
+      <label>Platforms</label>
+      <div class="plat-toggles">
+        <button class="plat-toggle" id="t-fb" onclick="togglePlat('fb')">Facebook</button>
+        <button class="plat-toggle" id="t-tw" onclick="togglePlat('tw')">X / Twitter</button>
+        <button class="plat-toggle" id="t-tr" onclick="togglePlat('tr')">Truth Social</button>
+      </div>
+    </div>
+    <div class="field"><label>Stage</label>
+      <select id="f-stage">
+        <option value="ideas">Ideas</option>
+        <option value="review" selected>Review</option>
+        <option value="approved">Approved</option>
+        <option value="scheduled">Scheduled</option>
+        <option value="posted">Posted</option>
+      </select>
+    </div>
+    <div class="field"><label>Staff</label>
+      <select id="f-author">
+        <option value="KC">KC</option>
+        <option value="Savanah">Savanah</option>
+        <option value="David">David</option>
+        <option value="AMGB">AMGB</option>
+        <option value="Zach">Zach</option>
+      </select>
+    </div>
+    <div class="field"><label>Note / Context (optional)</label><textarea id="f-note" placeholder="Approval notes, graphic references, tag requests…" rows="2"></textarea></div>
+    <div class="field"><label>Scheduled Date (optional)</label><input type="date" id="f-date"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-save" onclick="savePost()">Save Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-bg" id="detail-modal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="detail-title">Post Detail</span>
+      <button class="modal-close" onclick="closeDetailModal()">×</button>
+    </div>
+    <div id="detail-platforms" style="display:flex;gap:4px;margin-bottom:12px"></div>
+    <div class="detail-copy" id="detail-copy"></div>
+    <div class="detail-note" id="detail-note" style="display:none"></div>
+    <div class="detail-meta" id="detail-meta"></div>
+    <div style="font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-sec);margin-bottom:8px">Move to stage</div>
+    <div class="detail-move" id="detail-move"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="editFromDetail()">Edit</button>
+      <button class="btn-cancel" onclick="deleteFromDetail()" style="color:var(--red-muted);border-color:rgba(192,96,96,.3)">Delete</button>
+      <button class="btn-save" onclick="closeDetailModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY = 'pluribus_social_v1';
+const STAGES = ['ideas','review','approved','scheduled','posted'];
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY) || 'null') || defaultData(); }
+  catch(e) { return defaultData(); }
+}
+function save(d) { localStorage.setItem(KEY, JSON.stringify(d)); }
+
+function defaultData() {
+  return {
+    posts: [
+      { id:uid(), stage:'review',    platforms:['fb','tw','tr'], copy:'House clears first OBBB procedural hurdle — one step closer to delivering on the promises we made to the American people.', note:'QT for TW / graphic for FB and Truth', author:'Savanah', date:'', created:Date.now()-3600000 },
+      { id:uid(), stage:'review',    platforms:['tw'],            copy:"Markets stabilize after tariff pause announcement. President Trump's strategy is working — America First means putting our economy first.", note:'Screenshot the chart from this morning', author:'David', date:'', created:Date.now()-7200000 },
+      { id:uid(), stage:'review',    platforms:['fb','tw'],       copy:'Mast leads veterans amendment in Armed Services markup — ensuring our heroes get the care and recognition they deserve.', note:'AMGB to approve before posting', author:'KC', date:'', created:Date.now()-1800000 },
+      { id:uid(), stage:'approved',  platforms:['fb','tw','tr'], copy:"Proud to stand with President Trump as we secure the border and protect American families. Dalilah's Law is the next step.", note:'AMGB APPROVED', author:'AMGB', date:'', created:Date.now()-86400000 },
+      { id:uid(), stage:'approved',  platforms:['fb','tr'],       copy:'The Everglades is our backyard. WRDA 2026 delivers the water infrastructure FL-21 deserves — clean water for our families.', note:'', author:'KC', date:'', created:Date.now()-172800000 },
+      { id:uid(), stage:'scheduled', platforms:['fb','tw','tr'], copy:'Today, the Medal of Sacrifice Act passed the House unanimously. Three Palm Beach County deputies will never be forgotten.', note:'', author:'David', date:'2026-04-11', created:Date.now()-259200000 },
+      { id:uid(), stage:'ideas',     platforms:['tw'],            copy:'Retweet — @POTUS on the Iran ceasefire agreement. Major win for American diplomacy.', note:'Check if we want to add comment or just RT', author:'Zach', date:'', created:Date.now()-900000 },
+      { id:uid(), stage:'ideas',     platforms:['fb','tw','tr'], copy:'Town hall reminder — Brian will be in Palm Beach Gardens this Saturday. Come talk policy, bring your questions.', note:'Need to confirm venue address from scheduler', author:'Savanah', date:'', created:Date.now()-1200000 },
+      { id:uid(), stage:'posted',    platforms:['fb','tw','tr'], copy:'Happy Easter from the Mast family. Wishing everyone in FL-21 a blessed holiday.', note:'', author:'KC', date:'2026-04-05', created:Date.now()-432000000 },
+    ],
+    collapsed: { posted: true }
+  };
+}
+
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+let data = load();
+let activeFilter = 'all';
+let editingId = null;
+let platState = { fb:false, tw:true, tr:false };
+let detailId = null;
+let dragId = null;
+
+const STAFF_COLORS = {
+  KC:      { bg:'#2a1a4a', color:'#9b8aff' },
+  Savanah: { bg:'#1a2e1a', color:'#5db87a' },
+  David:   { bg:'#0e1e30', color:'#6baed6' },
+  AMGB:    { bg:'#2e0e0e', color:'#c06060' },
+  Zach:    { bg:'#1e1a0a', color:'#c9a84c' },
+};
+function staffChip(a) {
+  const s = STAFF_COLORS[a]||{bg:'#1a1a1a',color:'#9a9585'};
+  return `<span class="card-author-chip" style="background:${s.bg};color:${s.color}">${a[0]}</span>${a}`;
+}
+
+function render() { renderStats(); renderLanes(); }
+
+function renderStats() {
+  const c={};STAGES.forEach(s=>c[s]=0);
+  data.posts.forEach(p=>{if(c[p.stage]!==undefined)c[p.stage]++;});
+  document.getElementById('stats-row').innerHTML=`
+    <div class="stat-card s-ideas"><div class="stat-n">${c.ideas}</div><div class="stat-label">Ideas</div></div>
+    <div class="stat-card s-review"><div class="stat-n">${c.review}</div><div class="stat-label">Review</div></div>
+    <div class="stat-card s-approved"><div class="stat-n">${c.approved}</div><div class="stat-label">Approved</div></div>
+    <div class="stat-card s-scheduled"><div class="stat-n">${c.scheduled}</div><div class="stat-label">Scheduled</div></div>
+    <div class="stat-card s-posted"><div class="stat-n">${c.posted}</div><div class="stat-label">Posted</div></div>`;
+}
+
+function renderLanes() {
+  const META={
+    ideas:    {label:'Ideas',    action:'Move to Review', next:'review'},
+    review:   {label:'Review',   action:'Approve',        next:'approved'},
+    approved: {label:'Approved', action:'Schedule',       next:'scheduled'},
+    scheduled:{label:'Scheduled',action:'Mark Posted',    next:'posted'},
+    posted:   {label:'Posted',   action:null,             next:null},
+  };
+  const wrap=document.getElementById('lanes');
+  wrap.innerHTML='';
+  STAGES.forEach(stage=>{
+    const m=META[stage];
+    const posts=data.posts.filter(p=>{
+      if(p.stage!==stage)return false;
+      return activeFilter==='all'||p.platforms.includes(activeFilter);
+    });
+    const laneEl=document.createElement('div');
+    laneEl.className=`lane lane-${stage}${data.collapsed[stage]?' collapsed':''}`;
+
+    const hdr=document.createElement('div');
+    hdr.className='lane-header';
+    hdr.innerHTML=`<div class="lane-pip"></div><div class="lane-title">${m.label}</div><div class="lane-count">${posts.length}</div><div class="lane-chevron">▾</div>`;
+    hdr.addEventListener('click',()=>toggleLane(stage));
+
+    const body=document.createElement('div');
+    body.className='lane-body';
+    body.addEventListener('dragover',e=>{e.preventDefault();body.classList.add('drag-active');});
+    body.addEventListener('dragleave',()=>body.classList.remove('drag-active'));
+    body.addEventListener('drop',e=>{
+      e.preventDefault();body.classList.remove('drag-active');
+      if(dragId){const p=data.posts.find(x=>x.id===dragId);if(p){p.stage=stage;save(data);render();}dragId=null;}
+    });
+
+    posts.forEach(post=>{
+      const card=document.createElement('div');
+      card.className='card';card.draggable=true;
+      const platsH=post.platforms.map(pl=>`<span class="plat plat-${pl}">${pl==='fb'?'Facebook':pl==='tw'?'Twitter':'Truth'}</span>`).join('');
+      const dateStr=post.date?`· ${post.date}`:'';
+      const actH=m.action
+        ?`<div class="card-actions"><button class="card-btn card-btn-${stage==='review'?'approve':'move'}" onclick="event.stopPropagation();movePost('${post.id}','${m.next}')">${m.action}</button><button class="card-btn card-btn-more" onclick="event.stopPropagation();openDetail('${post.id}')">···</button></div>`
+        :`<div class="card-actions"><button class="card-btn card-btn-more" style="flex:1" onclick="event.stopPropagation();openDetail('${post.id}')">View detail</button></div>`;
+      card.innerHTML=`<div class="card-platforms">${platsH}</div><div class="card-copy">${esc(post.copy)}</div><div class="card-meta"><div class="card-author">${staffChip(post.author)}</div><div class="card-date">${dateStr}</div></div>${actH}`;
+      card.addEventListener('click',()=>openDetail(post.id));
+      card.addEventListener('dragstart',e=>{dragId=post.id;card.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+      card.addEventListener('dragend',()=>{card.classList.remove('dragging');dragId=null;});
+      body.appendChild(card);
+    });
+
+    if(!posts.length){
+      const em=document.createElement('div');
+      em.style.cssText='font-size:10px;color:var(--text-dim);padding:20px 8px;align-self:center;white-space:nowrap';
+      em.textContent='No posts in this stage';body.appendChild(em);
+    }
+    laneEl.appendChild(hdr);laneEl.appendChild(body);wrap.appendChild(laneEl);
+  });
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function movePost(id,to){const p=data.posts.find(x=>x.id===id);if(p){p.stage=to;save(data);render();}}
+function toggleLane(s){data.collapsed[s]=!data.collapsed[s];save(data);render();}
+function collapseAll(){STAGES.forEach(s=>data.collapsed[s]=true);save(data);render();}
+function expandAll(){STAGES.forEach(s=>data.collapsed[s]=false);save(data);render();}
+function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.tb-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+
+function openAddModal(id){
+  editingId=id||null;
+  const p=id?data.posts.find(x=>x.id===id):null;
+  document.getElementById('modal-title-text').textContent=p?'Edit Post':'New Post';
+  document.getElementById('f-copy').value=p?p.copy:'';
+  document.getElementById('f-note').value=p?(p.note||''):'';
+  document.getElementById('f-date').value=p?(p.date||''):'';
+  document.getElementById('f-stage').value=p?p.stage:'review';
+  document.getElementById('f-author').value=p?p.author:'KC';
+  platState={fb:p?p.platforms.includes('fb'):false,tw:p?p.platforms.includes('tw'):true,tr:p?p.platforms.includes('tr'):false};
+  updatePlatToggles();
+  document.getElementById('add-modal').classList.add('open');
+}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');editingId=null;}
+function togglePlat(pl){platState[pl]=!platState[pl];updatePlatToggles();}
+function updatePlatToggles(){
+  document.getElementById('t-fb').className='plat-toggle'+(platState.fb?' on-fb':'');
+  document.getElementById('t-tw').className='plat-toggle'+(platState.tw?' on-tw':'');
+  document.getElementById('t-tr').className='plat-toggle'+(platState.tr?' on-tr':'');
+}
+function savePost(){
+  const copy=document.getElementById('f-copy').value.trim();if(!copy)return;
+  const platforms=Object.keys(platState).filter(k=>platState[k]);if(!platforms.length)platforms.push('tw');
+  const post={id:editingId||uid(),stage:document.getElementById('f-stage').value,platforms,copy,note:document.getElementById('f-note').value.trim(),author:document.getElementById('f-author').value,date:document.getElementById('f-date').value,created:editingId?(data.posts.find(p=>p.id===editingId)||{}).created||Date.now():Date.now()};
+  if(editingId){const i=data.posts.findIndex(p=>p.id===editingId);if(i>=0)data.posts[i]=post;}
+  else data.posts.unshift(post);
+  save(data);render();closeAddModal();
+  if(detailId===editingId){closeDetailModal();openDetail(post.id);}
+}
+
+function openDetail(id){
+  detailId=id;const p=data.posts.find(x=>x.id===id);if(!p)return;
+  document.getElementById('detail-title').textContent=p.author+' · '+(p.date||'No date');
+  document.getElementById('detail-platforms').innerHTML=p.platforms.map(pl=>`<span class="plat plat-${pl}">${pl==='fb'?'Facebook':pl==='tw'?'X / Twitter':'Truth Social'}</span>`).join('');
+  document.getElementById('detail-copy').textContent=p.copy;
+  const n=document.getElementById('detail-note');if(p.note){n.textContent=p.note;n.style.display='';}else n.style.display='none';
+  document.getElementById('detail-meta').textContent=`Stage: ${p.stage} · Author: ${p.author} · ${new Date(p.created).toLocaleDateString()}`;
+  document.getElementById('detail-move').innerHTML=STAGES.map(s=>`<button class="stage-btn${p.stage===s?' current':''}" onclick="movePost('${id}','${s}');closeDetailModal();render()">${s[0].toUpperCase()+s.slice(1)}</button>`).join('');
+  document.getElementById('detail-modal').classList.add('open');
+}
+function closeDetailModal(){document.getElementById('detail-modal').classList.remove('open');detailId=null;}
+function editFromDetail(){const id=detailId;closeDetailModal();openAddModal(id);}
+function deleteFromDetail(){if(!detailId)return;if(!confirm('Delete this post?'))return;data.posts=data.posts.filter(p=>p.id!==detailId);save(data);render();closeDetailModal();}
+
+document.getElementById('add-modal').addEventListener('click',e=>{if(e.target.id==='add-modal')closeAddModal();});
+document.getElementById('detail-modal').addEventListener('click',e=>{if(e.target.id==='detail-modal')closeDetailModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAddModal();closeDetailModal();}});
+document.getElementById('nav-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+render();
+</script>
+</body>
+</html>
