@@ -430,6 +430,14 @@ document.getElementById('navDate').textContent =
     );
   }
 
+  // Split excerpt into sentences, return only those containing a Mast mention
+  function extractMastSentence(text){
+    if (!text) return '';
+    const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+    const hits = sentences.filter(s => /Brian Mast|Rep\.?\s*Mast|\bMast\b/i.test(s));
+    return hits.length ? hits.join(' ').trim() : '';
+  }
+
   async function load(){
     try {
       const res  = await fetch(SHEET_URL);
@@ -472,7 +480,9 @@ document.getElementById('navDate').textContent =
       const cleanAudience  = stripJunk(m.audience);
       const cleanPublicity = stripJunk(m.publicity);
       const cleanDate      = stripJunk(m.dateCollected);
-      const cleanExcerpt   = stripJunk(m.excerpt);
+      const cleanExcerpt = stripJunk(m.excerpt);
+      // Extract only the sentence(s) containing a Mast mention
+      const mastSentence = extractMastSentence(cleanExcerpt);
 
       let footerHTML = '';
       if (cleanAudience)  footerHTML += `<div class="mc-stat">Audience <span>${Number(cleanAudience.replace(/,/g,'')).toLocaleString()}</span></div>`;
@@ -485,7 +495,7 @@ document.getElementById('navDate').textContent =
             <div class="mc-slide-headline">${highlightMast(m.headline)}</div>
             <div class="mc-slide-outlet">${esc(stripJunk(m.outlet))}${m.market ? ' · ' + esc(stripJunk(m.market)) : ''}</div>
           </div>
-          ${cleanExcerpt ? `<div class="mc-slide-excerpt">"…${highlightMast(cleanExcerpt.slice(0,130))}…"</div>` : ''}
+          ${mastSentence ? `<div class="mc-slide-excerpt">"${highlightMast(mastSentence)}"</div>` : ''}
         </div>
         <div class="mc-slide-footer">${footerHTML}</div>
       `;
