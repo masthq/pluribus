@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy · Pluribus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
+  --crimson:#8b0000;--crimson-lt:#a31010;
+  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
+  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;
+  --red-medium:#d04040;--red-muted:#c06060;
+  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
+  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+  --font-sans:'Libre Franklin',sans-serif;--font-serif:'Instrument Serif',serif;
+  --page-pad:32px;--radius-sm:3px;--radius-md:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-sans);background:var(--navy);color:var(--text);min-height:100vh}
+
+/* TICKER */
+.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
+.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
+.ticker-wrap{display:flex;animation:ticker 38s linear infinite;width:max-content;padding-left:80px}
+.ticker-item{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95)}
+.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
+nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
+.nav-brand{display:flex;align-items:center;padding:10px 0;margin-right:48px;text-decoration:none}
+.nav-seal{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;background:transparent}
+.nav-seal-p{font-family:var(--font-serif);font-style:italic;font-size:22px;color:var(--gold);line-height:1;margin-top:1px}
+.nav-links{display:flex;list-style:none}
+.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
+.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
+.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
+.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
+
+/* PAGE HEADER */
+.page-header{padding:36px 32px 0;max-width:1440px;margin:0 auto}
+.page-eyebrow{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.page-title{font-size:36px;font-weight:900;color:#fff;line-height:1;letter-spacing:-0.5px;margin-bottom:6px}
+.page-desc{font-family:var(--font-serif);font-style:italic;font-size:13px;color:#cdc8bf;margin-bottom:28px;line-height:1.6}
+.page-rule{height:1px;background:var(--border);margin-bottom:28px}
+
+main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
+
+/* CONTROLS BAR */
+.controls-bar{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.dir-search{flex:1;min-width:200px;max-width:300px;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:13px;font-family:var(--font-sans);color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.dir-search:focus{border-color:var(--gold)}
+.dir-search::placeholder{color:var(--text-dim)}
+.filter-group{display:flex;gap:6px;flex-wrap:wrap}
+.dir-filter{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s;white-space:nowrap}
+.dir-filter:hover,.dir-filter.active{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
+.results-count{font-size:10px;color:var(--text-dim);font-weight:600}
+.add-btn{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:8px 18px;border-radius:4px;border:1px solid var(--gold);background:var(--gold-dim);color:var(--gold-lt);cursor:pointer;font-family:var(--font-sans);transition:all .15s;display:flex;align-items:center;gap:6px}
+.add-btn:hover{background:var(--gold);color:var(--navy)}
+.add-btn::before{content:'+';font-size:14px;font-weight:900}
+
+/* URGENCY STATS */
+.stat-row{display:flex;gap:10px;margin-bottom:20px}
+.stat-pill{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:4px;padding:10px 18px;display:flex;align-items:center;gap:10px}
+.stat-pill-num{font-size:20px;font-weight:900;color:var(--text);line-height:1}
+.stat-pill-label{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.stat-pill-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:6px;border:1px solid var(--border-dim)}
+.proj-table{width:100%;border-collapse:collapse;min-width:900px}
+.proj-table th{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border-dim);text-align:left;background:var(--navy-mid);white-space:nowrap;cursor:pointer;user-select:none}
+.proj-table th:hover{color:var(--gold-lt)}
+.proj-table td{padding:10px 14px;border-bottom:1px solid var(--border-dim);font-size:12px;color:var(--text-sec);vertical-align:middle}
+.proj-table tbody tr:last-child td{border-bottom:none}
+.proj-table tbody tr:hover td{background:var(--navy-hover)}
+.proj-table tbody tr{cursor:pointer}
+.col-org{font-size:13px;font-weight:700;color:var(--text)}
+.col-notes{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;color:var(--text-sec)}
+
+/* URGENCY BADGE on due date */
+.due-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:3px}
+.due-overdue{background:rgba(139,0,0,.2);color:#d04040}
+.due-soon{background:rgba(184,150,62,.15);color:#c9a84c}
+.due-ok{background:rgba(61,184,122,.1);color:#3db87a}
+.due-none{color:var(--text-dim);font-size:11px}
+
+/* PROGRESS BADGE */
+.prog-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:2px;display:inline-block;white-space:nowrap}
+.prog-not-started{background:rgba(255,255,255,.05);color:var(--text-dim)}
+.prog-in-the-works{background:rgba(107,174,214,.12);color:var(--sky)}
+.prog-drafted{background:rgba(184,150,62,.15);color:var(--gold-lt)}
+.prog-complete{background:rgba(61,184,122,.15);color:var(--green)}
+
+/* LOCATION BADGE */
+.loc-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:2px;display:inline-block}
+.loc-dc{background:rgba(139,0,0,.15);color:#c06060}
+.loc-district{background:rgba(107,174,214,.1);color:var(--sky)}
+.loc-other{background:rgba(255,255,255,.05);color:var(--text-sec)}
+
+/* STAFF CHIP */
+.staff-chip{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--navy-mid);border:1px solid var(--border-dim);font-size:9px;font-weight:900;color:var(--text-sec);text-transform:uppercase;letter-spacing:.5px}
+
+/* URL ICON */
+.url-icon{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-dim);font-size:11px;text-decoration:none;transition:all .15s}
+.url-icon:hover{border-color:var(--sky);color:var(--sky);background:rgba(107,174,214,.1)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-dim)}
+.empty-state-icon{font-size:32px;margin-bottom:12px;opacity:.3}
+.empty-state-text{font-size:13px;font-weight:600}
+
+/* ACTION BUTTONS in row */
+.row-actions{display:flex;gap:4px;opacity:0;transition:opacity .15s}
+tr:hover .row-actions{opacity:1}
+.row-btn{font-size:9px;font-weight:700;padding:3px 7px;border-radius:2px;border:1px solid var(--border-dim);background:transparent;color:var(--text-dim);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.row-btn:hover{border-color:var(--gold);color:var(--gold-lt)}
+.row-btn.del:hover{border-color:var(--crimson-lt);color:#d04040}
+
+/* LOADING */
+.loading-row td{text-align:center;padding:40px;color:var(--text-dim);font-size:12px}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(5,10,20,.8);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;backdrop-filter:blur(4px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--navy-card);border:1px solid var(--border);border-radius:8px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;padding:32px;position:relative;transform:translateY(12px);transition:transform .2s}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text-dim);font-size:18px;cursor:pointer;line-height:1;padding:4px 8px;border-radius:3px;font-family:var(--font-sans)}
+.modal-close:hover{color:var(--text);background:var(--border-dim)}
+.modal-title{font-size:18px;font-weight:900;color:#fff;margin-bottom:4px}
+.modal-sub{font-family:var(--font-serif);font-style:italic;font-size:12px;color:var(--text-sec);margin-bottom:24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-dim)}
+.form-input,.form-select,.form-textarea{background:var(--navy-mid);border:1px solid var(--border-dim);border-radius:4px;padding:8px 12px;font-size:13px;font-family:var(--font-sans);color:var(--text);outline:none;transition:border-color .15s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--text-dim)}
+.form-select option{background:var(--navy-mid)}
+.form-textarea{min-height:80px;resize:vertical;line-height:1.5}
+.form-actions{display:flex;gap:10px;margin-top:24px;justify-content:flex-end}
+.btn-cancel{font-size:11px;font-weight:700;padding:9px 18px;border-radius:4px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.btn-cancel:hover{border-color:var(--text-sec);color:var(--text)}
+.btn-save{font-size:11px;font-weight:800;letter-spacing:.5px;padding:9px 22px;border-radius:4px;border:1px solid var(--gold);background:var(--gold-dim);color:var(--gold-lt);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
+.btn-save:hover{background:var(--gold);color:var(--navy)}
+.btn-save:disabled{opacity:.5;cursor:not-allowed}
+.form-note{font-size:10px;color:var(--text-dim);margin-top:3px}
+
+/* OTHER STAFF REVEAL */
+#other-name-group{display:none}
+#other-name-group.visible{display:flex}
+
+/* DELETE CONFIRM */
+.delete-confirm{background:rgba(139,0,0,.12);border:1px solid rgba(139,0,0,.3);border-radius:6px;padding:16px;margin-bottom:20px;font-size:12px;color:#d04040;line-height:1.5;display:none}
+.delete-confirm.visible{display:block}
+
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:20px}
+.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
+.footer-text span{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-wrap">
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
+    <span class="ticker-item">House passes defense supplemental 218–210</span>
+    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
+    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
+    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
+    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="dashboard_v2.html">
+    <div class="nav-seal"><span class="nav-seal-p">P</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="dashboard_v2.html">Dashboard</a></li>
+    <li><a href="resources.html">Resources</a></li>
+    <li><a href="clipdrop.html">Clip Drop</a></li>
+  </ul>
+  <div class="nav-right"><span id="nav-date"></span></div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-eyebrow">Long-Term Planning</div>
+  <div class="page-title">Strategy</div>
+  <div class="page-desc">Project tracker — deadlines, deliverables, and progress across DC and district.</div>
+  <div class="page-rule"></div>
+</div>
+
+<main>
+  <!-- STAT PILLS -->
+  <div class="stat-row" id="stat-row">
+    <div class="stat-pill">
+      <div class="stat-pill-dot" style="background:var(--red-medium)"></div>
+      <div>
+        <div class="stat-pill-num" id="stat-overdue">—</div>
+        <div class="stat-pill-label">Overdue</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-pill-dot" style="background:var(--gold)"></div>
+      <div>
+        <div class="stat-pill-num" id="stat-soon">—</div>
+        <div class="stat-pill-label">Due within 7 days</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-pill-dot" style="background:var(--sky)"></div>
+      <div>
+        <div class="stat-pill-num" id="stat-inprog">—</div>
+        <div class="stat-pill-label">In progress</div>
+      </div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-pill-dot" style="background:var(--green)"></div>
+      <div>
+        <div class="stat-pill-num" id="stat-complete">—</div>
+        <div class="stat-pill-label">Complete</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <input class="dir-search" type="text" placeholder="Search org, type, staff, notes…" id="proj-search" oninput="renderTable()">
+    <div class="filter-group">
+      <button class="dir-filter active" onclick="setFilter('all',this)">All</button>
+      <button class="dir-filter" onclick="setFilter('DC',this)">DC</button>
+      <button class="dir-filter" onclick="setFilter('District',this)">District</button>
+      <button class="dir-filter" onclick="setFilter('Not started',this)">Not started</button>
+      <button class="dir-filter" onclick="setFilter('In the works',this)">In the works</button>
+      <button class="dir-filter" onclick="setFilter('Drafted',this)">Drafted</button>
+      <button class="dir-filter" onclick="setFilter('Complete',this)">Complete</button>
+    </div>
+    <div class="results-count" id="results-count"></div>
+    <button class="add-btn" onclick="openModal()">Add Project</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap">
+    <table class="proj-table">
+      <thead>
+        <tr>
+          <th onclick="sortBy('Due_Date')">Due Date ↕</th>
+          <th onclick="sortBy('Location')">Location ↕</th>
+          <th onclick="sortBy('Org')">Org ↕</th>
+          <th onclick="sortBy('Type')">Type ↕</th>
+          <th onclick="sortBy('Staff')">Staff ↕</th>
+          <th onclick="sortBy('Progress')">Progress ↕</th>
+          <th>Link</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="proj-tbody">
+        <tr class="loading-row"><td colspan="9">Loading projects…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title" id="modal-title">Add Project</div>
+    <div class="modal-sub" id="modal-sub">Fill in the details below. All fields except notes and URL are required.</div>
+
+    <div class="delete-confirm" id="delete-confirm">
+      Are you sure you want to delete this project? This cannot be undone.
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-cancel" onclick="document.getElementById('delete-confirm').classList.remove('visible')">Cancel</button>
+        <button class="btn-save" style="border-color:var(--crimson-lt);background:rgba(139,0,0,.15);color:#d04040" onclick="confirmDelete()">Yes, delete</button>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Location *</label>
+        <select class="form-select" id="f-location">
+          <option value="">Select…</option>
+          <option>DC</option>
+          <option>District</option>
+          <option>Remote</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Due Date *</label>
+        <input class="form-input" type="date" id="f-due-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Org / Event *</label>
+        <input class="form-input" type="text" placeholder="e.g. HALO, House, Keiser" id="f-org">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type / Deliverable *</label>
+        <input class="form-input" type="text" placeholder="e.g. Floor speech, Remarks" id="f-type">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Staff *</label>
+        <select class="form-select" id="f-staff" onchange="handleStaffChange()">
+          <option value="">Select…</option>
+          <option>Kate</option>
+          <option>Savanah</option>
+          <option>David</option>
+          <option>AMGB</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Progress *</label>
+        <select class="form-select" id="f-progress">
+          <option value="">Select…</option>
+          <option>Not started</option>
+          <option>In the works</option>
+          <option>Drafted</option>
+          <option>Complete</option>
+        </select>
+      </div>
+      <div class="form-group full" id="other-name-group">
+        <label class="form-label">Staff name (other)</label>
+        <input class="form-input" type="text" placeholder="Enter name" id="f-staff-other">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Document URL <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:9px">— optional</span></label>
+        <input class="form-input" type="url" placeholder="https://docs.google.com/…" id="f-url">
+        <div class="form-note">Google Doc, Drive link, or any direct URL for the draft or reference material.</div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Notes <span style="color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0;font-size:9px">— optional</span></label>
+        <textarea class="form-textarea" placeholder="Context, instructions, constraints…" id="f-notes"></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" id="btn-save" onclick="saveProject()">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
+  <div class="footer-text">Strategy · Long-term planning</div>
+</footer>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────
+const BASE_ID  = 'appolE86XNzvXIvkZ';
+const TABLE_ID = 'tblThqZ8aIffLGDLb';
+const PAT      = 'patdtR6wMxKFO3ULn.9d9f76b9d95ea1ae5a8eeefa67da40ec72e4ce80cf3c3e37c3b2b4f2bad2e70';
+const API_URL  = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
+const HEADERS  = { 'Authorization': `Bearer ${PAT}`, 'Content-Type': 'application/json' };
+
+// ── STATE ────────────────────────────────────────────
+let allProjects = [];
+let currentFilter = 'all';
+let currentSort = { col: 'Due_Date', asc: true };
+let editingId = null;
+
+// ── AIRTABLE FETCH ───────────────────────────────────
+async function loadProjects() {
+  try {
+    let records = [], offset = null;
+    do {
+      const url = API_URL + '?pageSize=100' + (offset ? `&offset=${offset}` : '');
+      const res = await fetch(url, { headers: HEADERS });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error.message);
+      records = records.concat(data.records || []);
+      offset = data.offset || null;
+    } while (offset);
+
+    allProjects = records.map(r => ({
+      id: r.id,
+      Location:  r.fields['Location']  || '',
+      Due_Date:  r.fields['Due Date']   || '',
+      Org:       r.fields['Org']        || '',
+      Type:      r.fields['Type']       || '',
+      Staff:     r.fields['Staff']      || '',
+      Progress:  r.fields['Progress']   || '',
+      URL:       r.fields['URL']        || '',
+      Notes:     r.fields['Notes']      || '',
+    }));
+    updateStats();
+    renderTable();
+  } catch(e) {
+    document.getElementById('proj-tbody').innerHTML =
+      `<tr class="loading-row"><td colspan="9" style="color:var(--red-muted)">Error loading data: ${e.message}</td></tr>`;
+  }
+}
+
+// ── STATS ─────────────────────────────────────────────
+function updateStats() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const soon = new Date(now); soon.setDate(soon.getDate() + 7);
+  let overdue = 0, soonCount = 0, inprog = 0, complete = 0;
+  allProjects.forEach(p => {
+    if (p.Due_Date) {
+      const d = new Date(p.Due_Date + 'T12:00:00');
+      if (d < now && p.Progress !== 'Complete') overdue++;
+      else if (d >= now && d <= soon && p.Progress !== 'Complete') soonCount++;
+    }
+    if (p.Progress === 'In the works' || p.Progress === 'Drafted') inprog++;
+    if (p.Progress === 'Complete') complete++;
+  });
+  document.getElementById('stat-overdue').textContent = overdue;
+  document.getElementById('stat-soon').textContent = soonCount;
+  document.getElementById('stat-inprog').textContent = inprog;
+  document.getElementById('stat-complete').textContent = complete;
+}
+
+// ── RENDER TABLE ──────────────────────────────────────
+function renderTable() {
+  const q = document.getElementById('proj-search').value.toLowerCase();
+  let rows = allProjects.filter(p => {
+    const filterMatch = currentFilter === 'all'
+      || p.Location === currentFilter
+      || p.Progress === currentFilter;
+    const qMatch = !q || [p.Org, p.Type, p.Staff, p.Notes, p.Location].join(' ').toLowerCase().includes(q);
+    return filterMatch && qMatch;
+  });
+
+  // Sort
+  rows.sort((a,b) => {
+    let av = (a[currentSort.col] || '').toLowerCase();
+    let bv = (b[currentSort.col] || '').toLowerCase();
+    if (currentSort.col === 'Due_Date') {
+      av = a.Due_Date || '9999-99-99';
+      bv = b.Due_Date || '9999-99-99';
+    }
+    return currentSort.asc ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
+
+  document.getElementById('results-count').textContent = `${rows.length} project${rows.length !== 1 ? 's' : ''}`;
+
+  if (!rows.length) {
+    document.getElementById('proj-tbody').innerHTML =
+      `<tr><td colspan="9"><div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">No projects found</div></div></td></tr>`;
+    return;
+  }
+
+  document.getElementById('proj-tbody').innerHTML = rows.map(p => `
+    <tr onclick="openEdit('${p.id}')">
+      <td>${dueBadge(p.Due_Date, p.Progress)}</td>
+      <td>${locBadge(p.Location)}</td>
+      <td class="col-org">${esc(p.Org) || '—'}</td>
+      <td style="font-size:11px;color:var(--text-sec)">${esc(p.Type) || '—'}</td>
+      <td>${staffChip(p.Staff)}</td>
+      <td>${progBadge(p.Progress)}</td>
+      <td>${p.URL ? `<a class="url-icon" href="${esc(p.URL)}" target="_blank" onclick="event.stopPropagation()" title="Open document">↗</a>` : '<span style="color:var(--text-dim);font-size:11px">—</span>'}</td>
+      <td class="col-notes" title="${esc(p.Notes)}">${esc(p.Notes) || '—'}</td>
+      <td>
+        <div class="row-actions">
+          <button class="row-btn" onclick="event.stopPropagation();openEdit('${p.id}')">edit</button>
+          <button class="row-btn del" onclick="event.stopPropagation();openDelete('${p.id}')">del</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ── BADGE HELPERS ─────────────────────────────────────
+function esc(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function dueBadge(date, progress) {
+  if (!date) return '<span class="due-none">—</span>';
+  const now = new Date(); now.setHours(0,0,0,0);
+  const d = new Date(date + 'T12:00:00');
+  const diff = Math.round((d - now) / 86400000);
+  const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (progress === 'Complete') return `<span class="due-badge due-ok">✓ ${label}</span>`;
+  if (diff < 0) return `<span class="due-badge due-overdue">⚠ ${label}</span>`;
+  if (diff <= 7) return `<span class="due-badge due-soon">◆ ${label}</span>`;
+  return `<span class="due-badge due-ok">${label}</span>`;
+}
+
+function locBadge(loc) {
+  if (!loc) return '—';
+  const cls = loc === 'DC' ? 'loc-dc' : loc === 'District' ? 'loc-district' : 'loc-other';
+  return `<span class="loc-badge ${cls}">${esc(loc)}</span>`;
+}
+
+function progBadge(prog) {
+  if (!prog) return '—';
+  const map = {
+    'Not started': 'prog-not-started',
+    'In the works': 'prog-in-the-works',
+    'Drafted': 'prog-drafted',
+    'Complete': 'prog-complete',
+  };
+  return `<span class="prog-badge ${map[prog] || 'prog-not-started'}">${esc(prog)}</span>`;
+}
+
+function staffChip(name) {
+  if (!name) return '<span style="color:var(--text-dim);font-size:11px">—</span>';
+  const initials = name.length <= 5 ? name : name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  return `<span class="staff-chip" title="${esc(name)}">${esc(initials)}</span>`;
+}
+
+// ── FILTER / SORT ─────────────────────────────────────
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.dir-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function sortBy(col) {
+  if (currentSort.col === col) currentSort.asc = !currentSort.asc;
+  else { currentSort.col = col; currentSort.asc = true; }
+  renderTable();
+}
+
+// ── MODAL ─────────────────────────────────────────────
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById('delete-confirm').classList.remove('visible');
+  document.getElementById('modal-title').textContent = id ? 'Edit Project' : 'Add Project';
+  document.getElementById('modal-sub').textContent = id
+    ? 'Update the fields below and save.'
+    : 'Fill in the details below. All fields except notes and URL are required.';
+
+  if (id) {
+    const p = allProjects.find(x => x.id === id);
+    document.getElementById('f-location').value = p.Location;
+    document.getElementById('f-due-date').value = p.Due_Date;
+    document.getElementById('f-org').value = p.Org;
+    document.getElementById('f-type').value = p.Type;
+    document.getElementById('f-progress').value = p.Progress;
+    document.getElementById('f-notes').value = p.Notes;
+    document.getElementById('f-url').value = p.URL;
+
+    // Staff handling
+    const staffOptions = ['Kate','Savanah','David','AMGB'];
+    if (staffOptions.includes(p.Staff)) {
+      document.getElementById('f-staff').value = p.Staff;
+      document.getElementById('f-staff-other').value = '';
+      document.getElementById('other-name-group').classList.remove('visible');
+    } else if (p.Staff) {
+      document.getElementById('f-staff').value = 'Other';
+      document.getElementById('f-staff-other').value = p.Staff;
+      document.getElementById('other-name-group').classList.add('visible');
+    } else {
+      document.getElementById('f-staff').value = '';
+      document.getElementById('f-staff-other').value = '';
+      document.getElementById('other-name-group').classList.remove('visible');
+    }
+  } else {
+    clearForm();
+  }
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openEdit(id) { openModal(id); }
+
+function openDelete(id) {
+  editingId = id;
+  const p = allProjects.find(x => x.id === id);
+  document.getElementById('modal-title').textContent = 'Delete Project';
+  document.getElementById('modal-sub').textContent = `"${p.Org} — ${p.Type}"`;
+  document.getElementById('delete-confirm').classList.add('visible');
+  clearForm();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function clearForm() {
+  ['f-location','f-due-date','f-org','f-type','f-staff','f-progress','f-url','f-notes','f-staff-other']
+    .forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('other-name-group').classList.remove('visible');
+}
+
+function handleStaffChange() {
+  const val = document.getElementById('f-staff').value;
+  const grp = document.getElementById('other-name-group');
+  val === 'Other' ? grp.classList.add('visible') : grp.classList.remove('visible');
+}
+
+// ── SAVE ──────────────────────────────────────────────
+async function saveProject() {
+  const location = document.getElementById('f-location').value.trim();
+  const dueDate  = document.getElementById('f-due-date').value;
+  const org      = document.getElementById('f-org').value.trim();
+  const type     = document.getElementById('f-type').value.trim();
+  const staffSel = document.getElementById('f-staff').value;
+  const staffOther = document.getElementById('f-staff-other').value.trim();
+  const staff    = staffSel === 'Other' ? staffOther : staffSel;
+  const progress = document.getElementById('f-progress').value;
+  const url      = document.getElementById('f-url').value.trim();
+  const notes    = document.getElementById('f-notes').value.trim();
+
+  if (!location || !dueDate || !org || !type || !staff || !progress) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  const fields = {
+    'Location': location,
+    'Due Date': dueDate,
+    'Org': org,
+    'Type': type,
+    'Staff': staff,
+    'Progress': progress,
+    'Notes': notes,
+  };
+  if (url) fields['URL'] = url;
+
+  try {
+    if (editingId) {
+      await fetch(`${API_URL}/${editingId}`, {
+        method: 'PATCH',
+        headers: HEADERS,
+        body: JSON.stringify({ fields }),
+      });
+    } else {
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: HEADERS,
+        body: JSON.stringify({ fields }),
+      });
+    }
+    closeModal();
+    await loadProjects();
+  } catch(e) {
+    alert('Error saving: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Save Project';
+  }
+}
+
+// ── DELETE ─────────────────────────────────────────────
+async function confirmDelete() {
+  if (!editingId) return;
+  try {
+    await fetch(`${API_URL}/${editingId}`, { method: 'DELETE', headers: HEADERS });
+    closeModal();
+    await loadProjects();
+  } catch(e) {
+    alert('Error deleting: ' + e.message);
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────
+document.getElementById('nav-date').textContent =
+  new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+
+loadProjects();
+</script>
+</body>
+</html>
