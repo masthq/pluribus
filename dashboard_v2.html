@@ -3,822 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pluribus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<title>Mast Comms HQ — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
-  --crimson:#8b0000;--crimson-lt:#a31010;
-  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
-  --sky:#6baed6;--white:#fff;
-  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
-  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
-  --cal-wh:#b8963e;--cal-vote:#8b0000;--cal-hear:#6baed6;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh}
 
-/* TICKER */
-.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative;cursor:pointer}
-.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
-.ticker-wrap{display:flex;animation:ticker 60s linear infinite;width:max-content;padding-left:80px}
-.ticker-wrap.paused{animation-play-state:paused}
-.ticker-item{font-size:11px;font-weight:700;letter-spacing:0px;text-transform:uppercase;white-space:nowrap;padding-right:32px;color:rgba(255,255,255,.95);cursor:pointer;transition:color .15s}
-.ticker-item:hover{color:var(--gold-lt)}
-.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
-.ticker-source{font-size:9px;font-weight:700;color:rgba(255,255,255,.32);margin-right:6px;letter-spacing:0px;text-transform:uppercase}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* CHYRON — full bleed red bar, white text */
+.chyron{background:#8b0000;padding:5px 0;overflow:hidden;white-space:nowrap}
+.chyron-inner{display:inline-flex;gap:40px;padding:0 32px;animation:scroll 32s linear infinite}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.chyron-item{font-size:10px;color:#ffffff;display:flex;gap:8px;align-items:center;font-weight:700}
+.chyron-label{font-weight:700;font-size:9px;letter-spacing:.09em;opacity:.75}
+.chyron-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.5);flex-shrink:0}
 
-/* NAV */
-nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
-.nav-brand{display:flex;align-items:center;gap:0;padding:10px 0;margin-right:48px;text-decoration:none}
-.nav-seal{width:38px;height:38px;border-radius:50%;border:1.5px solid #b8963e;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent}
-.nav-seal-p{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:#b8963e;line-height:1;margin-top:1px}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+/* NAV — full bleed, content inside wrapper */
+.nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,0.18)}
+.nav-inner{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
+.nav-logo{width:26px;height:26px;border-radius:50%;background:rgba(184,150,62,0.15);border:1px solid rgba(184,150,62,0.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#b8963e;margin-right:20px;flex-shrink:0}
+.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer}
+.nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
+.nav-date{margin-left:auto;font-size:11px;color:#9a9585}
 
-.nav-links{display:flex;list-style:none}
-.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
-.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
-.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
-.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
+/* MAIN CONTENT */
+.main-outer{width:100%}
+.main-inner{max-width:900px;margin:0 auto;padding:20px 32px 32px}
 
-/* MAIN */
-main{padding:28px 32px 48px;max-width:1440px;margin:0 auto}
-.page-eyebrow{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:22px;display:flex;align-items:center;gap:10px}
-.page-eyebrow::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#9a9585;text-transform:uppercase;margin-bottom:10px}
 
-/* TILE GRID */
-.tile-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 
-/* TILE */
-.tile{aspect-ratio:1/1;border-radius:6px;border:1px solid var(--border-dim);background:var(--navy-card);position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .18s}
-.tile:hover{border-color:var(--border);transform:translateY(-2px)}
-.tile:hover .tile-face{opacity:0;pointer-events:none}
-.tile:hover .tile-hover{opacity:1;pointer-events:auto}
-.tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:2}
-.tile-wh::before{background:var(--cal-wh)}
-.tile-vote::before{background:var(--cal-vote)}
-.tile-hear::before{background:var(--cal-hear)}
-.tile-gold::before{background:var(--gold)}
-.tile-neutral::before{background:rgba(255,255,255,0.08)}
-.tile-sky::before{background:var(--sky)}
+/* BASE TILE — original feel */
+.tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden}
+.tile:hover{filter:brightness(1.12)}
+.tile-tag{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+.tile-title{font-size:15px;font-weight:600;line-height:1.2;margin-bottom:3px}
+.tile-sub{font-size:10.5px;line-height:1.4}
 
-/* TILE FACE */
-.tile-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;transition:opacity .22s ease}
-.tile-icon{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:auto}
-.tile-name{font-size:clamp(17px,2vw,24px);font-weight:900;color:var(--text);line-height:1.1;letter-spacing:-0.3px}
-.tile-sub{font-size:11px;color:var(--text-sec);font-weight:600;margin-top:6px;font-family:'Instrument Serif',serif;font-style:italic}
+/* PAINT SAMPLE COLOR FAMILIES */
 
-/* TILE HOVER */
-.tile-hover{position:absolute;inset:0;background:var(--navy-mid);padding:20px;opacity:0;transition:opacity .22s ease;display:flex;flex-direction:column;gap:7px;overflow:hidden}
-.tile-hover-label{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;flex-shrink:0}
-.preview-item{padding:6px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:8px;align-items:flex-start;flex-shrink:0}
-.preview-item:last-of-type{border-bottom:none}
-.preview-dot{width:4px;height:4px;border-radius:50%;margin-top:5px;flex-shrink:0}
-.preview-text{font-size:11px;color:var(--text-sec);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.preview-tag{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px;border-radius:2px;flex-shrink:0;margin-top:1px}
-.tag-wh{background:rgba(184,150,62,.15);color:var(--gold-lt)}
-.tag-pass{background:rgba(0,120,60,.15);color:#3db87a}
-.tag-fail{background:rgba(139,0,0,.15);color:#d04040}
-.tag-hear{background:rgba(107,174,214,.12);color:var(--sky)}
-.tag-urgent{background:rgba(139,0,0,.2);color:#ff6060}
-.tile-click-hint{margin-top:auto;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:5px;flex-shrink:0}
-.tile-click-hint::after{content:'→'}
+/* Gold — White House, Calendar */
+.t-gold{background:#181406;border-top:2px solid #b8963e}
+.t-gold .tile-tag{color:#b8963e}
+.t-gold .tile-title{color:#e8dfc0}
+.t-gold .tile-sub{color:#9a8c6a}
 
-/* OVERLAY */
-.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(6,12,24,0.97);flex-direction:column}
-.overlay.open{display:flex}
-.overlay-header{background:var(--navy);border-bottom:2px solid var(--gold);padding:16px 32px;display:flex;align-items:center;gap:16px;flex-shrink:0}
-.overlay-back{background:none;border:1px solid var(--border-dim);color:var(--text-sec);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:4px;cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px}
-.overlay-back::before{content:'←'}
-.overlay-back:hover{border-color:var(--gold);color:var(--gold)}
-.overlay-title{font-size:16px;font-weight:900;color:#fff;letter-spacing:0.3px}
-.overlay-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:var(--gold-dim);color:var(--gold-lt)}
-.overlay-body{flex:1;overflow-y:auto;padding:28px 32px}
+/* Sky — Message of Week, Committee, Bill Lookup, District */
+.t-sky{background:#080f18;border-top:2px solid #6baed6}
+.t-sky .tile-tag{color:#6baed6}
+.t-sky .tile-title{color:#c8dde8}
+.t-sky .tile-sub{color:#5a8090}
 
-/* News overlay */
-.ov-news-item{padding:14px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:12px;align-items:flex-start;cursor:pointer}
-.ov-news-item:hover .ov-news-title{color:var(--gold-lt)}
-.ov-news-item:last-child{border-bottom:none}
-.ov-accent{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:40px}
-.ov-accent-wh{background:var(--cal-wh)}.ov-accent-neutral{background:var(--border)}
-.ov-news-inner{flex:1}
-.ov-news-meta{display:flex;gap:8px;align-items:center;margin-bottom:5px}
-.ov-cat{font-size:8px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:2px}
-.ov-cat-wh{background:rgba(184,150,62,.15);color:var(--gold-lt)}
-.ov-cat-n{background:var(--border-dim);color:var(--text-sec)}
-.ov-date{font-size:10px;color:var(--text-dim);font-weight:600}
-.ov-news-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;transition:color .15s}
+/* Crimson — Outreach, Recent Votes, Press Clips */
+.t-crimson{background:#120808;border-top:2px solid #8b0000}
+.t-crimson .tile-tag{color:#c06060}
+.t-crimson .tile-title{color:#e8c8c8}
+.t-crimson .tile-sub{color:#885858}
 
-/* Talking points */
-.ov-tp{padding:16px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:16px}
-.ov-tp:last-child{border-bottom:none}
-.ov-tp-num{font-size:13px;font-weight:900;color:var(--gold);min-width:24px}
-.ov-tp-text{font-size:16px;color:rgba(232,228,217,.9);line-height:1.6;font-family:'Instrument Serif',serif}
+/* Green — Member Socials */
+.t-green{background:#07100b;border-top:2px solid #3db87a}
+.t-green .tile-tag{color:#3db87a}
+.t-green .tile-title{color:#c0e0cc}
+.t-green .tile-sub{color:#4a8060}
 
-/* Clips */
-.ov-clip{padding:12px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:10px;align-items:flex-start}
-.ov-clip:last-child{border-bottom:none}
-.ov-clip-tag{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:2px;flex-shrink:0}
-.ov-clip-text{font-size:13px;color:var(--text);line-height:1.4}
-.ov-clip-meta{font-size:10px;color:var(--text-dim);margin-top:3px}
-.ov-urgent-dot{width:6px;height:6px;background:var(--crimson-lt);border-radius:50%;margin-top:5px;flex-shrink:0;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+/* Purple-blue — Clip Drop, Press Directory */
+.t-purple{background:#09091a;border-top:2px solid #7a8aff}
+.t-purple .tile-tag{color:#7a8aff}
+.t-purple .tile-title{color:#cdd0f0}
+.t-purple .tile-sub{color:#5a6090}
 
-/* Hearings */
-.ov-hearing{padding:12px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:12px;align-items:flex-start}
-.ov-hearing:last-child{border-bottom:none}
-.ov-hear-accent{width:3px;border-radius:2px;background:var(--cal-hear);align-self:stretch;min-height:30px;flex-shrink:0}
-.ov-hear-time{font-size:11px;font-weight:700;color:var(--sky);min-width:52px}
-.ov-hear-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.35}
-.ov-hear-cmte{font-size:10px;color:var(--text-dim);margin-top:2px}
+/* APPROVALS */
+.approvals-section{margin-top:18px}
+.approvals-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.approvals-divider-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#b8963e;text-transform:uppercase;white-space:nowrap}
+.approvals-divider-line{flex:1;height:1px;background:rgba(184,150,62,0.22)}
 
-/* Votes */
-.ov-vote{padding:12px 0;border-bottom:1px solid var(--border-dim);display:flex;gap:10px;align-items:center}
-.ov-vote:last-child{border-bottom:none}
-.ov-vote-accent{width:3px;border-radius:2px;background:var(--cal-vote);align-self:stretch;flex-shrink:0;min-height:36px}
-.ov-vote-result{font-size:8px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:2px;flex-shrink:0}
-.vpass{background:rgba(0,120,60,.15);color:#3db87a}.vfail{background:rgba(139,0,0,.15);color:#d04040}
-.ov-vote-info{flex:1;min-width:0}
-.ov-vote-title{font-size:13px;font-weight:600;color:var(--text)}
-.ov-vote-tally{font-size:10px;color:var(--text-dim);margin-top:2px}
-
-/* Calendar overlay */
-.cal-overlay-inner{max-width:960px;margin:0 auto}
-.cal-controls{display:flex;align-items:center;gap:16px;margin-bottom:24px}
-.cal-nav-btn{background:none;border:1px solid var(--border-dim);color:var(--text-sec);cursor:pointer;font-size:16px;width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'Libre Franklin',sans-serif}
-.cal-nav-btn:hover{border-color:var(--gold);color:var(--gold)}
-.cal-month-label{font-size:20px;font-weight:900;color:#fff;flex:1}
-.cal-legend{display:flex;gap:16px}
-.cal-leg{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;color:var(--text-sec);letter-spacing:.5px;text-transform:uppercase}
-.cal-leg-dot{width:8px;height:8px;border-radius:50%}
-.big-cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
-.big-cal-dayname{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);text-align:center;padding:8px 0}
-.big-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.big-cal-day{min-height:90px;border-radius:5px;border:1px solid var(--border-dim);background:var(--navy-card);padding:8px;transition:border-color .15s}
-.big-cal-day.has-events{cursor:pointer}.big-cal-day.has-events:hover{border-color:var(--border)}
-.big-cal-day.empty{background:transparent;border-color:transparent}
-.big-cal-day.today{border-color:var(--gold)}
-.big-cal-num{font-size:12px;font-weight:700;color:var(--text-sec);margin-bottom:6px}
-.big-cal-day.today .big-cal-num{color:var(--gold);font-weight:900}
-.big-cal-event{font-size:10px;font-weight:600;padding:2px 5px;border-radius:2px;margin-bottom:3px;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.bce-wh{background:rgba(184,150,62,.15);color:var(--gold-lt)}
-.bce-vote{background:rgba(139,0,0,.18);color:#d04040}
-.bce-hear{background:rgba(107,174,214,.12);color:var(--sky)}
-
-/* Bill lookup */
-.bill-form{max-width:560px;margin:0 auto 32px}
-.bill-row{display:flex;gap:10px;margin-bottom:14px}
-.bill-input{flex:1;border:1px solid var(--border-dim);border-radius:4px;padding:12px 16px;font-size:15px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
-.bill-input:focus{border-color:var(--gold)}
-.bill-input::placeholder{color:var(--text-dim)}
-.bill-btn{background:var(--crimson);color:#fff;border:none;border-radius:4px;padding:12px 20px;font-size:11px;font-weight:800;letter-spacing:.5px;font-family:'Libre Franklin',sans-serif;cursor:pointer;transition:background .15s}
-.bill-btn:hover{background:var(--crimson-lt)}
-#bill-result-ov{font-size:14px;color:var(--text);font-family:'Instrument Serif',serif;font-style:italic;min-height:20px;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto}
-.recent-label{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);max-width:560px;margin:0 auto 8px}
-.recent-tags{display:flex;gap:6px;flex-wrap:wrap;max-width:560px;margin:0 auto}
-.recent-tag{background:rgba(255,255,255,.05);border:1px solid var(--border-dim);border-radius:3px;padding:4px 12px;font-size:10px;font-weight:700;color:var(--text-sec);cursor:pointer;transition:all .15s}
-.recent-tag:hover{border-color:var(--gold);color:var(--gold-lt)}
-
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between}
-.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
-.footer-text span{color:var(--gold)}
-
-/* ── Press Clips overlay ── */
-.clips-date-group { margin-bottom: 32px; }
-.clips-date-label { font-size: 9px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border-dim); }
-.clips-section-label { font-size: 9px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin: 18px 0 10px; }
-.clip-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; background: var(--navy-card); border: 1px solid var(--border-dim); border-radius: 5px; margin-bottom: 8px; transition: border-color .15s, background .15s; cursor: pointer; text-decoration: none; }
-.clip-row:hover { border-color: var(--border); background: var(--navy-hover); }
-.clip-outlet-badge { font-size: 8px; font-weight: 900; letter-spacing: .8px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
-.badge-featured { background: rgba(139,0,0,.15); color: #d04040; }
-.badge-national { background: rgba(184,150,62,.12); color: var(--gold-lt); }
-.badge-local    { background: rgba(107,174,214,.12); color: var(--sky); }
-.clip-content { flex: 1; min-width: 0; }
-.clip-headline { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.35; margin-bottom: 3px; }
-.clip-outlet { font-size: 10px; color: var(--text-dim); font-weight: 600; margin-bottom: 4px; }
-.clip-snippet { font-size: 11px; color: var(--text-sec); line-height: 1.45; }
-.clips-empty { color: var(--text-dim); font-size: 13px; padding: 24px 0; font-style: italic; }
-.clips-loading { display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-size: 12px; padding: 20px 0; }
-
+.approval-tile{background:#13110a;border:1px solid rgba(184,150,62,0.18);border-left:3px solid #b8963e;border-radius:0 5px 5px 0;padding:15px 18px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:filter .15s}
+.approval-tile:hover{filter:brightness(1.12)}
+.approval-header{display:flex;align-items:center;justify-content:space-between}
+.approval-title{font-size:15px;font-weight:600;color:#e8dfc0}
+.badge{font-size:8.5px;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:3px;text-transform:uppercase}
+.badge-pending{background:rgba(184,150,62,0.18);color:#c9a84c}
+.badge-review{background:rgba(107,174,214,0.15);color:#6baed6}
+.approval-meta{font-size:10px;color:#9a8c78;line-height:1.4}
+.kanban{display:flex;gap:4px;margin-top:2px}
+.k-col{flex:1;background:rgba(255,255,255,0.03);border-radius:3px;padding:5px 5px 4px}
+.k-col-label{font-size:7.5px;font-weight:700;letter-spacing:.06em;color:#4a4a42;text-transform:uppercase;margin-bottom:3px}
+.k-pill{border-radius:2px;height:6px;margin-bottom:2px;background:rgba(255,255,255,0.07)}
+.k-pill.gold{background:rgba(184,150,62,0.35)}
+.k-pill.green{background:rgba(61,184,122,0.28)}
+.k-pill.sky{background:rgba(107,174,214,0.28)}
 </style>
 </head>
 <body>
 
-<div class="ticker-bar" onmouseenter="pauseTicker()" onmouseleave="resumeTicker()">
-  <div class="ticker-wrap" id="ticker-wrap">
-    <span class="ticker-item">Loading live news feed…</span>
+<!-- CHYRON: full-bleed red, white text -->
+<div class="chyron">
+  <div class="chyron-inner">
+    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">WORLD</span> Peruvians head to polls hoping to break cycle of instability</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">BUSINESS</span> Markets stabilize after tariff pause announcement</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">WORLD</span> Peruvians head to polls hoping to break cycle of instability</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">BUSINESS</span> Markets stabilize after tariff pause announcement</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
   </div>
 </div>
 
-<nav>
-          <a class="nav-brand" href="dashboard_v2.html">
-    <div class="nav-seal"><span class="nav-seal-p">P</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="dashboard_v2.html" class="active">Dashboard</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li><a href="clipdrop.html">Clip Drop</a></li>
-  </ul>
-  <div class="nav-right"><span id="nav-date"></span></div>
-</nav>
+<!-- NAV -->
+<div class="nav-outer">
+  <div class="nav-inner">
+    <div class="nav-logo">P</div>
+    <div class="nav-link active">Dashboard</div>
+    <div class="nav-link">Resources</div>
+    <div class="nav-link">Clip Drop</div>
+    <div class="nav-date">Fri, Apr 10, 2026</div>
+  </div>
+</div>
 
-<main>
-  <div class="page-eyebrow">Command Center</div>
-  <div class="tile-grid">
+<!-- MAIN CONTENT -->
+<div class="main-outer">
+  <div class="main-inner">
 
-    <div class="tile tile-wh" onclick="window.location.href='whitehouse.html'">
-      <div class="tile-face">
-        <div class="tile-icon">Newsroom</div>
-        <div class="tile-name">White House</div>
+    <div class="section-label">Command Center</div>
+
+    <div class="grid-4">
+      <div class="tile t-gold">
+        <div>
+          <div class="tile-tag">Newsroom</div>
+          <div class="tile-title">White House</div>
+        </div>
         <div class="tile-sub">Press releases, EOs &amp; proclamations</div>
       </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Latest releases</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">Further Continuance of the FEMA Review Council</div><span class="preview-tag tag-wh">EO</span></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">Tariff Policy and American Manufacturing</div><span class="preview-tag tag-wh">FS</span></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">National Agriculture Day, 2026</div><span class="preview-tag tag-wh">Proc</span></div>
-        <div class="tile-click-hint">Open full feed</div>
-      </div>
-    </div>
-
-    <div class="tile tile-gold" onclick="openOverlay('tp')">
-      <div class="tile-face">
-        <div class="tile-icon">This week</div>
-        <div class="tile-name">Message of the Week</div>
+      <div class="tile t-sky">
+        <div>
+          <div class="tile-tag">This week</div>
+          <div class="tile-title">Message of the Week</div>
+        </div>
         <div class="tile-sub">4 active talking points</div>
       </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Talking Points</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">Trump tariff policy protecting American workers and restoring manufacturing jobs.</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">Big Beautiful Bill: largest middle-class tax cut in American history.</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">Mast secured Everglades restoration funding in FY26.</div></div>
-        <div class="tile-click-hint">Open pinboard</div>
+      <div class="tile t-crimson">
+        <div>
+          <div class="tile-tag">Lists · Matrix · Tracker</div>
+          <div class="tile-title">Outreach &amp; Affiliations</div>
+        </div>
+        <div class="tile-sub">55 lists · real send history</div>
+      </div>
+      <div class="tile t-gold">
+        <div>
+          <div class="tile-tag">Schedule</div>
+          <div class="tile-title">Calendar</div>
+        </div>
+        <div class="tile-sub">Hearings · Votes · Milestones</div>
       </div>
     </div>
 
-    <div class="tile tile-vote" onclick="window.location.href='affiliations.html'">
-      <div class="tile-face">
-        <div class="tile-icon">Lists · Matrix · Tracker</div>
-        <div class="tile-name">Outreach &amp; Affiliations</div>
-        <div class="tile-sub">35 lists · real send history</div>
-      </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Top gaps</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--crimson-lt)"></span><div class="preview-text">NR (145K) — last hit Jul 2025</div><span class="preview-tag tag-urgent">Overdue</span></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--crimson-lt)"></span><div class="preview-text">BIO.FISHERMAN (87K) — never sent</div><span class="preview-tag tag-urgent">Overdue</span></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">SEN (40K) — zero sends vs. 6 senior blogs</div></div>
-        <div class="tile-click-hint">Open directory →</div>
-      </div>
-    </div>
-
-    <div class="tile tile-hear" onclick="openOverlay('cal')">
-      <div class="tile-face">
-        <div class="tile-icon">Schedule</div>
-        <div class="tile-name">Calendar</div>
-        <div class="tile-sub">Hearings · votes · WH releases</div>
-      </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Today — Apr 8</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">Appropriations Markup 9:00am</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-vote)"></span><div class="preview-text">Floor vote: Budget CR</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-wh)"></span><div class="preview-text">WH Fact Sheet: Tariff Policy</div></div>
-        <div class="tile-click-hint">Open full calendar</div>
-      </div>
-    </div>
-
-    <div class="tile tile-hear" onclick="openOverlay('hearings')">
-      <div class="tile-face">
-        <div class="tile-icon">Today</div>
-        <div class="tile-name">Committee Hearings</div>
+    <div class="grid-4">
+      <div class="tile t-sky">
+        <div>
+          <div class="tile-tag">Today</div>
+          <div class="tile-title">Committee Hearings</div>
+        </div>
         <div class="tile-sub">4 hearings this week</div>
       </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Upcoming</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">FY27 Energy Appropriations Markup · 9:00am</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">Trade Adjustment &amp; Tariff Impact · 10:30am</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--cal-hear)"></span><div class="preview-text">Infrastructure Reauthorization Markup · 2:00pm</div></div>
-        <div class="tile-click-hint">Open all hearings</div>
-      </div>
-    </div>
-
-    <div class="tile tile-neutral" onclick="openOverlay('bill')">
-      <div class="tile-face">
-        <div class="tile-icon">Congress.gov</div>
-        <div class="tile-name">Bill Lookup</div>
+      <div class="tile t-sky">
+        <div>
+          <div class="tile-tag">Congress.gov</div>
+          <div class="tile-title">Bill Lookup</div>
+        </div>
         <div class="tile-sub">Search any bill instantly</div>
       </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Recent lookups</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--text-sec)"></span><div class="preview-text">HR 1 → Passed House · Enrolled</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--text-sec)"></span><div class="preview-text">S. 4138 → Signed into law 3/20/26</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--text-sec)"></span><div class="preview-text">HR 2872 → In committee</div></div>
-        <div class="tile-click-hint">Open search</div>
-      </div>
-    </div>
-
-    <div class="tile tile-vote" onclick="openOverlay('votes')">
-      <div class="tile-face">
-        <div class="tile-icon">House floor</div>
-        <div class="tile-name">Recent Votes</div>
+      <div class="tile t-crimson">
+        <div>
+          <div class="tile-tag">House Floor</div>
+          <div class="tile-title">Recent Votes</div>
+        </div>
         <div class="tile-sub">119th Congress</div>
       </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Latest</div>
-        <div class="preview-item"><span class="preview-tag tag-pass" style="flex-shrink:0">Pass</span><div class="preview-text">Defense Supplemental FY26 · 218–210</div></div>
-        <div class="preview-item"><span class="preview-tag tag-fail" style="flex-shrink:0">Fail</span><div class="preview-text">Motion to Recommit — Energy Pkg · 195–230</div></div>
-        <div class="preview-item"><span class="preview-tag tag-pass" style="flex-shrink:0">Pass</span><div class="preview-text">S. 4138 · 312–112 · Mar 20</div></div>
-        <div class="tile-click-hint">Open vote tracker</div>
-      </div>
-    </div>
-
-    <!-- ROW 3 -->
-    <div class="tile tile-sky" onclick="window.location.href='district.html'">
-      <div class="tile-face">
-        <div class="tile-icon">FL-21 · GIS Map</div>
-        <div class="tile-name">District</div>
+      <div class="tile t-sky">
+        <div>
+          <div class="tile-tag">FL-21 · GIS Map</div>
+          <div class="tile-title">District</div>
+        </div>
         <div class="tile-sub">Palm Beach · Martin · St. Lucie</div>
       </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">District at a glance</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">Live FL-21 boundary map</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--gold)"></span><div class="preview-text">County breakdown + local officials</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--green)"></span><div class="preview-text">District office contacts</div></div>
-        <div class="tile-click-hint">Open map →</div>
-      </div>
     </div>
 
-    <div class="tile tile-neutral" onclick="window.location.href='clipdrop.html'">
-      <div class="tile-face">
-        <div class="tile-icon">Media · Assets</div>
-        <div class="tile-name">Clip Drop</div>
-        <div class="tile-sub">Coming soon</div>
-      </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">Clip Drop</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Media asset management</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Press clips and screenshots</div></div>
-        <div class="tile-click-hint">Coming soon</div>
-      </div>
-    </div>
-
-    <div class="tile tile-neutral" onclick="openOverlay('socials')">
-      <div class="tile-face">
-        <div class="tile-icon">X / Twitter</div>
-        <div class="tile-name">Member Socials</div>
-        <div class="tile-sub">House &amp; Senate Republicans</div>
-      </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label">X List · 35 members</div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">25 House Republicans · curated list</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--sky)"></span><div class="preview-text">10 Senate Republicans · curated list</div></div>
-        <div class="preview-item"><span class="preview-dot" style="background:var(--text-dim)"></span><div class="preview-text">Single embedded X List feed</div></div>
-        <div class="tile-click-hint">Open feed</div>
-      </div>
-    </div>
-
-    <div class="tile tile-vote" onclick="openOverlay('clips')">
-      <div class="tile-face">
-        <div class="tile-icon">Daily · Office-wide</div>
-        <div class="tile-name">Press Clips</div>
-        <div class="tile-sub" id="clips-tile-sub">Today's digest</div>
-      </div>
-      <div class="tile-hover">
-        <div class="tile-hover-label" id="clips-tile-label">Latest clips</div>
-        <div id="clips-tile-preview">
-          <div class="preview-item"><span class="preview-dot" style="background:var(--crimson-lt)"></span><div class="preview-text">Loading clips…</div></div>
+    <div class="grid-4" style="margin-bottom:0">
+      <div class="tile t-purple">
+        <div>
+          <div class="tile-tag">Media · Assets</div>
+          <div class="tile-title">Clip Drop</div>
         </div>
-        <div class="tile-click-hint">Open full digest →</div>
+        <div class="tile-sub">Drop &amp; share live links</div>
       </div>
-    </div>
-
-  </div>
-</main>
-
-<footer>
-  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
-  <div class="footer-text">WH RSS · Congress.gov · Google Sheets</div>
-</footer>
-
-<!-- OVERLAYS -->
-<div class="overlay" id="ov-wh">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('wh')">Back</button><div class="overlay-title">White House Newsroom</div><div class="overlay-badge">Live · RSS</div></div>
-  <div class="overlay-body">
-    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Exec. Order</span><span class="ov-date">Apr 7, 2026</span></div><div class="ov-news-title">Further Continuance of the Federal Emergency Management Agency Review Council</div></div></div>
-    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Fact Sheet</span><span class="ov-date">Apr 6, 2026</span></div><div class="ov-news-title">Tariff Policy and American Manufacturing Competitiveness</div></div></div>
-    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Proclamation</span><span class="ov-date">Apr 5, 2026</span></div><div class="ov-news-title">National Agriculture Day, 2026</div></div></div>
-    <div class="ov-news-item"><div class="ov-accent ov-accent-neutral"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-n">Briefing</span><span class="ov-date">Apr 5, 2026</span></div><div class="ov-news-title">First Lady Melania Trump Launches Fostering the Future Together — 45 Member Nations Attend</div></div></div>
-    <div class="ov-news-item"><div class="ov-accent ov-accent-neutral"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-n">Remarks</span><span class="ov-date">Apr 4, 2026</span></div><div class="ov-news-title">President Remarks at Memphis Safe Task Force Briefing</div></div></div>
-    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Exec. Order</span><span class="ov-date">Apr 3, 2026</span></div><div class="ov-news-title">Restoring American Maritime Dominance</div></div></div>
-    <div class="ov-news-item"><div class="ov-accent ov-accent-wh"></div><div class="ov-news-inner"><div class="ov-news-meta"><span class="ov-cat ov-cat-wh">Proclamation</span><span class="ov-date">Mar 24, 2026</span></div><div class="ov-news-title">Greek Independence Day: A National Day of Celebration of Greek and American Democracy, 2026</div></div></div>
-  </div>
-</div>
-
-<div class="overlay" id="ov-tp">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('tp')">Back</button><div class="overlay-title">Message of the Week</div><div class="overlay-badge">Week of Apr 7</div></div>
-  <div class="overlay-body">
-    <div style="max-width:720px;margin:0 auto">
-      <div class="ov-tp"><div class="ov-tp-num">01</div><div class="ov-tp-text">President Trump's tariff policy is protecting American workers and restoring manufacturing jobs lost to unfair trade practices for decades.</div></div>
-      <div class="ov-tp"><div class="ov-tp-num">02</div><div class="ov-tp-text">The Big Beautiful Bill delivers the largest middle-class tax cut in American history while cutting wasteful federal spending and reducing the deficit.</div></div>
-      <div class="ov-tp"><div class="ov-tp-num">03</div><div class="ov-tp-text">Rep. Mast secured funding for Everglades restoration in the FY26 appropriations package — a direct win for FL-21 families.</div></div>
-      <div class="ov-tp"><div class="ov-tp-num">04</div><div class="ov-tp-text">Democrats' continued obstruction on DHS funding has left airports understaffed and American communities less safe.</div></div>
-      <div style="margin-top:28px;padding:14px 18px;background:rgba(184,150,62,.07);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;font-size:12px;color:var(--text-dim);font-style:italic;font-family:'Instrument Serif',serif">Last updated by comms leadership · Edit via shared Google Doc</div>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="ov-clips">
-  <div class="overlay-header">
-    <button class="overlay-back" onclick="closeOverlay('clips')">Back</button>
-    <div class="overlay-title">Press Clips</div>
-    <div class="overlay-badge" id="clips-badge">Loading…</div>
-  </div>
-  <div class="overlay-body" id="clips-body">
-    <div style="color:var(--text-dim);font-size:13px;padding:20px 0">Loading today's clips…</div>
-  </div>
-</div>
-
-<div class="overlay" id="ov-cal">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('cal')">Back</button><div class="overlay-title">Calendar</div><div class="overlay-badge" id="cal-ov-badge"></div></div>
-  <div class="overlay-body">
-    <div class="cal-overlay-inner">
-      <div class="cal-controls">
-        <button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button>
-        <div class="cal-month-label" id="cal-ov-label"></div>
-        <button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button>
-        <div class="cal-legend">
-          <div class="cal-leg"><div class="cal-leg-dot" style="background:var(--cal-wh)"></div>WH</div>
-          <div class="cal-leg"><div class="cal-leg-dot" style="background:var(--cal-hear)"></div>Hearing</div>
-          <div class="cal-leg"><div class="cal-leg-dot" style="background:var(--cal-vote)"></div>Vote</div>
+      <div class="tile t-green">
+        <div>
+          <div class="tile-tag">X / Twitter</div>
+          <div class="tile-title">Member Socials</div>
         </div>
+        <div class="tile-sub">House GOP · Senate · Leadership</div>
       </div>
-      <div class="big-cal-header">
-        <div class="big-cal-dayname">Sun</div><div class="big-cal-dayname">Mon</div><div class="big-cal-dayname">Tue</div><div class="big-cal-dayname">Wed</div><div class="big-cal-dayname">Thu</div><div class="big-cal-dayname">Fri</div><div class="big-cal-dayname">Sat</div>
+      <div class="tile t-crimson">
+        <div>
+          <div class="tile-tag">Daily · Office-wide</div>
+          <div class="tile-title">Press Clips</div>
+        </div>
+        <div class="tile-sub">Coverage &amp; mentions</div>
       </div>
-      <div class="big-cal-grid" id="big-cal-days"></div>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="ov-hearings">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('hearings')">Back</button><div class="overlay-title">Committee Hearings</div><div class="overlay-badge">Today &amp; upcoming</div></div>
-  <div class="overlay-body">
-    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">9:00a</div><div><div class="ov-hear-title">Markup: FY27 Energy Appropriations</div><div class="ov-hear-cmte">House Appropriations · Today</div></div></div>
-    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">10:30a</div><div><div class="ov-hear-title">Trade Adjustment &amp; Tariff Impact Hearing</div><div class="ov-hear-cmte">Ways &amp; Means · Today</div></div></div>
-    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">2:00p</div><div><div class="ov-hear-title">Infrastructure Reauthorization Markup</div><div class="ov-hear-cmte">Transportation &amp; Infrastructure · Today</div></div></div>
-    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">Thu</div><div><div class="ov-hear-title">Foreign Aid Oversight Hearing</div><div class="ov-hear-cmte">House Foreign Affairs · Apr 10</div></div></div>
-    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">Thu</div><div><div class="ov-hear-title">Senate Finance: Tax Reconciliation Markup</div><div class="ov-hear-cmte">Senate Finance Committee · Apr 10</div></div></div>
-    <div class="ov-hearing"><div class="ov-hear-accent"></div><div class="ov-hear-time">Next wk</div><div><div class="ov-hear-title">Energy &amp; Commerce: Telecom subcommittee</div><div class="ov-hear-cmte">Energy &amp; Commerce · Apr 15</div></div></div>
-  </div>
-</div>
-
-<div class="overlay" id="ov-bill">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('bill')">Back</button><div class="overlay-title">Bill Status Lookup</div><div class="overlay-badge">Congress.gov</div></div>
-  <div class="overlay-body">
-    <div class="bill-form">
-      <div class="bill-row"><input class="bill-input" type="text" placeholder="Enter bill number — e.g. HR 1234 or S. 456" id="bill-input-ov"><button class="bill-btn" onclick="searchBillOv()">Search</button></div>
-      <div id="bill-result-ov"></div>
-      <div class="recent-label">Recent lookups</div>
-      <div class="recent-tags">
-        <span class="recent-tag" onclick="fillBillOv('HR 1')">HR 1</span>
-        <span class="recent-tag" onclick="fillBillOv('S. 4138')">S. 4138</span>
-        <span class="recent-tag" onclick="fillBillOv('HR 2872')">HR 2872</span>
-        <span class="recent-tag" onclick="fillBillOv('S. 900')">S. 900</span>
+      <div class="tile t-purple">
+        <div>
+          <div class="tile-tag">Contacts</div>
+          <div class="tile-title">Press Directory</div>
+        </div>
+        <div class="tile-sub">100+ reporters &amp; bookers</div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="overlay" id="ov-votes">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('votes')">Back</button><div class="overlay-title">Recent Votes</div><div class="overlay-badge">House Floor · 119th Congress</div></div>
-  <div class="overlay-body">
-    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vpass">Pass</span><div class="ov-vote-info"><div class="ov-vote-title">Defense Supplemental FY26</div><div class="ov-vote-tally">218–210 · Apr 6, 2026</div></div></div>
-    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vfail">Fail</span><div class="ov-vote-info"><div class="ov-vote-title">Motion to Recommit — Energy Package</div><div class="ov-vote-tally">195–230 · Apr 5, 2026</div></div></div>
-    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vpass">Pass</span><div class="ov-vote-info"><div class="ov-vote-title">Congressional Bill S. 4138</div><div class="ov-vote-tally">312–112 · Mar 20, 2026</div></div></div>
-    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vpass">Pass</span><div class="ov-vote-info"><div class="ov-vote-title">School Choice Expansion Act</div><div class="ov-vote-tally">221–207 · Mar 18, 2026</div></div></div>
-    <div class="ov-vote"><div class="ov-vote-accent"></div><span class="ov-vote-result vfail">Fail</span><div class="ov-vote-info"><div class="ov-vote-title">Amendment — Border Security Supplemental</div><div class="ov-vote-tally">198–228 · Mar 12, 2026</div></div></div>
-  </div>
-</div>
+    <div class="approvals-section">
+      <div class="approvals-divider">
+        <div class="approvals-divider-label">Approvals</div>
+        <div class="approvals-divider-line"></div>
+      </div>
 
-<div class="overlay" id="ov-socials">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOverlay('socials')">Back</button><div class="overlay-title">Member Socials</div><div class="overlay-badge">X List · 35 Members</div></div>
-  <div class="overlay-body" style="display:flex;align-items:flex-start;justify-content:center">
-    <div style="max-width:560px;width:100%;text-align:center;padding-top:40px">
-      <div style="font-size:13px;color:var(--text-sec);font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px">Embed your curated X List below. Add your list URL to activate the live feed.</div>
-      <div style="background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;padding:32px;color:var(--text-dim);font-size:12px">X List embed will appear here once configured.<br><br><span style="color:var(--gold-lt);font-weight:700">Next step:</span> Paste your X List embed code here.</div>
-    </div>
-  </div>
-</div>
-
-<script>
-const now = new Date();
-document.getElementById('nav-date').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-
-function openOverlay(id){document.getElementById('ov-'+id).classList.add('open');document.body.style.overflow='hidden';if(id==='cal')renderBigCal()}
-function closeOverlay(id){document.getElementById('ov-'+id).classList.remove('open');document.body.style.overflow=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.overlay.open').forEach(o=>{o.classList.remove('open');document.body.style.overflow=''})}});
-
-function fillBillOv(v){document.getElementById('bill-input-ov').value=v;searchBillOv()}
-function searchBillOv(){const v=document.getElementById('bill-input-ov').value.trim(),el=document.getElementById('bill-result-ov');if(!v)return;el.style.color='var(--text-sec)';el.textContent='Looking up '+v+'…';setTimeout(()=>{el.textContent=v+' → Passed House 3/20/26 · Enrolled · Signed into law';el.style.color='#3db87a'},800)}
-
-// ── LIVE RSS TICKER ──────────────────────────────────────────
-// Primary: The Guardian API (free, CORS-native, reliable)
-// Fallback: NPR RSS (one of the only feeds with native CORS headers)
-// Replace GUARDIAN_API_KEY with your free key from open-platform.theguardian.com
-
-const GUARDIAN_API_KEY = '94981b8b-9fdc-4fa5-bb48-1992aad9bfa6'; // ← paste key here
-
-const GUARDIAN_SECTIONS = [
-  { tag: 'us-news',      label: 'US NEWS'   },
-  { tag: 'politics',     label: 'POLITICS'  },
-  { tag: 'world',        label: 'WORLD'     },
-  { tag: 'business',     label: 'BUSINESS'  },
-];
-
-const NPR_FEEDS = [
-  { url: 'https://feeds.npr.org/1001/rss.xml',  label: 'NPR'     },
-  { url: 'https://feeds.npr.org/1014/rss.xml',  label: 'NPR POL' },
-];
-
-// ── Guardian fetch ──
-async function fetchGuardian() {
-  const items = [];
-  const requests = GUARDIAN_SECTIONS.map(({ tag, label }) =>
-    fetch(
-      `https://content.guardianapis.com/search?section=${tag}&api-key=${GUARDIAN_API_KEY}&page-size=8&order-by=newest&show-fields=headline`,
-      { cache: 'no-store' }
-    )
-    .then(r => r.json())
-    .then(data => {
-      (data?.response?.results || []).forEach(r => {
-        items.push({
-          title: (r.fields?.headline || r.webTitle || '').replace(/ \| .*/,'').trim(),
-          link:  r.webUrl || '#',
-          label,
-        });
-      });
-    })
-    .catch(() => {})
-  );
-  await Promise.allSettled(requests);
-  return items;
-}
-
-// ── NPR direct fetch (native CORS) ──
-async function fetchNPR() {
-  const items = [];
-  for (const { url, label } of NPR_FEEDS) {
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      const xml  = await res.text();
-      const doc  = new DOMParser().parseFromString(xml, 'text/xml');
-      if (doc.querySelector('parsererror')) continue;
-      [...doc.querySelectorAll('item')].slice(0, 8).forEach(item => {
-        const title = (item.querySelector('title')?.textContent || '')
-          .replace(/<![CDATA[|]]>/g, '').replace(/&amp;/g,'&').trim();
-        const link  = (item.querySelector('link')?.textContent || '#').trim();
-        if (title.length > 8) items.push({ title, link, label });
-      });
-    } catch(e) {}
-  }
-  return items;
-}
-
-// ── Ticker render ──
-function buildTickerHTML(items) {
-  const makeSpan = ({ title, label, link }) => {
-    const safe = title.replace(/"/g,'&quot;').toUpperCase().slice(0, 130);
-    const href = (link || '#').replace(/'/g, '%27');
-    const src  = label ? `<span class="ticker-source">${label.toUpperCase()}</span>` : '';
-    return `<span class="ticker-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" title="${safe}">${src}${safe}</span>`;
-  };
-  const half = items.map(makeSpan).join('');
-  return half + half;
-}
-
-function setTickerSpeed(items) {
-  const totalChars = items.reduce((n, i) => n + (i.title||'').length, 0);
-  const secs = Math.max(90, Math.min(180, Math.round(totalChars * 0.48)));
-  document.getElementById('ticker-wrap').style.animationDuration = secs + 's';
-}
-
-const TICKER_FALLBACK = [
-  { title: 'Connect your Guardian API key for live headlines',             label: 'SETUP',    link: 'https://open-platform.theguardian.com/access/register' },
-  { title: 'House floor schedule — check congress.gov for latest',        label: 'CONGRESS', link: 'https://www.congress.gov'  },
-  { title: 'Senate Finance Committee — reconciliation markup this week',  label: 'CONGRESS', link: 'https://www.congress.gov'  },
-  { title: 'White House briefing room — latest releases',                 label: 'WH',       link: 'https://www.whitehouse.gov/news/' },
-  { title: 'Ways & Means Committee — markup schedule pending',            label: 'CONGRESS', link: 'https://waysandmeans.house.gov' },
-];
-
-async function initTicker() {
-  const wrap = document.getElementById('ticker-wrap');
-  const timer = ms => new Promise((_, rej) => setTimeout(() => rej('timeout'), ms));
-
-  let items = [];
-
-  // ── 1. Pull from clips spreadsheet (most reliable — your team's own data) ──
-  try {
-    const res = await Promise.race([
-      fetch(CLIPS_CSV + '&t=' + Date.now(), { cache: 'no-store' }),
-      timer(6000)
-    ]);
-    if (res.ok) {
-      const text = await res.text();
-      const lines = text.trim().split('\n');
-      if (lines.length > 1) {
-        const rows = parseCSV(text);
-        // Sort by date descending, take most recent date only
-        const dates = [...new Set(rows.map(r => r.date))].sort().reverse();
-        const latest = dates[0];
-        const todayRows = rows.filter(r => r.date === latest);
-        todayRows.forEach(r => {
-          if (r.headline && r.headline.length > 8) {
-            items.push({
-              title: r.headline,
-              label: r.outlet || r.section || 'CLIPS',
-              link:  r.url || '#',
-            });
-          }
-        });
-      }
-    }
-  } catch(e) {}
-
-  // ── 2. Try Guardian API if clips didn't load enough ──
-  if (items.length < 4 && GUARDIAN_API_KEY !== 'YOUR_GUARDIAN_API_KEY') {
-    try {
-      const guardianItems = await Promise.race([fetchGuardian(), timer(8000)]);
-      items = items.concat(guardianItems);
-    } catch(e) {}
-  }
-
-  // ── 3. Try NPR direct (native CORS) ──
-  if (items.length < 4) {
-    try {
-      const npr = await Promise.race([fetchNPR(), timer(6000)]);
-      items = items.concat(npr);
-    } catch(e) {}
-  }
-
-  // ── 4. Static fallback ──
-  if (items.length < 4) items = TICKER_FALLBACK;
-  else items = items.sort(() => Math.random() - 0.5);
-
-  wrap.innerHTML = buildTickerHTML(items);
-  setTickerSpeed(items);
-}
-
-initTicker();
-setInterval(initTicker, 15 * 60 * 1000);
-// ── END TICKER ──────────────────────────────────────────────
-
-const EVENTS={'2026-04-07':[{type:'wh',text:'EO: Maritime Dominance'},{type:'hear',text:'Appropriations Markup'}],'2026-04-08':[{type:'vote',text:'Floor vote: Budget CR'},{type:'wh',text:'Fact Sheet: Tariff Policy'}],'2026-04-09':[{type:'hear',text:'Ways & Means: Trade Adjustment'}],'2026-04-10':[{type:'vote',text:'Defense Supplemental'},{type:'hear',text:'T&I Markup'},{type:'hear',text:'Foreign Affairs Oversight'}],'2026-04-14':[{type:'wh',text:'Proclamation: Patriots Day'},{type:'vote',text:'Floor vote: TBD'}],'2026-04-15':[{type:'hear',text:'Energy & Commerce'}],'2026-04-17':[{type:'wh',text:'Fact Sheet: Energy Policy'}],'2026-04-21':[{type:'vote',text:'Floor vote: Reconciliation'},{type:'wh',text:'Proclamation'}],'2026-04-22':[{type:'hear',text:'Senate Finance: Tax markup'}],'2026-04-28':[{type:'hear',text:'Energy & Commerce hearing'},{type:'vote',text:'Floor vote: Foreign Aid'}],'2026-03-20':[{type:'vote',text:'S. 4138 signed into law'}],'2026-03-24':[{type:'wh',text:'EO: FEMA Review Council'},{type:'wh',text:'Proclamation: Greek Independence Day'}],'2026-05-05':[{type:'hear',text:'Appropriations: Defense subcommittee'}],'2026-05-12':[{type:'vote',text:'Floor vote: TBD'},{type:'hear',text:'Ways & Means markup'}]};
-let calYear=now.getFullYear(),calMonth=now.getMonth();
-function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderBigCal()}
-function renderBigCal(){const label=new Date(calYear,calMonth,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});document.getElementById('cal-ov-label').textContent=label;document.getElementById('cal-ov-badge').textContent=label;const first=new Date(calYear,calMonth,1).getDay(),days=new Date(calYear,calMonth+1,0).getDate(),today=now.toISOString().slice(0,10);let h='';for(let i=0;i<first;i++)h+='<div class="big-cal-day empty"></div>';for(let d=1;d<=days;d++){const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,ev=EVENTS[ds]||[],isT=ds===today;let ev2=ev.map(e=>`<div class="big-cal-event bce-${e.type}">${e.text}</div>`).join('');h+=`<div class="big-cal-day${isT?' today':''}${ev.length?' has-events':''}"><div class="big-cal-num">${d}</div>${ev2}</div>`}document.getElementById('big-cal-days').innerHTML=h}
-
-// ── PRESS CLIPS ────────────────────────────────────────────
-const CLIPS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUhXu1o6z68hw9uY1nuAikdoTPswTPxgLcicD8rkz-xm_j_Al3N9U4EJMjtCiTonT0y-22QfS_8R2I/pub?output=csv';
-
-function parseCSV(text) {
-  const rows = [];
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
-  for (let i = 1; i < lines.length; i++) {
-    // Handle quoted fields with commas inside
-    const fields = [];
-    let cur = '', inQ = false;
-    for (const ch of lines[i]) {
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { fields.push(cur.trim()); cur = ''; }
-      else cur += ch;
-    }
-    fields.push(cur.trim());
-    if (fields.length >= 5 && fields[0]) {
-      const obj = {};
-      headers.forEach((h, j) => obj[h] = (fields[j] || '').replace(/^"|"$/g, ''));
-      rows.push(obj);
-    }
-  }
-  return rows;
-}
-
-function sectionBadgeClass(section) {
-  if (!section) return 'badge-national';
-  const s = section.toLowerCase();
-  if (s.includes('feature') || s.includes('mast') || s.includes('mention')) return 'badge-featured';
-  if (s.includes('local')) return 'badge-local';
-  return 'badge-national';
-}
-
-function renderClips(rows) {
-  const body = document.getElementById('clips-body');
-  const badge = document.getElementById('clips-badge');
-  if (!body) return;
-
-  if (!rows || rows.length === 0) {
-    body.innerHTML = '<div class="clips-empty">No clips found. Make sure the Apps Script is running and the sheet has data.</div>';
-    if (badge) badge.textContent = 'No clips';
-    return;
-  }
-
-  // Group by date, newest first
-  const byDate = {};
-  rows.forEach(r => {
-    const d = r.date || 'Unknown';
-    if (!byDate[d]) byDate[d] = [];
-    byDate[d].push(r);
-  });
-  const dates = Object.keys(byDate).sort().reverse();
-
-  if (badge) {
-    const latest = dates[0];
-    const count = byDate[latest]?.length || 0;
-    badge.textContent = `${latest} · ${count} clips`;
-  }
-
-  // Update tile preview with latest 3 headlines
-  const latestClips = byDate[dates[0]] || [];
-  const tilePreview = document.getElementById('clips-tile-preview');
-  const tileSub = document.getElementById('clips-tile-sub');
-  const tileLabel = document.getElementById('clips-tile-label');
-  if (tilePreview && latestClips.length) {
-    const dotColor = { Featured: 'var(--crimson-lt)', National: 'var(--gold)', Local: 'var(--sky)' };
-    tilePreview.innerHTML = latestClips.slice(0, 3).map(c =>
-      `<div class="preview-item"><span class="preview-dot" style="background:${dotColor[c.section]||'var(--gold)'}"></span><div class="preview-text">${(c.outlet||'')+': '+(c.headline||'').slice(0,60)}</div></div>`
-    ).join('');
-    if (tileSub) tileSub.textContent = `${dates[0]} · ${latestClips.length} clips`;
-    if (tileLabel) tileLabel.textContent = `${dates[0]}`;
-  }
-
-  // Render full overlay grouped by date → section
-  const SECTION_ORDER = ['Featured', 'National', 'Local'];
-  body.innerHTML = dates.map(date => {
-    const clips = byDate[date];
-    const bySection = {};
-    clips.forEach(c => {
-      const s = c.section || 'National';
-      if (!bySection[s]) bySection[s] = [];
-      bySection[s].push(c);
-    });
-
-    const dateLabel = new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-
-    const sectionsHTML = SECTION_ORDER.filter(s => bySection[s]).map(section => {
-      const clipsHTML = bySection[section].map(c => {
-        const href = c.url || '#';
-        const snippet = c.snippet ? `<div class="clip-snippet">${c.snippet}</div>` : '';
-        return `<a class="clip-row" href="${href}" target="_blank" rel="noopener">
-          <span class="clip-outlet-badge ${sectionBadgeClass(section)}">${section}</span>
-          <div class="clip-content">
-            <div class="clip-outlet">${c.outlet || ''}</div>
-            <div class="clip-headline">${c.headline || ''}</div>
-            ${snippet}
+      <div class="grid-2">
+        <div class="approval-tile">
+          <div class="approval-header">
+            <div class="approval-title">Social Media</div>
+            <div class="badge badge-pending">3 pending</div>
           </div>
-        </a>`;
-      }).join('');
-      return `<div class="clips-section-label">${section}</div>${clipsHTML}`;
-    }).join('');
+          <div class="approval-meta">Ideas &rarr; Review &rarr; Approved &rarr; Scheduled &rarr; Posted</div>
+          <div class="kanban">
+            <div class="k-col">
+              <div class="k-col-label">Ideas</div>
+              <div class="k-pill"></div>
+              <div class="k-pill"></div>
+              <div class="k-pill"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">Review</div>
+              <div class="k-pill gold"></div>
+              <div class="k-pill gold"></div>
+              <div class="k-pill gold"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">Approved</div>
+              <div class="k-pill green"></div>
+              <div class="k-pill green"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">Scheduled</div>
+              <div class="k-pill sky"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">Posted</div>
+              <div class="k-pill"></div>
+              <div class="k-pill"></div>
+              <div class="k-pill"></div>
+            </div>
+          </div>
+        </div>
 
-    return `<div class="clips-date-group"><div class="clips-date-label">${dateLabel}</div>${sectionsHTML}</div>`;
-  }).join('');
-}
+        <div class="approval-tile">
+          <div class="approval-header">
+            <div class="approval-title">Strategy</div>
+            <div class="badge badge-review">2 in review</div>
+          </div>
+          <div class="approval-meta">Legislative priorities · Messaging · Long-term comms</div>
+          <div class="kanban">
+            <div class="k-col">
+              <div class="k-col-label">Draft</div>
+              <div class="k-pill"></div>
+              <div class="k-pill"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">In review</div>
+              <div class="k-pill gold"></div>
+              <div class="k-pill gold"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">Approved</div>
+              <div class="k-pill green"></div>
+            </div>
+            <div class="k-col">
+              <div class="k-col-label">Active</div>
+              <div class="k-pill sky"></div>
+              <div class="k-pill sky"></div>
+              <div class="k-pill sky"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-async function loadClips() {
-  const body = document.getElementById('clips-body');
-  if (body) body.innerHTML = '<div class="clips-loading">Loading clips…</div>';
-  try {
-    const res = await fetch(CLIPS_CSV + '&t=' + Date.now(), { cache: 'no-store' });
-    if (!res.ok) throw new Error('Sheet fetch failed');
-    const text = await res.text();
-    // If sheet is empty or just headers, show setup message
-    const lines = text.trim().split('\n');
-    if (lines.length < 2) {
-      if (body) body.innerHTML = '<div class="clips-empty">No clips yet — paste the Apps Script into your Google Sheet and set the trigger to start auto-populating.</div>';
-      return;
-    }
-    const rows = parseCSV(text);
-    renderClips(rows);
-  } catch(e) {
-    if (body) body.innerHTML = '<div class="clips-empty">Could not load clips. Check that the sheet is published and the Apps Script is running.</div>';
-  }
-}
+  </div>
+</div>
 
-// Load clips when overlay opens
-const origOpenOverlay = window.openOverlay;
-window.openOverlay = function(id) {
-  origOpenOverlay(id);
-  if (id === 'clips') loadClips();
-};
-
-// Pre-load tile preview on page load
-loadClips();
-// ── END PRESS CLIPS ─────────────────────────────────────────
-
-</script>
 </body>
 </html>
