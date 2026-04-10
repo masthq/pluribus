@@ -414,6 +414,22 @@ document.getElementById('navDate').textContent =
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  function stripJunk(s){
+    return String(s||'')
+      .replace(/<[^>]+>/g,'')
+      .replace(/https?:\/\/\S+/g,'')
+      .replace(/\[.*?\]/g,'')
+      .replace(/\s{2,}/g,' ')
+      .trim();
+  }
+
+  function highlightMast(text){
+    return esc(stripJunk(text)).replace(
+      /(Brian Mast|Rep\.?\s*Mast|Mast)/g,
+      '<strong style="color:#ffffff;font-weight:700">$1</strong>'
+    );
+  }
+
   async function load(){
     try {
       const res  = await fetch(SHEET_URL);
@@ -453,18 +469,23 @@ document.getElementById('navDate').textContent =
       const slide = document.createElement('div');
       slide.className = 'mc-slide' + (i === 0 ? ' active' : '');
 
+      const cleanAudience  = stripJunk(m.audience);
+      const cleanPublicity = stripJunk(m.publicity);
+      const cleanDate      = stripJunk(m.dateCollected);
+      const cleanExcerpt   = stripJunk(m.excerpt);
+
       let footerHTML = '';
-      if (m.audience)   footerHTML += `<div class="mc-stat">Audience <span>${Number(m.audience.replace(/,/g,'')).toLocaleString()}</span></div>`;
-      if (m.publicity)  footerHTML += `<div class="mc-stat">Est. Value <span>${esc(m.publicity)}</span></div>`;
-      if (m.dateCollected) footerHTML += `<div class="mc-stat">Date <span>${esc(m.dateCollected)}</span></div>`;
+      if (cleanAudience)  footerHTML += `<div class="mc-stat">Audience <span>${Number(cleanAudience.replace(/,/g,'')).toLocaleString()}</span></div>`;
+      if (cleanPublicity) footerHTML += `<div class="mc-stat">Est. Value <span>${esc(cleanPublicity)}</span></div>`;
+      if (cleanDate)      footerHTML += `<div class="mc-stat">Date <span>${esc(cleanDate)}</span></div>`;
 
       slide.innerHTML = `
         <div>
           <div class="mc-slide-top">
-            <div class="mc-slide-headline">${esc(m.headline)}</div>
-            <div class="mc-slide-outlet">${esc(m.outlet)}${m.market ? ' · ' + esc(m.market) : ''}</div>
+            <div class="mc-slide-headline">${highlightMast(m.headline)}</div>
+            <div class="mc-slide-outlet">${esc(stripJunk(m.outlet))}${m.market ? ' · ' + esc(stripJunk(m.market)) : ''}</div>
           </div>
-          ${m.excerpt ? `<div class="mc-slide-excerpt">"…${esc(m.excerpt.slice(0,130))}…"</div>` : ''}
+          ${cleanExcerpt ? `<div class="mc-slide-excerpt">"…${highlightMast(cleanExcerpt.slice(0,130))}…"</div>` : ''}
         </div>
         <div class="mc-slide-footer">${footerHTML}</div>
       `;
