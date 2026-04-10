@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mast Mentions — Pluribus HQ</title>
+<link rel="stylesheet" href="design-tokens.css">
+<style>
+
+/* ─── PAGE SHELL ──────────────────────────────────────────────────────────── */
+.page-wrap {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 28px var(--page-pad) 60px;
+}
+
+/* ─── MENTIONS HEADER ─────────────────────────────────────────────────────── */
+.mentions-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.mentions-eyebrow {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.mentions-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+.mentions-sub {
+  font-size: 11px;
+  color: var(--text-sec);
+  margin-top: 3px;
+}
+.mentions-count {
+  font-size: 11px;
+  color: var(--text-sec);
+  font-weight: 600;
+}
+
+/* ─── FILTER BAR ──────────────────────────────────────────────────────────── */
+.mentions-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.mf-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .10em;
+  color: var(--text-sec);
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+.mf-btn {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(184,150,62,0.18);
+  background: transparent;
+  color: var(--text-sec);
+  cursor: pointer;
+  letter-spacing: .04em;
+  transition: all .15s;
+}
+.mf-btn:hover { border-color: rgba(184,150,62,0.4); color: var(--text); }
+.mf-btn.active {
+  background: rgba(139,0,0,0.15);
+  border-color: rgba(139,0,0,0.4);
+  color: #e08080;
+}
+.mf-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.08); margin: 0 2px; }
+.mf-search {
+  margin-left: auto;
+  background: var(--navy-card);
+  border: 1px solid rgba(184,150,62,0.18);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  outline: none;
+  width: 180px;
+  transition: border-color .15s;
+}
+.mf-search:focus { border-color: rgba(184,150,62,0.45); }
+.mf-search::placeholder { color: var(--text-dim); }
+
+/* ─── MENTION CARDS ───────────────────────────────────────────────────────── */
+.mentions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.mention-card {
+  background: var(--navy-card);
+  border: 1px solid var(--border-card);
+  border-left: 3px solid var(--crimson);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
+}
+.mention-card:hover {
+  background: var(--navy-hover);
+  border-color: rgba(139,0,0,0.5);
+  border-left-color: var(--crimson-lt);
+}
+
+.mention-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+.mention-headline {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  flex: 1;
+}
+.mention-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.mention-outlet {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--crimson-lt);
+  background: rgba(139,0,0,0.12);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+}
+.mention-market {
+  font-size: 9px;
+  color: var(--text-sec);
+  font-weight: 600;
+}
+.mention-date {
+  font-size: 9px;
+  color: var(--text-dim);
+}
+
+.mention-excerpt {
+  font-size: 11.5px;
+  color: var(--text-sec);
+  line-height: 1.55;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.mention-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.mention-stat {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.mention-stat span {
+  color: var(--text-sec);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.mention-link {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color .15s;
+}
+.mention-card:hover .mention-link { color: var(--gold); }
+
+/* ─── EMPTY STATE ─────────────────────────────────────────────────────────── */
+.mentions-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+.mentions-empty-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  opacity: .4;
+}
+
+/* ─── LOADING ─────────────────────────────────────────────────────────────── */
+.mentions-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-dim);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+</style>
+</head>
+<body>
+
+<!-- CHYRON -->
+<div class="chyron">
+  <div class="chyron-inner" id="chyronInner">
+    <div class="chyron-item"><span class="chyron-label">LIVE</span> Loading headlines…</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a class="nav-logo" href="dashboard_v2.html">P</a>
+    <a class="nav-link" href="dashboard_v2.html">Dashboard</a>
+    <a class="nav-link" href="#">Resources</a>
+    <a class="nav-link" href="clip-drop.html">Clip Drop</a>
+    <a class="nav-link active" href="mast-mentions.html">Mast Mentions</a>
+    <span class="nav-date" id="navDate"></span>
+  </div>
+</div>
+
+<!-- PAGE -->
+<div class="page-wrap">
+
+  <div class="mentions-header">
+    <div>
+      <div class="mentions-eyebrow">Media · Monitoring</div>
+      <div class="mentions-title">Mast Mentions</div>
+      <div class="mentions-sub">Critical Mention alerts · auto-updated every 5 min</div>
+    </div>
+    <div class="mentions-count" id="mentionsCount">—</div>
+  </div>
+
+  <div class="mentions-filters">
+    <span class="mf-label">Filter</span>
+    <button class="mf-btn active" data-filter="all">All</button>
+    <button class="mf-btn" data-filter="National">National</button>
+    <button class="mf-btn" data-filter="Local">Local</button>
+    <button class="mf-btn" data-filter="United Kingdom">Intl</button>
+    <div class="mf-sep"></div>
+    <button class="mf-btn" data-filter="today">Today</button>
+    <input class="mf-search" type="text" placeholder="Search mentions…" id="mentionSearch">
+  </div>
+
+  <div id="mentionsLoading" class="mentions-loading">Loading mentions…</div>
+  <div class="mentions-grid" id="mentionsGrid"></div>
+  <div id="mentionsEmpty" class="mentions-empty" style="display:none">
+    <div class="mentions-empty-icon">📭</div>
+    No mentions found.
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+const SHEET_ID  = '15eRR2J10xIe1TRaXBJ4w4z-5IPag_m-NLPHROIbo4Bk';
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
+
+// ─── DATE ──────────────────────────────────────────────────────────────────
+document.getElementById('navDate').textContent =
+  new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let allMentions = [];
+let activeFilter = 'all';
+let searchQuery  = '';
+
+// ─── FETCH FROM SHEET ──────────────────────────────────────────────────────
+async function fetchMentions() {
+  try {
+    const res  = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+    const rows = json.table.rows;
+
+    allMentions = rows.map(row => ({
+      timestamp : row.c[0]?.v || '',
+      headline  : row.c[1]?.v || '',
+      outlet    : row.c[2]?.v || '',
+      market    : row.c[3]?.v || '',
+      dateCollected: row.c[4]?.v || '',
+      excerpt   : row.c[5]?.v || '',
+      audience  : row.c[6]?.v || '',
+      publicity : row.c[7]?.v || '',
+    })).filter(m => m.headline); // skip header row / blanks
+
+    document.getElementById('mentionsLoading').style.display = 'none';
+    render();
+  } catch(e) {
+    document.getElementById('mentionsLoading').textContent = 'Could not load mentions. Check sheet permissions.';
+    console.error(e);
+  }
+}
+
+// ─── ENCODE LINK ───────────────────────────────────────────────────────────
+// Stores the outlet + headline + timestamp as a base64 search key so the
+// CM deep link can be reconstructed if added to the sheet later.
+function encodeKey(m) {
+  return btoa(encodeURIComponent(`${m.outlet}||${m.headline}||${m.dateCollected}`));
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────────────
+function render() {
+  const grid = document.getElementById('mentionsGrid');
+  const empty = document.getElementById('mentionsEmpty');
+  grid.innerHTML = '';
+
+  const today = new Date().toDateString();
+
+  let filtered = allMentions.filter(m => {
+    if (activeFilter === 'today') {
+      const d = new Date(m.timestamp);
+      return d.toDateString() === today;
+    }
+    if (activeFilter !== 'all') {
+      return (m.market || '').toLowerCase().includes(activeFilter.toLowerCase()) ||
+             (m.outlet || '').toLowerCase().includes(activeFilter.toLowerCase());
+    }
+    return true;
+  });
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(m =>
+      m.headline.toLowerCase().includes(q) ||
+      m.outlet.toLowerCase().includes(q)   ||
+      m.excerpt.toLowerCase().includes(q)
+    );
+  }
+
+  document.getElementById('mentionsCount').textContent =
+    `${filtered.length} mention${filtered.length !== 1 ? 's' : ''}`;
+
+  if (!filtered.length) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  filtered.forEach(m => {
+    const key = encodeKey(m);
+    const card = document.createElement('a');
+    card.className = 'mention-card';
+    // Link to CM app search if you have the URL, otherwise a self-referencing anchor
+    card.href = `mast-mentions.html?ref=${key}`;
+    card.target = '_blank';
+    card.rel = 'noopener';
+
+    const dateStr = m.dateCollected || (m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '');
+
+    card.innerHTML = `
+      <div class="mention-top">
+        <div class="mention-headline">${escHtml(m.headline)}</div>
+        <div class="mention-meta-row">
+          <span class="mention-outlet">${escHtml(m.outlet)}</span>
+          ${m.market ? `<span class="mention-market">${escHtml(m.market)}</span>` : ''}
+        </div>
+      </div>
+      ${m.excerpt ? `<div class="mention-excerpt">"…${escHtml(m.excerpt)}"</div>` : ''}
+      <div class="mention-footer">
+        ${m.audience  ? `<div class="mention-stat">Audience <span>${Number(m.audience.replace(/,/g,'')).toLocaleString()}</span></div>` : ''}
+        ${m.publicity ? `<div class="mention-stat">Est. Value <span>${m.publicity}</span></div>` : ''}
+        <div class="mention-stat" style="margin-left:0">Date <span>${escHtml(dateStr)}</span></div>
+        <div class="mention-link">Open in CM ↗</div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ─── FILTERS ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.mf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById('mentionSearch').addEventListener('input', e => {
+  searchQuery = e.target.value.trim();
+  render();
+});
+
+// ─── CHYRON (reuse AP / Reuters pattern) ──────────────────────────────────
+async function loadChyron() {
+  const feeds = [
+    'https://feeds.feedburner.com/thedailybeast/politics',
+    'https://rss.politico.com/congress.xml',
+  ];
+  // Simple passthrough — just populate with mention headlines once loaded
+  setTimeout(() => {
+    if (allMentions.length) {
+      const inner = document.getElementById('chyronInner');
+      const items = allMentions.slice(0, 8).map(m =>
+        `<div class="chyron-item"><span class="chyron-label">MENTION</span>${escHtml(m.headline.slice(0,80))}${m.headline.length > 80 ? '…' : ''}<span class="chyron-dot"></span></div>`
+      ).join('');
+      inner.innerHTML = items + items; // double for seamless loop
+    }
+  }, 2000);
+}
+
+// ─── INIT ──────────────────────────────────────────────────────────────────
+fetchMentions();
+loadChyron();
+setInterval(fetchMentions, 5 * 60 * 1000); // refresh every 5 min
+</script>
+</body>
+</html>
