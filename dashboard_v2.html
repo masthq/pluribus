@@ -18,7 +18,7 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 
 .nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,0.18)}
 .nav-inner{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
-.nav-logo{width:26px;height:26px;border-radius:50%;background:rgba(184,150,62,0.15);border:1px solid rgba(184,150,62,0.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
+.nav-logo{width:26px;height:26px;border-radius:50%;border:1.5px solid #b8963e;background:transparent;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
 .nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer;text-decoration:none}
 .nav-link:hover{color:#e8e4d9}
 .nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
@@ -112,10 +112,10 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 
 <div class="nav-outer">
   <div class="nav-inner">
-    <a href="index.html" class="nav-logo">P</a>
-    <a href="index.html" class="nav-link active">Dashboard</a>
+    <a href="dashboard_v2.html" class="nav-logo">P</a>
+    <a href="dashboard_v2.html" class="nav-link active">Dashboard</a>
     <a href="resources.html" class="nav-link">Resources</a>
-    <a href="clip-drop.html" class="nav-link">Clip Drop</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
     <div class="nav-date">Fri, Apr 10, 2026</div>
   </div>
 </div>
@@ -126,28 +126,28 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
     <div class="section-label">Command Center</div>
 
     <div class="grid-4">
-      <a href="index.html#whitehouse" class="tile t-gold">
+      <a href="whitehouse.html" class="tile t-gold">
         <div>
           <div class="tile-tag">Newsroom</div>
           <div class="tile-title">White House</div>
         </div>
         <div class="tile-sub">Press releases, EOs &amp; proclamations</div>
       </a>
-      <a href="index.html#message" class="tile t-sky">
+      <a href="dashboard_v2.html" class="tile t-sky">
         <div>
           <div class="tile-tag">This week</div>
           <div class="tile-title">Message of the Week</div>
         </div>
         <div class="tile-sub">4 active talking points</div>
       </a>
-      <a href="resources.html#outreach" class="tile t-crimson">
+      <a href="affiliations.html" class="tile t-crimson">
         <div>
           <div class="tile-tag">Lists · Matrix · Tracker</div>
           <div class="tile-title">Outreach &amp; Affiliations</div>
         </div>
         <div class="tile-sub">55 lists · real send history</div>
       </a>
-      <a href="index.html#calendar" class="tile t-gold">
+      <a href="dashboard_v2.html" class="tile t-gold">
         <div>
           <div class="tile-tag">Schedule</div>
           <div class="tile-title">Calendar</div>
@@ -157,21 +157,21 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
     </div>
 
     <div class="grid-4">
-      <a href="index.html#hearings" class="tile t-sky">
+      <a href="dashboard_v2.html" class="tile t-sky">
         <div>
           <div class="tile-tag">Today</div>
           <div class="tile-title">Committee Hearings</div>
         </div>
         <div class="tile-sub">4 hearings this week</div>
       </a>
-      <a href="index.html#billlookup" class="tile t-sky">
+      <a href="dashboard_v2.html" class="tile t-sky">
         <div>
           <div class="tile-tag">Congress.gov</div>
           <div class="tile-title">Bill Lookup</div>
         </div>
         <div class="tile-sub">Search any bill instantly</div>
       </a>
-      <a href="index.html#votes" class="tile t-crimson">
+      <a href="dashboard_v2.html" class="tile t-crimson">
         <div>
           <div class="tile-tag">House Floor</div>
           <div class="tile-title">Recent Votes</div>
@@ -188,28 +188,28 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
     </div>
 
     <div class="grid-4" style="margin-bottom:0">
-      <a href="clip-drop.html" class="tile t-purple">
+      <a href="clipdrop.html" class="tile t-purple">
         <div>
           <div class="tile-tag">Media · Assets</div>
           <div class="tile-title">Clip Drop</div>
         </div>
         <div class="tile-sub">Drop &amp; share live links</div>
       </a>
-      <a href="index.html#socials" class="tile t-green">
+      <a href="dashboard_v2.html" class="tile t-green">
         <div>
           <div class="tile-tag">X / Twitter</div>
           <div class="tile-title">Member Socials</div>
         </div>
         <div class="tile-sub">House GOP · Senate · Leadership</div>
       </a>
-      <a href="index.html#clips" class="tile t-crimson">
+      <a href="dashboard_v2.html" class="tile t-crimson">
         <div>
           <div class="tile-tag">Daily · Office-wide</div>
           <div class="tile-title">Press Clips</div>
         </div>
         <div class="tile-sub">Coverage &amp; mentions</div>
       </a>
-      <a href="resources.html#press-directory" class="tile t-purple">
+      <a href="resources.html" class="tile t-purple">
         <div>
           <div class="tile-tag">Contacts</div>
           <div class="tile-title">Press Directory</div>
@@ -232,63 +232,25 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
           </div>
           <div class="approval-meta">Ideas &rarr; Review &rarr; Approved &rarr; Scheduled &rarr; Posted</div>
           <div class="kanban">
-            <div class="k-col">
-              <div class="k-col-label">Ideas</div>
-              <div class="k-pill"></div>
-              <div class="k-pill"></div>
-              <div class="k-pill"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">Review</div>
-              <div class="k-pill gold"></div>
-              <div class="k-pill gold"></div>
-              <div class="k-pill gold"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">Approved</div>
-              <div class="k-pill green"></div>
-              <div class="k-pill green"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">Scheduled</div>
-              <div class="k-pill sky"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">Posted</div>
-              <div class="k-pill"></div>
-              <div class="k-pill"></div>
-              <div class="k-pill"></div>
-            </div>
+            <div class="k-col"><div class="k-col-label">Ideas</div><div class="k-pill"></div><div class="k-pill"></div><div class="k-pill"></div></div>
+            <div class="k-col"><div class="k-col-label">Review</div><div class="k-pill gold"></div><div class="k-pill gold"></div><div class="k-pill gold"></div></div>
+            <div class="k-col"><div class="k-col-label">Approved</div><div class="k-pill green"></div><div class="k-pill green"></div></div>
+            <div class="k-col"><div class="k-col-label">Scheduled</div><div class="k-pill sky"></div></div>
+            <div class="k-col"><div class="k-col-label">Posted</div><div class="k-pill"></div><div class="k-pill"></div><div class="k-pill"></div></div>
           </div>
         </a>
 
-        <a href="resources.html#strategy" class="approval-tile">
+        <a href="strategy.html" class="approval-tile">
           <div class="approval-header">
             <div class="approval-title">Strategy</div>
             <div class="badge badge-review">2 in review</div>
           </div>
           <div class="approval-meta">Legislative priorities · Messaging · Long-term comms</div>
           <div class="kanban">
-            <div class="k-col">
-              <div class="k-col-label">Draft</div>
-              <div class="k-pill"></div>
-              <div class="k-pill"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">In review</div>
-              <div class="k-pill gold"></div>
-              <div class="k-pill gold"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">Approved</div>
-              <div class="k-pill green"></div>
-            </div>
-            <div class="k-col">
-              <div class="k-col-label">Active</div>
-              <div class="k-pill sky"></div>
-              <div class="k-pill sky"></div>
-              <div class="k-pill sky"></div>
-            </div>
+            <div class="k-col"><div class="k-col-label">Draft</div><div class="k-pill"></div><div class="k-pill"></div></div>
+            <div class="k-col"><div class="k-col-label">In review</div><div class="k-pill gold"></div><div class="k-pill gold"></div></div>
+            <div class="k-col"><div class="k-col-label">Approved</div><div class="k-pill green"></div></div>
+            <div class="k-col"><div class="k-col-label">Active</div><div class="k-pill sky"></div><div class="k-pill sky"></div><div class="k-pill sky"></div></div>
           </div>
         </a>
       </div>
