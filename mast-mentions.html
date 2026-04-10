@@ -324,10 +324,36 @@ async function fetchMentions() {
 }
 
 // ─── ENCODE LINK ───────────────────────────────────────────────────────────
-// Stores the outlet + headline + timestamp as a base64 search key so the
-// CM deep link can be reconstructed if added to the sheet later.
 function encodeKey(m) {
   return btoa(encodeURIComponent(`${m.outlet}||${m.headline}||${m.dateCollected}`));
+}
+
+// ─── HELPERS ───────────────────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Strip any residual HTML tags and URLs from text coming out of the sheet
+function stripJunk(str) {
+  return String(str||'')
+    .replace(/<[^>]+>/g, '')               // HTML tags
+    .replace(/https?:\/\/\S+/g, '')        // bare URLs
+    .replace(/\[.*?\]/g, '')               // [image] refs
+    .replace(/\s{2,}/g, ' ')              // collapse whitespace
+    .trim();
+}
+
+// Highlight "Brian Mast", "Rep. Mast", "Rep Mast", "Mast" in text
+// Returns HTML string — call AFTER escHtml on surrounding content
+function highlightMast(text) {
+  // Escape first so we don't accidentally break tags
+  const escaped = escHtml(stripJunk(text));
+  return escaped.replace(
+    /(Brian Mast|Rep\.?\s*Mast|Mast)/g,
+    '<strong style="color:#ffffff;font-weight:700">$1</strong>'
+  );
 }
 
 // ─── RENDER ────────────────────────────────────────────────────────────────
@@ -372,37 +398,33 @@ function render() {
     const key = encodeKey(m);
     const card = document.createElement('a');
     card.className = 'mention-card';
-    // Link to CM app search if you have the URL, otherwise a self-referencing anchor
     card.href = `mast-mentions.html?ref=${key}`;
     card.target = '_blank';
     card.rel = 'noopener';
 
-    const dateStr = m.dateCollected || (m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '');
+    const dateStr = stripJunk(m.dateCollected) || (m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '');
+    const cleanExcerpt = stripJunk(m.excerpt);
+    const cleanAudience = stripJunk(m.audience);
+    const cleanPublicity = stripJunk(m.publicity);
 
     card.innerHTML = `
       <div class="mention-top">
-        <div class="mention-headline">${escHtml(m.headline)}</div>
+        <div class="mention-headline">${highlightMast(m.headline)}</div>
         <div class="mention-meta-row">
-          <span class="mention-outlet">${escHtml(m.outlet)}</span>
-          ${m.market ? `<span class="mention-market">${escHtml(m.market)}</span>` : ''}
+          <span class="mention-outlet">${escHtml(stripJunk(m.outlet))}</span>
+          ${m.market ? `<span class="mention-market">${escHtml(stripJunk(m.market))}</span>` : ''}
         </div>
       </div>
-      ${m.excerpt ? `<div class="mention-excerpt">"…${escHtml(m.excerpt)}"</div>` : ''}
+      ${cleanExcerpt ? `<div class="mention-excerpt">"…${highlightMast(cleanExcerpt)}"</div>` : ''}
       <div class="mention-footer">
-        ${m.audience  ? `<div class="mention-stat">Audience <span>${Number(m.audience.replace(/,/g,'')).toLocaleString()}</span></div>` : ''}
-        ${m.publicity ? `<div class="mention-stat">Est. Value <span>${m.publicity}</span></div>` : ''}
+        ${cleanAudience  ? `<div class="mention-stat">Audience <span>${Number(cleanAudience.replace(/,/g,'')).toLocaleString()}</span></div>` : ''}
+        ${cleanPublicity ? `<div class="mention-stat">Est. Value <span>${escHtml(cleanPublicity)}</span></div>` : ''}
         <div class="mention-stat" style="margin-left:0">Date <span>${escHtml(dateStr)}</span></div>
         <div class="mention-link">Open in CM ↗</div>
       </div>
     `;
     grid.appendChild(card);
   });
-}
-
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
 // ─── FILTERS ───────────────────────────────────────────────────────────────
