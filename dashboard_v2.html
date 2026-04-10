@@ -9,7 +9,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh}
 
-/* CHYRON — full bleed red bar, white text */
 .chyron{background:#8b0000;padding:5px 0;overflow:hidden;white-space:nowrap}
 .chyron-inner{display:inline-flex;gap:40px;padding:0 32px;animation:scroll 32s linear infinite}
 @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
@@ -17,15 +16,14 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 .chyron-label{font-weight:700;font-size:9px;letter-spacing:.09em;opacity:.75}
 .chyron-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.5);flex-shrink:0}
 
-/* NAV — full bleed, content inside wrapper */
 .nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,0.18)}
 .nav-inner{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
-.nav-logo{width:26px;height:26px;border-radius:50%;background:rgba(184,150,62,0.15);border:1px solid rgba(184,150,62,0.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#b8963e;margin-right:20px;flex-shrink:0}
-.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer}
+.nav-logo{width:26px;height:26px;border-radius:50%;background:rgba(184,150,62,0.15);border:1px solid rgba(184,150,62,0.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
+.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.nav-link:hover{color:#e8e4d9}
 .nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
 .nav-date{margin-left:auto;font-size:11px;color:#9a9585}
 
-/* MAIN CONTENT */
 .main-outer{width:100%}
 .main-inner{max-width:900px;margin:0 auto;padding:20px 32px 32px}
 
@@ -34,52 +32,43 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 
-/* BASE TILE — original feel */
-.tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden}
+.tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden;text-decoration:none}
 .tile:hover{filter:brightness(1.12)}
 .tile-tag{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
 .tile-title{font-size:15px;font-weight:600;line-height:1.2;margin-bottom:3px}
 .tile-sub{font-size:10.5px;line-height:1.4}
 
-/* PAINT SAMPLE COLOR FAMILIES */
-
-/* Gold — White House, Calendar */
 .t-gold{background:#181406;border-top:2px solid #b8963e}
 .t-gold .tile-tag{color:#b8963e}
 .t-gold .tile-title{color:#e8dfc0}
 .t-gold .tile-sub{color:#9a8c6a}
 
-/* Sky — Message of Week, Committee, Bill Lookup, District */
 .t-sky{background:#080f18;border-top:2px solid #6baed6}
 .t-sky .tile-tag{color:#6baed6}
 .t-sky .tile-title{color:#c8dde8}
 .t-sky .tile-sub{color:#5a8090}
 
-/* Crimson — Outreach, Recent Votes, Press Clips */
 .t-crimson{background:#120808;border-top:2px solid #8b0000}
 .t-crimson .tile-tag{color:#c06060}
 .t-crimson .tile-title{color:#e8c8c8}
 .t-crimson .tile-sub{color:#885858}
 
-/* Green — Member Socials */
 .t-green{background:#07100b;border-top:2px solid #3db87a}
 .t-green .tile-tag{color:#3db87a}
 .t-green .tile-title{color:#c0e0cc}
 .t-green .tile-sub{color:#4a8060}
 
-/* Purple-blue — Clip Drop, Press Directory */
 .t-purple{background:#09091a;border-top:2px solid #7a8aff}
 .t-purple .tile-tag{color:#7a8aff}
 .t-purple .tile-title{color:#cdd0f0}
 .t-purple .tile-sub{color:#5a6090}
 
-/* APPROVALS */
 .approvals-section{margin-top:18px}
 .approvals-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .approvals-divider-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#b8963e;text-transform:uppercase;white-space:nowrap}
 .approvals-divider-line{flex:1;height:1px;background:rgba(184,150,62,0.22)}
 
-.approval-tile{background:#13110a;border:1px solid rgba(184,150,62,0.18);border-left:3px solid #b8963e;border-radius:0 5px 5px 0;padding:15px 18px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:filter .15s}
+.approval-tile{background:#13110a;border:1px solid rgba(184,150,62,0.18);border-left:3px solid #b8963e;border-radius:0 5px 5px 0;padding:15px 18px;cursor:pointer;display:flex;flex-direction:column;gap:8px;transition:filter .15s;text-decoration:none}
 .approval-tile:hover{filter:brightness(1.12)}
 .approval-header{display:flex;align-items:center;justify-content:space-between}
 .approval-title{font-size:15px;font-weight:600;color:#e8dfc0}
@@ -98,7 +87,6 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 </head>
 <body>
 
-<!-- CHYRON: full-bleed red, white text -->
 <div class="chyron">
   <div class="chyron-inner">
     <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
@@ -122,114 +110,112 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
   </div>
 </div>
 
-<!-- NAV -->
 <div class="nav-outer">
   <div class="nav-inner">
-    <div class="nav-logo">P</div>
-    <div class="nav-link active">Dashboard</div>
-    <div class="nav-link">Resources</div>
-    <div class="nav-link">Clip Drop</div>
+    <a href="index.html" class="nav-logo">P</a>
+    <a href="index.html" class="nav-link active">Dashboard</a>
+    <a href="resources.html" class="nav-link">Resources</a>
+    <a href="clip-drop.html" class="nav-link">Clip Drop</a>
     <div class="nav-date">Fri, Apr 10, 2026</div>
   </div>
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="main-outer">
   <div class="main-inner">
 
     <div class="section-label">Command Center</div>
 
     <div class="grid-4">
-      <div class="tile t-gold">
+      <a href="index.html#whitehouse" class="tile t-gold">
         <div>
           <div class="tile-tag">Newsroom</div>
           <div class="tile-title">White House</div>
         </div>
         <div class="tile-sub">Press releases, EOs &amp; proclamations</div>
-      </div>
-      <div class="tile t-sky">
+      </a>
+      <a href="index.html#message" class="tile t-sky">
         <div>
           <div class="tile-tag">This week</div>
           <div class="tile-title">Message of the Week</div>
         </div>
         <div class="tile-sub">4 active talking points</div>
-      </div>
-      <div class="tile t-crimson">
+      </a>
+      <a href="resources.html#outreach" class="tile t-crimson">
         <div>
           <div class="tile-tag">Lists · Matrix · Tracker</div>
           <div class="tile-title">Outreach &amp; Affiliations</div>
         </div>
         <div class="tile-sub">55 lists · real send history</div>
-      </div>
-      <div class="tile t-gold">
+      </a>
+      <a href="index.html#calendar" class="tile t-gold">
         <div>
           <div class="tile-tag">Schedule</div>
           <div class="tile-title">Calendar</div>
         </div>
         <div class="tile-sub">Hearings · Votes · Milestones</div>
-      </div>
+      </a>
     </div>
 
     <div class="grid-4">
-      <div class="tile t-sky">
+      <a href="index.html#hearings" class="tile t-sky">
         <div>
           <div class="tile-tag">Today</div>
           <div class="tile-title">Committee Hearings</div>
         </div>
         <div class="tile-sub">4 hearings this week</div>
-      </div>
-      <div class="tile t-sky">
+      </a>
+      <a href="index.html#billlookup" class="tile t-sky">
         <div>
           <div class="tile-tag">Congress.gov</div>
           <div class="tile-title">Bill Lookup</div>
         </div>
         <div class="tile-sub">Search any bill instantly</div>
-      </div>
-      <div class="tile t-crimson">
+      </a>
+      <a href="index.html#votes" class="tile t-crimson">
         <div>
           <div class="tile-tag">House Floor</div>
           <div class="tile-title">Recent Votes</div>
         </div>
         <div class="tile-sub">119th Congress</div>
-      </div>
-      <div class="tile t-sky">
+      </a>
+      <a href="district.html" class="tile t-sky">
         <div>
           <div class="tile-tag">FL-21 · GIS Map</div>
           <div class="tile-title">District</div>
         </div>
         <div class="tile-sub">Palm Beach · Martin · St. Lucie</div>
-      </div>
+      </a>
     </div>
 
     <div class="grid-4" style="margin-bottom:0">
-      <div class="tile t-purple">
+      <a href="clip-drop.html" class="tile t-purple">
         <div>
           <div class="tile-tag">Media · Assets</div>
           <div class="tile-title">Clip Drop</div>
         </div>
         <div class="tile-sub">Drop &amp; share live links</div>
-      </div>
-      <div class="tile t-green">
+      </a>
+      <a href="index.html#socials" class="tile t-green">
         <div>
           <div class="tile-tag">X / Twitter</div>
           <div class="tile-title">Member Socials</div>
         </div>
         <div class="tile-sub">House GOP · Senate · Leadership</div>
-      </div>
-      <div class="tile t-crimson">
+      </a>
+      <a href="index.html#clips" class="tile t-crimson">
         <div>
           <div class="tile-tag">Daily · Office-wide</div>
           <div class="tile-title">Press Clips</div>
         </div>
         <div class="tile-sub">Coverage &amp; mentions</div>
-      </div>
-      <div class="tile t-purple">
+      </a>
+      <a href="resources.html#press-directory" class="tile t-purple">
         <div>
           <div class="tile-tag">Contacts</div>
           <div class="tile-title">Press Directory</div>
         </div>
         <div class="tile-sub">100+ reporters &amp; bookers</div>
-      </div>
+      </a>
     </div>
 
     <div class="approvals-section">
@@ -239,7 +225,7 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
       </div>
 
       <div class="grid-2">
-        <div class="approval-tile">
+        <a href="social-approvals.html" class="approval-tile">
           <div class="approval-header">
             <div class="approval-title">Social Media</div>
             <div class="badge badge-pending">3 pending</div>
@@ -274,9 +260,9 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
               <div class="k-pill"></div>
             </div>
           </div>
-        </div>
+        </a>
 
-        <div class="approval-tile">
+        <a href="resources.html#strategy" class="approval-tile">
           <div class="approval-header">
             <div class="approval-title">Strategy</div>
             <div class="badge badge-review">2 in review</div>
@@ -304,7 +290,7 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
               <div class="k-pill sky"></div>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     </div>
 
