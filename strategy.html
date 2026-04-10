@@ -261,7 +261,7 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
           <th onclick="sortBy('Due_Date')">Due Date ↕</th>
           <th onclick="sortBy('Location')">Location ↕</th>
           <th onclick="sortBy('Org')">Org ↕</th>
-          <th onclick="sortBy('Type')">Type ↕</th>
+          <th onclick="sortBy('Deliverable')">Deliverable ↕</th>
           <th onclick="sortBy('Staff')">Staff ↕</th>
           <th onclick="sortBy('Progress')">Progress ↕</th>
           <th>Link</th>
@@ -311,8 +311,8 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
         <input class="form-input" type="text" placeholder="e.g. HALO, House, Keiser" id="f-org">
       </div>
       <div class="form-group">
-        <label class="form-label">Type / Deliverable *</label>
-        <input class="form-input" type="text" placeholder="e.g. Floor speech, Remarks" id="f-type">
+        <label class="form-label">Deliverable *</label>
+        <input class="form-input" type="text" placeholder="e.g. Floor speech, Remarks" id="f-deliverable">
       </div>
       <div class="form-group">
         <label class="form-label">Staff *</label>
@@ -366,7 +366,7 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
 // ── CONFIG ──────────────────────────────────────────
 const BASE_ID  = 'appolE86XNzvXIvkZ';
 const TABLE_ID = 'tblThqZ8aIffLGDLb';
-const PAT = 'patIn42Q3UIPD3out.0666c08990c298ff8a634501acf7ed019d21b282b5d38f1456d233567b81d972';
+const PAT      = 'patdtR6wMxKFO3ULn.9d9f76b9d95ea1ae5a8eeefa67da40ec72e4ce80cf3c3e37c3b2b4f2bad2e70';
 const API_URL  = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`;
 const HEADERS  = { 'Authorization': `Bearer ${PAT}`, 'Content-Type': 'application/json' };
 
@@ -391,14 +391,14 @@ async function loadProjects() {
 
     allProjects = records.map(r => ({
       id: r.id,
-      Location:  r.fields['Location']  || '',
-      Due_Date:  r.fields['Due Date']   || '',
-      Org:       r.fields['Org']        || '',
-      Type:      r.fields['Type']       || '',
-      Staff:     r.fields['Staff']      || '',
-      Progress:  r.fields['Progress']   || '',
-      URL:       r.fields['URL']        || '',
-      Notes:     r.fields['Notes']      || '',
+      Location:    r.fields['Location']    || '',
+      Due_Date:    r.fields['Due Date']     || '',
+      Org:         r.fields['Org']          || '',
+      Deliverable: r.fields['Deliverable']  || '',
+      Staff:       r.fields['Staff']        || '',
+      Progress:    r.fields['Progress']     || '',
+      URL:         r.fields['URL']          || '',
+      Notes:       r.fields['Notes']        || '',
     }));
     updateStats();
     renderTable();
@@ -435,7 +435,7 @@ function renderTable() {
     const filterMatch = currentFilter === 'all'
       || p.Location === currentFilter
       || p.Progress === currentFilter;
-    const qMatch = !q || [p.Org, p.Type, p.Staff, p.Notes, p.Location].join(' ').toLowerCase().includes(q);
+    const qMatch = !q || [p.Org, p.Deliverable, p.Staff, p.Notes, p.Location].join(' ').toLowerCase().includes(q);
     return filterMatch && qMatch;
   });
 
@@ -463,7 +463,7 @@ function renderTable() {
       <td>${dueBadge(p.Due_Date, p.Progress)}</td>
       <td>${locBadge(p.Location)}</td>
       <td class="col-org">${esc(p.Org) || '—'}</td>
-      <td style="font-size:11px;color:var(--text-sec)">${esc(p.Type) || '—'}</td>
+      <td style="font-size:11px;color:var(--text-sec)">${esc(p.Deliverable) || '—'}</td>
       <td>${staffChip(p.Staff)}</td>
       <td>${progBadge(p.Progress)}</td>
       <td>${p.URL ? `<a class="url-icon" href="${esc(p.URL)}" target="_blank" onclick="event.stopPropagation()" title="Open document">↗</a>` : '<span style="color:var(--text-dim);font-size:11px">—</span>'}</td>
@@ -515,8 +515,15 @@ function progBadge(prog) {
 
 function staffChip(name) {
   if (!name) return '<span style="color:var(--text-dim);font-size:11px">—</span>';
+  const colorMap = {
+    'Kate':    { bg: '#7C37EF', text: '#fff' },
+    'Savanah': { bg: '#FFBA05', text: '#111' },
+    'David':   { bg: '#166EE1', text: '#fff' },
+    'AMGB':    { bg: '#DC043B', text: '#fff' },
+  };
+  const colors = colorMap[name] || { bg: 'var(--navy-mid)', text: 'var(--text-sec)' };
   const initials = name.length <= 5 ? name : name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  return `<span class="staff-chip" title="${esc(name)}">${esc(initials)}</span>`;
+  return `<span class="staff-chip" title="${esc(name)}" style="background:${colors.bg};color:${colors.text};border-color:transparent">${esc(initials)}</span>`;
 }
 
 // ── FILTER / SORT ─────────────────────────────────────
@@ -547,7 +554,7 @@ function openModal(id) {
     document.getElementById('f-location').value = p.Location;
     document.getElementById('f-due-date').value = p.Due_Date;
     document.getElementById('f-org').value = p.Org;
-    document.getElementById('f-type').value = p.Type;
+    document.getElementById('f-deliverable').value = p.Deliverable;
     document.getElementById('f-progress').value = p.Progress;
     document.getElementById('f-notes').value = p.Notes;
     document.getElementById('f-url').value = p.URL;
@@ -611,16 +618,16 @@ function handleStaffChange() {
 async function saveProject() {
   const location = document.getElementById('f-location').value.trim();
   const dueDate  = document.getElementById('f-due-date').value;
-  const org      = document.getElementById('f-org').value.trim();
-  const type     = document.getElementById('f-type').value.trim();
-  const staffSel = document.getElementById('f-staff').value;
+  const org         = document.getElementById('f-org').value.trim();
+  const deliverable = document.getElementById('f-deliverable').value.trim();
+  const staffSel    = document.getElementById('f-staff').value;
   const staffOther = document.getElementById('f-staff-other').value.trim();
   const staff    = staffSel === 'Other' ? staffOther : staffSel;
   const progress = document.getElementById('f-progress').value;
   const url      = document.getElementById('f-url').value.trim();
   const notes    = document.getElementById('f-notes').value.trim();
 
-  if (!location || !dueDate || !org || !type || !staff || !progress) {
+  if (!location || !dueDate || !org || !deliverable || !staff || !progress) {
     alert('Please fill in all required fields.');
     return;
   }
@@ -630,13 +637,13 @@ async function saveProject() {
   btn.textContent = 'Saving…';
 
   const fields = {
-    'Location': location,
-    'Due Date': dueDate,
-    'Org': org,
-    'Type': type,
-    'Staff': staff,
-    'Progress': progress,
-    'Notes': notes,
+    'Location':    location,
+    'Due Date':    dueDate,
+    'Org':         org,
+    'Deliverable': deliverable,
+    'Staff':       staff,
+    'Progress':    progress,
+    'Notes':       notes,
   };
   if (url) fields['URL'] = url;
 
