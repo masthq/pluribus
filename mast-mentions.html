@@ -348,12 +348,19 @@ function stripJunk(str) {
 // Highlight "Brian Mast", "Rep. Mast", "Rep Mast", "Mast" in text
 // Returns HTML string — call AFTER escHtml on surrounding content
 function highlightMast(text) {
-  // Escape first so we don't accidentally break tags
   const escaped = escHtml(stripJunk(text));
   return escaped.replace(
     /(Brian Mast|Rep\.?\s*Mast|Mast)/g,
     '<strong style="color:#ffffff;font-weight:700">$1</strong>'
   );
+}
+
+// Return only the sentence(s) from the excerpt that contain a Mast mention
+function extractMastSentence(text) {
+  if (!text) return '';
+  const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+  const hits = sentences.filter(s => /Brian Mast|Rep\.?\s*Mast|\bMast\b/i.test(s));
+  return hits.length ? hits.join(' ').trim() : stripJunk(text).slice(0, 200);
 }
 
 // ─── RENDER ────────────────────────────────────────────────────────────────
@@ -403,7 +410,7 @@ function render() {
     card.rel = 'noopener';
 
     const dateStr = stripJunk(m.dateCollected) || (m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '');
-    const cleanExcerpt = stripJunk(m.excerpt);
+    const mastSentence = extractMastSentence(m.excerpt);
     const cleanAudience = stripJunk(m.audience);
     const cleanPublicity = stripJunk(m.publicity);
 
@@ -415,7 +422,7 @@ function render() {
           ${m.market ? `<span class="mention-market">${escHtml(stripJunk(m.market))}</span>` : ''}
         </div>
       </div>
-      ${cleanExcerpt ? `<div class="mention-excerpt">"…${highlightMast(cleanExcerpt)}"</div>` : ''}
+      ${mastSentence ? `<div class="mention-excerpt">"${highlightMast(mastSentence)}"</div>` : ''}
       <div class="mention-footer">
         ${cleanAudience  ? `<div class="mention-stat">Audience <span>${Number(cleanAudience.replace(/,/g,'')).toLocaleString()}</span></div>` : ''}
         ${cleanPublicity ? `<div class="mention-stat">Est. Value <span>${escHtml(cleanPublicity)}</span></div>` : ''}
