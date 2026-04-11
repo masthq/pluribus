@@ -444,16 +444,32 @@ document.getElementById('navDate').textContent =
       const text = await res.text();
       const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
       mentions = json.table.rows
-        .map(r => ({
-          headline     : r.c[1]?.v || '',
-          outlet       : r.c[2]?.v || '',
-          market       : r.c[3]?.v || '',
-          dateCollected: r.c[4]?.v || '',
-          excerpt      : r.c[5]?.v || '',
-          audience     : r.c[6]?.v || '',
-          publicity    : r.c[7]?.v || '',
-        }))
+        .map(r => {
+          // gviz returns timestamp col as "Date(2026,3,10,17,40,0)" — parse it
+          let tsRaw = r.c[0]?.v || '';
+          let dateStr = '';
+          if (typeof tsRaw === 'string' && tsRaw.startsWith('Date(')) {
+            const parts = tsRaw.replace('Date(','').replace(')','').split(',').map(Number);
+            const d = new Date(parts[0], parts[1], parts[2]);
+            dateStr = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+          }
+          // dateCollected is CM's own date string (col 4) — use it if present, else fall back
+          const dcRaw = r.c[4]?.v || '';
+          const dateCollected = dcRaw ? stripJunk(dcRaw) : dateStr;
+
+          return {
+            timestamp    : dateStr,
+            headline     : r.c[1]?.v || '',
+            outlet       : r.c[2]?.v || '',
+            market       : r.c[3]?.v || '',
+            dateCollected,
+            excerpt      : r.c[5]?.v || '',
+            audience     : r.c[6]?.v || '',
+            publicity    : r.c[7]?.v || '',
+          };
+        })
         .filter(m => m.headline)
+        .reverse()   // newest first — sheet appends to bottom
         .slice(0, 8);
 
       build();
