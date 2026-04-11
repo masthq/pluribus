@@ -304,16 +304,30 @@ async function fetchMentions() {
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
     const rows = json.table.rows;
 
-    allMentions = rows.map(row => ({
-      timestamp : row.c[0]?.v || '',
-      headline  : row.c[1]?.v || '',
-      outlet    : row.c[2]?.v || '',
-      market    : row.c[3]?.v || '',
-      dateCollected: row.c[4]?.v || '',
-      excerpt   : row.c[5]?.v || '',
-      audience  : row.c[6]?.v || '',
-      publicity : row.c[7]?.v || '',
-    })).filter(m => m.headline); // skip header row / blanks
+    allMentions = rows.map(row => {
+      let tsRaw = row.c[0]?.v || '';
+      let dateStr = '';
+      if (typeof tsRaw === 'string' && tsRaw.startsWith('Date(')) {
+        const parts = tsRaw.replace('Date(','').replace(')','').split(',').map(Number);
+        const d = new Date(parts[0], parts[1], parts[2]);
+        dateStr = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+      }
+      const dcRaw = row.c[4]?.v || '';
+      const dateCollected = dcRaw ? stripJunk(dcRaw) : dateStr;
+
+      return {
+        timestamp    : dateStr,
+        headline     : row.c[1]?.v || '',
+        outlet       : row.c[2]?.v || '',
+        market       : row.c[3]?.v || '',
+        dateCollected,
+        excerpt      : row.c[5]?.v || '',
+        audience     : row.c[6]?.v || '',
+        publicity    : row.c[7]?.v || '',
+      };
+    })
+    .filter(m => m.headline)
+    .reverse(); // newest first
 
     document.getElementById('mentionsLoading').style.display = 'none';
     render();
@@ -369,12 +383,10 @@ function render() {
   const empty = document.getElementById('mentionsEmpty');
   grid.innerHTML = '';
 
-  const today = new Date().toDateString();
-
   let filtered = allMentions.filter(m => {
     if (activeFilter === 'today') {
-      const d = new Date(m.timestamp);
-      return d.toDateString() === today;
+      const today = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+      return m.timestamp === today || m.dateCollected.includes(new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'}));
     }
     if (activeFilter !== 'all') {
       return (m.market || '').toLowerCase().includes(activeFilter.toLowerCase()) ||
@@ -409,7 +421,7 @@ function render() {
     card.target = '_blank';
     card.rel = 'noopener';
 
-    const dateStr = stripJunk(m.dateCollected) || (m.timestamp ? new Date(m.timestamp).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '');
+    const dateStr = m.dateCollected || m.timestamp || '';
     const mastSentence = extractMastSentence(m.excerpt);
     const cleanAudience = stripJunk(m.audience);
     const cleanPublicity = stripJunk(m.publicity);
