@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observance Calendar — Mast Comms HQ</title>
+  <link rel="stylesheet" href="design-tokens.css" />
+  <style>
+    /* ── PAGE SHELL ── */
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Libre Franklin', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── CHYRON ── */
+    .chyron {
+      background: var(--crimson);
+      width: 100%;
+      padding: 7px 32px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .chyron a { color: #fff; text-decoration: none; opacity: 0.7; }
+    .chyron a:hover { opacity: 1; }
+    .chyron-sep { opacity: 0.35; }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--border-dim);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      height: 52px;
+    }
+    .nav-brand {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.15rem;
+      color: var(--gold);
+      letter-spacing: 0.03em;
+      margin-right: 28px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: var(--text-sec);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--navy-hover); }
+    .nav-links a.active { color: var(--gold); }
+
+    /* ── LAYOUT ── */
+    .page-wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 36px 32px 64px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 28px;
+    }
+    .page-header h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.9rem;
+      color: var(--gold-lt);
+      letter-spacing: 0.01em;
+      margin-bottom: 6px;
+    }
+    .page-header p {
+      font-size: 0.82rem;
+      color: var(--text-sec);
+      line-height: 1.5;
+      max-width: 600px;
+    }
+    .source-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      background: var(--border-dim);
+      border-radius: 4px;
+      padding: 4px 10px;
+      margin-top: 10px;
+    }
+    .source-note svg { opacity: 0.5; }
+
+    /* ── CONTROLS ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .controls-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-right: 4px;
+    }
+    .filter-btn {
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      color: var(--text-sec);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--border); color: var(--text); }
+    .filter-btn.active {
+      color: var(--navy);
+      border-color: transparent;
+    }
+    .filter-btn[data-cat="all"].active          { background: var(--text); }
+    .filter-btn[data-cat="military-veterans"].active { background: var(--gold); }
+    .filter-btn[data-cat="holiday"].active      { background: var(--sky); color: var(--navy); }
+    .filter-btn[data-cat="solemn"].active       { background: var(--red-medium); color: #fff; }
+    .filter-btn[data-cat="health"].active       { background: var(--green); color: var(--navy); }
+    .filter-btn[data-cat="heritage"].active     { background: var(--purple-blue); color: var(--navy); }
+    .filter-btn[data-cat="policy"].active       { background: #6b9fd4; color: var(--navy); }
+    .filter-btn[data-cat="environment"].active  { background: #4caf7d; color: var(--navy); }
+
+    /* ── VIEW TOGGLE ── */
+    .view-toggle {
+      margin-left: auto;
+      display: flex;
+      gap: 4px;
+    }
+    .view-btn {
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      color: var(--text-sec);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .view-btn.active { background: var(--navy-hover); color: var(--gold); border-color: var(--border); }
+    .view-btn:hover { color: var(--text); }
+
+    /* ── UPCOMING STRIP ── */
+    .upcoming-strip {
+      background: var(--navy-card);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 28px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .upcoming-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--crimson);
+      white-space: nowrap;
+      padding-top: 2px;
+      min-width: 90px;
+    }
+    .upcoming-items {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .upcoming-chip {
+      background: var(--navy-hover);
+      border: 1px solid var(--border-dim);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .upcoming-chip .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .upcoming-chip .chip-days {
+      font-size: 0.62rem;
+      color: var(--text-sec);
+    }
+
+    /* ── MONTH SECTIONS (list view) ── */
+    .month-section {
+      margin-bottom: 32px;
+    }
+    .month-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .month-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.15rem;
+      color: var(--gold-lt);
+    }
+    .month-count {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── OBSERVANCE CARD ── */
+    .obs-card {
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.15s;
+      cursor: default;
+    }
+    .obs-card:hover { border-color: var(--border); }
+    .obs-date {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      min-width: 56px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .obs-date .date-num {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-sec);
+      display: block;
+      line-height: 1;
+    }
+    .obs-date .date-month-abbr {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: block;
+    }
+    .obs-date.no-date .date-num {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+    .obs-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--border-dim);
+      flex-shrink: 0;
+    }
+    .obs-info { flex: 1; }
+    .obs-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .obs-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+    .obs-tag {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+    .obs-note {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+    .obs-priority {
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--crimson);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(139,0,0,0.4);
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    /* Category tag colors */
+    .tag-military-veterans { background: rgba(184,150,62,0.15); color: var(--gold); }
+    .tag-holiday           { background: rgba(107,174,214,0.12); color: var(--sky); }
+    .tag-solemn            { background: rgba(208,64,64,0.15); color: var(--red-medium); }
+    .tag-health            { background: rgba(61,184,122,0.12); color: var(--green); }
+    .tag-heritage          { background: rgba(122,138,255,0.12); color: var(--purple-blue); }
+    .tag-policy            { background: rgba(107,159,212,0.12); color: #6b9fd4; }
+    .tag-environment       { background: rgba(76,175,125,0.12); color: #4caf7d; }
+
+    /* ── GRID VIEW ── */
+    .grid-view {
+      display: none;
+    }
+    .grid-view.active { display: block; }
+    .list-view { display: block; }
+    .list-view.hidden { display: none; }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 0;
+    }
+    .month-cell {
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .month-cell-name {
+      font-family: 'Instrument Serif', serif;
+      font-size: 0.9rem;
+      color: var(--gold-lt);
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .grid-obs-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border-dim);
+      font-size: 0.72rem;
+    }
+    .grid-obs-item:last-child { border-bottom: none; }
+    .grid-obs-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+    .grid-obs-name { color: var(--text); line-height: 1.35; }
+    .grid-obs-date { color: var(--text-dim); font-size: 0.63rem; white-space: nowrap; }
+
+    /* Category dot colors */
+    .dot-military-veterans { background: var(--gold); }
+    .dot-holiday           { background: var(--sky); }
+    .dot-solemn            { background: var(--red-medium); }
+    .dot-health            { background: var(--green); }
+    .dot-heritage          { background: var(--purple-blue); }
+    .dot-policy            { background: #6b9fd4; }
+    .dot-environment       { background: #4caf7d; }
+
+    /* ── LEGEND ── */
+    .legend {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: var(--navy-card);
+      border: 1px solid var(--border-dim);
+      border-radius: 6px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.65rem;
+      color: var(--text-sec);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* Hidden items */
+    .obs-card.hidden-item { display: none; }
+    .month-section.all-hidden { display: none; }
+    .month-cell.all-hidden { display: none; }
+    .grid-obs-item.hidden-item { display: none; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CHYRON -->
+  <div class="chyron">
+    <span>MAST COMMS HQ</span>
+    <span class="chyron-sep">|</span>
+    <a href="index.html">Dashboard</a>
+    <span class="chyron-sep">|</span>
+    <a href="#">Internal Use Only</a>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="index.html">Pluribus</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="district.html">District</a>
+      <a href="clip-drop.html">Clip Drop</a>
+      <a href="social-approvals.html">Social</a>
+      <a href="messaging-archive.html">Messaging</a>
+      <a href="press-directory.html">Press Dir</a>
+      <a href="local-officials.html">Officials</a>
+      <a href="outreach.html">Outreach</a>
+      <a href="observance-calendar.html" class="active">Observances</a>
+    </div>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="page-wrap">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>Observance Calendar</h1>
+      <p>Days, weeks, and months worth recognizing — sourced from Rep. Mast's blog and newsletter archive. Use this to plan content ahead of key commemorative dates.</p>
+      <div class="source-note">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 018 3zm-.5 2.5v3.25l2.5 1.5.5-.85-2-1.2V5.5h-1z" fill="currentColor"/></svg>
+        Parsed from 1,110 blog/newsletter documents (2020–2026) — 51 observances identified
+      </div>
+    </div>
+
+    <!-- UPCOMING STRIP (populated by JS) -->
+    <div class="upcoming-strip" id="upcomingStrip">
+      <span class="upcoming-label">⚡ Coming up</span>
+      <div class="upcoming-items" id="upcomingItems"></div>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot dot-military-veterans"></div>Military / Veterans</div>
+      <div class="legend-item"><div class="legend-dot dot-holiday"></div>Holiday</div>
+      <div class="legend-item"><div class="legend-dot dot-solemn"></div>Solemn / Remembrance</div>
+      <div class="legend-item"><div class="legend-dot dot-health"></div>Health Awareness</div>
+      <div class="legend-item"><div class="legend-dot dot-heritage"></div>Heritage</div>
+      <div class="legend-item"><div class="legend-dot dot-policy"></div>Policy / Constituent</div>
+      <div class="legend-item"><div class="legend-dot dot-environment"></div>Environment</div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <span class="controls-label">Filter:</span>
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="military-veterans">Military &amp; Veterans</button>
+      <button class="filter-btn" data-cat="holiday">Holidays</button>
+      <button class="filter-btn" data-cat="solemn">Solemn</button>
+      <button class="filter-btn" data-cat="health">Health</button>
+      <button class="filter-btn" data-cat="heritage">Heritage</button>
+      <button class="filter-btn" data-cat="policy">Policy</button>
+      <button class="filter-btn" data-cat="environment">Environment</button>
+      <div class="view-toggle">
+        <button class="view-btn active" data-view="list">List</button>
+        <button class="view-btn" data-view="grid">Grid</button>
+      </div>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div class="list-view" id="listView"></div>
+
+    <!-- GRID VIEW -->
+    <div class="grid-view" id="gridView"></div>
+
+  </div>
+
+  <script>
+  const OBSERVANCES = [
+    // January
+    {month:1,day:1,   name:"New Year's Day",                                   period:"day",     cat:"holiday",           note:""},
+    {month:1,day:9,   name:"Law Enforcement Appreciation Day",                  period:"day",     cat:"military-veterans", note:"Observed 6× in Mast blog archive"},
+    {month:1,day:27,  name:"International Holocaust Remembrance Day",           period:"day",     cat:"solemn",            note:"Observed 6× in Mast blog archive"},
+    {month:1,day:null,name:"National School Choice Week",                        period:"week",    cat:"policy",            note:"Late January"},
+    // February
+    {month:2,day:null,name:"Black History Month",                                period:"month",   cat:"heritage",          note:""},
+    {month:2,day:null,name:"American Heart Month",                               period:"month",   cat:"health",            note:""},
+    // March
+    {month:3,day:null,name:"Women's History Month",                              period:"month",   cat:"heritage",          note:""},
+    {month:3,day:null,name:"National Invest in Veterans Week",                   period:"week",    cat:"military-veterans", note:"Observed in Mast blog archive"},
+    {month:3,day:null,name:"Brain Awareness Month / Glioblastoma Awareness",     period:"month",   cat:"health",            note:"Glioblastoma observed 2× in archive"},
+    // April
+    {month:4,day:5,   name:"Gold Star Spouses Day",                             period:"day",     cat:"military-veterans", note:"Priority"},
+    {month:4,day:null,name:"Month of the Military Child",                        period:"month",   cat:"military-veterans", note:"Observed in Mast blog archive"},
+    {month:4,day:null,name:"National Former POW Recognition Day",                period:"day",     cat:"military-veterans", note:"Observed in Mast blog archive"},
+    {month:4,day:null,name:"National Manatee Appreciation Day",                  period:"day",     cat:"environment",       note:"Observed in Mast blog archive — FL-21 relevance"},
+    {month:4,day:null,name:"Passover",                                           period:"holiday", cat:"holiday",           note:"Date varies — check Jewish calendar"},
+    {month:4,day:null,name:"Easter",                                             period:"holiday", cat:"holiday",           note:"Date varies; observed 4× in archive"},
+    // May
+    {month:5,day:null,name:"National Police Week",                               period:"week",    cat:"military-veterans", note:"⭐ Observed 9× — high priority"},
+    {month:5,day:15,  name:"Peace Officers Memorial Day",                        period:"day",     cat:"military-veterans", note:"Part of National Police Week"},
+    {month:5,day:null,name:"Military Appreciation Month",                        period:"month",   cat:"military-veterans", note:"All of May"},
+    {month:5,day:null,name:"Military Spouses Appreciation Day",                  period:"day",     cat:"military-veterans", note:"Observed 2× in archive"},
+    {month:5,day:null,name:"National Small Business Week",                       period:"week",    cat:"policy",            note:"Observed 2× in archive"},
+    {month:5,day:null,name:"Memorial Day",                                       period:"day",     cat:"military-veterans", note:"⭐ Observed 6× — high priority"},
+    {month:5,day:null,name:"Mental Health Awareness Month",                      period:"month",   cat:"health",            note:""},
+    {month:5,day:null,name:"Foster Care Awareness Month",                        period:"month",   cat:"policy",            note:"Observed in archive"},
+    // June
+    {month:6,day:5,   name:"World Environment Day",                              period:"day",     cat:"environment",       note:"Observed in archive"},
+    {month:6,day:14,  name:"Flag Day",                                           period:"day",     cat:"holiday",           note:""},
+    {month:6,day:null,name:"National Homeownership Month",                       period:"month",   cat:"policy",            note:"Observed in archive"},
+    {month:6,day:null,name:"World Ocean Month / National Estuaries Week",        period:"month",   cat:"environment",       note:"Estuaries Week observed 5× — strong FL-21 relevance"},
+    // July
+    {month:7,day:4,   name:"Independence Day / Fourth of July",                  period:"day",     cat:"holiday",           note:"⭐ Observed 8× — high priority"},
+    {month:7,day:null,name:"National Go Fishing Day",                            period:"day",     cat:"environment",       note:"Observed in archive — FL-21 relevance"},
+    // August
+    {month:8,day:4,   name:"U.S. Coast Guard Birthday",                         period:"day",     cat:"military-veterans", note:"Observed in archive"},
+    {month:8,day:7,   name:"National Purple Heart Day",                          period:"day",     cat:"military-veterans", note:"Observed 2× in archive"},
+    // September
+    {month:9,day:null,name:"Labor Day",                                          period:"day",     cat:"holiday",           note:"First Monday in September"},
+    {month:9,day:11,  name:"Patriot Day / September 11 Remembrance",            period:"day",     cat:"solemn",            note:"⭐ Observed 4× — high priority"},
+    {month:9,day:null,name:"Suicide Prevention Awareness Month",                 period:"month",   cat:"health",            note:"Observed in archive — veteran focus"},
+    {month:9,day:null,name:"National PTSD Awareness Day",                        period:"day",     cat:"health",            note:"Observed in archive"},
+    {month:9,day:null,name:"National Estuaries Week",                            period:"week",    cat:"environment",       note:"⭐ Observed 5× — strong FL-21 relevance"},
+    // October
+    {month:10,day:null,name:"Breast Cancer Awareness Month",                     period:"month",   cat:"health",            note:""},
+    {month:10,day:null,name:"Domestic Violence Awareness Month",                  period:"month",   cat:"policy",            note:"Observed in archive"},
+    {month:10,day:null,name:"National Fire Prevention Week",                      period:"week",    cat:"policy",            note:"Observed in archive"},
+    {month:10,day:null,name:"National Manufacturing Day",                         period:"day",     cat:"policy",            note:"Observed in archive"},
+    {month:10,day:null,name:"Native American Heritage Month",                     period:"month",   cat:"heritage",          note:"Observed in archive"},
+    {month:10,day:null,name:"National Women's Small Business Month",              period:"month",   cat:"policy",            note:"Observed in archive"},
+    {month:10,day:null,name:"Alzheimer's Awareness Month",                        period:"month",   cat:"health",            note:"Observed in archive"},
+    {month:10,day:31, name:"Halloween",                                           period:"day",     cat:"holiday",           note:"Observed 2× in archive"},
+    // November
+    {month:11,day:11, name:"Veterans Day",                                        period:"day",     cat:"military-veterans", note:"⭐ Observed 7× — high priority"},
+    {month:11,day:null,name:"Thanksgiving",                                        period:"day",     cat:"holiday",           note:"⭐ Observed 10× — high priority"},
+    {month:11,day:null,name:"National Military Brats Day",                         period:"day",     cat:"military-veterans", note:"Observed in archive"},
+    // December
+    {month:12,day:7,  name:"Pearl Harbor Remembrance Day",                        period:"day",     cat:"solemn",            note:""},
+    {month:12,day:null,name:"Hanukkah",                                            period:"holiday", cat:"holiday",           note:"Date varies — check Jewish calendar"},
+    {month:12,day:25, name:"Christmas",                                            period:"day",     cat:"holiday",           note:"⭐ Observed 12× — high priority"},
+    {month:12,day:null,name:"Constitution Day",                                    period:"day",     cat:"policy",            note:"Observed in archive"},
+  ];
+
+  const MONTH_NAMES = ["","January","February","March","April","May","June","July","August","September","October","November","December"];
+  const MONTH_ABBR  = ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  const PRIORITY_KEYWORDS = ['⭐', 'high priority', 'Priority'];
+  const isPriority = obs => PRIORITY_KEYWORDS.some(k => obs.note.includes(k));
+
+  const CAT_LABELS = {
+    'military-veterans': 'Military / Veterans',
+    'holiday': 'Holiday',
+    'solemn': 'Solemn',
+    'health': 'Health',
+    'heritage': 'Heritage',
+    'policy': 'Policy',
+    'environment': 'Environment',
+  };
+
+  const PERIOD_LABELS = { day:'Day', week:'Week', month:'Month', holiday:'Holiday' };
+
+  // ── UPCOMING STRIP ──
+  function buildUpcoming() {
+    const today = new Date();
+    const yr = today.getFullYear();
+    const items = [];
+    for (const obs of OBSERVANCES) {
+      if (!obs.day) continue; // only fixed dates
+      let candidate = new Date(yr, obs.month - 1, obs.day);
+      if (candidate < today) candidate = new Date(yr + 1, obs.month - 1, obs.day);
+      const diff = Math.round((candidate - today) / 86400000);
+      if (diff <= 60) {
+        items.push({ obs, diff, date: candidate });
+      }
+    }
+    items.sort((a, b) => a.diff - b.diff);
+
+    const container = document.getElementById('upcomingItems');
+    const strip = document.getElementById('upcomingStrip');
+    if (!items.length) { strip.style.display = 'none'; return; }
+
+    items.slice(0, 6).forEach(({ obs, diff }) => {
+      const chip = document.createElement('div');
+      chip.className = 'upcoming-chip';
+      const label = diff === 0 ? 'TODAY' : diff === 1 ? 'Tomorrow' : `in ${diff}d`;
+      chip.innerHTML = `
+        <div class="chip-dot dot-${obs.cat}"></div>
+        <span>${obs.name}</span>
+        <span class="chip-days">${label}</span>
+      `;
+      container.appendChild(chip);
+    });
+  }
+
+  // ── BUILD LIST VIEW ──
+  let currentCat = 'all';
+
+  function buildListView() {
+    const container = document.getElementById('listView');
+    container.innerHTML = '';
+
+    // Group by month
+    const byMonth = {};
+    for (const obs of OBSERVANCES) {
+      if (!byMonth[obs.month]) byMonth[obs.month] = [];
+      byMonth[obs.month].push(obs);
+    }
+
+    for (let m = 1; m <= 12; m++) {
+      if (!byMonth[m]) continue;
+      const section = document.createElement('div');
+      section.className = 'month-section';
+      section.dataset.month = m;
+
+      section.innerHTML = `
+        <div class="month-heading">
+          <span class="month-name">${MONTH_NAMES[m]}</span>
+          <span class="month-count" id="count-${m}">${byMonth[m].length} observance${byMonth[m].length !== 1 ? 's' : ''}</span>
+        </div>
+      `;
+
+      for (const obs of byMonth[m]) {
+        const card = document.createElement('div');
+        card.className = 'obs-card';
+        card.dataset.cat = obs.cat;
+
+        const dateBlock = obs.day
+          ? `<div class="obs-date"><span class="date-num">${obs.day}</span><span class="date-month-abbr">${MONTH_ABBR[m]}</span></div>`
+          : `<div class="obs-date no-date"><span class="date-num">Varies</span></div>`;
+
+        const priorityBadge = isPriority(obs)
+          ? `<span class="obs-priority">★ Priority</span>` : '';
+
+        const noteText = obs.note.replace(/⭐\s*/g, '').replace(/high priority[—–-]?/i, '').trim();
+
+        card.innerHTML = `
+          ${dateBlock}
+          <div class="obs-divider"></div>
+          <div class="obs-info">
+            <div class="obs-name">${obs.name}</div>
+            <div class="obs-meta">
+              <span class="obs-tag tag-${obs.cat}">${CAT_LABELS[obs.cat]}</span>
+              <span class="obs-tag" style="background:var(--border-dim);color:var(--text-sec)">${PERIOD_LABELS[obs.period]}</span>
+              ${priorityBadge}
+              ${noteText ? `<span class="obs-note">${noteText}</span>` : ''}
+            </div>
+          </div>
+        `;
+        section.appendChild(card);
+      }
+      container.appendChild(section);
+    }
+    applyFilter();
+  }
+
+  // ── BUILD GRID VIEW ──
+  function buildGridView() {
+    const container = document.getElementById('gridView');
+    container.innerHTML = '';
+
+    const grid = document.createElement('div');
+    grid.className = 'month-grid';
+
+    const byMonth = {};
+    for (const obs of OBSERVANCES) {
+      if (!byMonth[obs.month]) byMonth[obs.month] = [];
+      byMonth[obs.month].push(obs);
+    }
+
+    for (let m = 1; m <= 12; m++) {
+      const cell = document.createElement('div');
+      cell.className = 'month-cell';
+      cell.dataset.month = m;
+
+      let inner = `<div class="month-cell-name">${MONTH_NAMES[m]}</div>`;
+      if (byMonth[m]) {
+        for (const obs of byMonth[m]) {
+          const dateStr = obs.day ? `${MONTH_ABBR[m]} ${obs.day}` : 'varies';
+          inner += `
+            <div class="grid-obs-item" data-cat="${obs.cat}">
+              <div class="grid-obs-dot dot-${obs.cat}"></div>
+              <div>
+                <div class="grid-obs-name">${obs.name}</div>
+                <div class="grid-obs-date">${dateStr} · ${PERIOD_LABELS[obs.period]}</div>
+              </div>
+            </div>
+          `;
+        }
+      }
+      cell.innerHTML = inner;
+      grid.appendChild(cell);
+    }
+    container.appendChild(grid);
+  }
+
+  // ── FILTER ──
+  function applyFilter() {
+    // List view
+    document.querySelectorAll('.obs-card').forEach(card => {
+      const match = currentCat === 'all' || card.dataset.cat === currentCat;
+      card.classList.toggle('hidden-item', !match);
+    });
+    document.querySelectorAll('.month-section').forEach(sec => {
+      const visible = sec.querySelectorAll('.obs-card:not(.hidden-item)').length;
+      sec.classList.toggle('all-hidden', visible === 0);
+      const m = parseInt(sec.dataset.month);
+      const countEl = document.getElementById(`count-${m}`);
+      if (countEl) {
+        countEl.textContent = `${visible} observance${visible !== 1 ? 's' : ''}`;
+      }
+    });
+
+    // Grid view
+    document.querySelectorAll('.grid-obs-item').forEach(item => {
+      const match = currentCat === 'all' || item.dataset.cat === currentCat;
+      item.classList.toggle('hidden-item', !match);
+    });
+    document.querySelectorAll('.month-cell').forEach(cell => {
+      const visible = cell.querySelectorAll('.grid-obs-item:not(.hidden-item)').length;
+      cell.classList.toggle('all-hidden', visible === 0);
+    });
+  }
+
+  // ── FILTER BUTTONS ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      applyFilter();
+    });
+  });
+
+  // ── VIEW TOGGLE ──
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = btn.dataset.view;
+      const listEl = document.getElementById('listView');
+      const gridEl = document.getElementById('gridView');
+      if (view === 'list') {
+        listEl.classList.remove('hidden');
+        gridEl.classList.remove('active');
+      } else {
+        listEl.classList.add('hidden');
+        gridEl.classList.add('active');
+      }
+    });
+  });
+
+  // ── INIT ──
+  buildUpcoming();
+  buildListView();
+  buildGridView();
+  </script>
+
+</body>
+</html>
