@@ -162,7 +162,11 @@ body{font-family:'Libre Franklin',sans-serif;background:#0a1628;color:#e8e4d9;mi
     <div class="secretaries-panel">
       <div class="secretaries-label">● Cabinet Secretaries · X/Twitter</div>
       <div class="secretaries-embed">
-        <div id="secretariesEmbed" style="width:100%;height:420px;border-radius:3px;overflow:hidden;background:#0a1628"></div>
+        <iframe
+          src="https://twitter.com/i/lists/2043113595169644567?ref_src=twsrc%5Etfw"
+          width="100%" height="420" frameborder="0" scrolling="yes"
+          style="border-radius:3px;background:#0a1628;border:none">
+        </iframe>
       </div>
     </div>
   </div>
@@ -415,8 +419,7 @@ body{font-family:'Libre Franklin',sans-serif;background:#0a1628;color:#e8e4d9;mi
 <div class="overlay" id="ov-commerce"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('commerce')">← Back</button><div class="overlay-title">Commerce · Sec. Lutnick</div><div class="overlay-badge">Trade · Tariffs</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">📊</div><div class="ov-cs-title">Commerce Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Commerce press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
 <div class="overlay" id="ov-energy"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('energy')">← Back</button><div class="overlay-title">Dept. of Energy · Sec. Wright</div><div class="overlay-badge">Energy Policy</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⚡</div><div class="ov-cs-title">DOE Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOE press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
 
-<!-- X embed script -->
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<!-- NO external widget scripts needed -->
 
 <script>
 // ── DATE ──────────────────────────────────────────────────────────────────
@@ -441,86 +444,55 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ── X LIST EMBED ──────────────────────────────────────────────────────────
-// Use twttr.ready() to ensure widget script has loaded before rendering
-function loadXEmbed() {
-  const container = document.getElementById('secretariesEmbed');
-  if (window.twttr && window.twttr.widgets) {
-    window.twttr.widgets.createTimeline(
-      { sourceType: 'list', id: '2043113595169644567' },
-      container,
-      {
-        height: 420,
-        theme: 'dark',
-        chrome: 'noheader nofooter noborders transparent',
-        tweetLimit: 8
-      }
-    );
-  } else {
-    // Fallback: plain iframe embed
-    container.innerHTML = `<iframe
-      src="https://syndication.twitter.com/srv/timeline-list/timeline?listId=2043113595169644567&dnt=true&theme=dark&chrome=noheader%20nofooter%20noborders%20transparent&maxHeight=420px"
-      width="100%" height="420" frameborder="0" scrolling="yes"
-      style="border-radius:3px;background:#0a1628"></iframe>`;
-  }
-}
-// Try immediately, then wait for widget script if needed
-if (window.twttr) {
-  window.twttr.ready(loadXEmbed);
-} else {
-  window.addEventListener('load', () => {
-    if (window.twttr) window.twttr.ready(loadXEmbed);
-    else loadXEmbed(); // fallback iframe
-  });
-}
+// ── WH RELEASES from Google Sheet (same pattern as CM mentions) ───────────
+const WH_SHEET_ID  = '1oGqnNgNPjp1dSCoYIfSE-E2q6kajCXYHv9lqYJDb7r0';
+const WH_SHEET_URL = `https://docs.google.com/spreadsheets/d/${WH_SHEET_ID}/gviz/tq?tqx=out:json&sheet=WH%20Releases`;
 
-// ── WH RSS FEED ───────────────────────────────────────────────────────────
-// rss2json is more reliable than allorigins for RSS parsing
-const WH_RSS_JSON = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://www.whitehouse.gov/feed/');
-
-function typeBadge(title) {
-  const t = (title||'').toLowerCase();
-  if (t.startsWith('executive order'))         return ['badge-eo',   'E.O.'];
-  if (t.startsWith('fact sheet'))              return ['badge-fs',   'Fact Sheet'];
-  if (t.startsWith('proclamation'))            return ['badge-proc', 'Proclamation'];
-  if (t.startsWith('presidential memorandum')) return ['badge-memo', 'Memo'];
-  if (t.startsWith('statement'))               return ['badge-stmt', 'Statement'];
-  if (t.startsWith('readout'))                 return ['badge-rdout','Readout'];
-  if (t.startsWith('press briefing'))          return ['badge-stmt', 'Briefing'];
-  if (t.startsWith('remarks'))                 return ['badge-stmt', 'Remarks'];
-  if (t.startsWith('icymi') || t.startsWith('in case you missed'))
-                                               return ['badge-def',  'ICYMI'];
+function typeBadge(type) {
+  const t = (type||'').toLowerCase();
+  if (t.includes('exec') || t.includes('order') || t.includes('e.o.')) return ['badge-eo',   'E.O.'];
+  if (t.includes('fact'))   return ['badge-fs',   'Fact Sheet'];
+  if (t.includes('proc'))   return ['badge-proc', 'Proclamation'];
+  if (t.includes('memo'))   return ['badge-memo', 'Memo'];
+  if (t.includes('read'))   return ['badge-rdout','Readout'];
+  if (t.includes('brief'))  return ['badge-stmt', 'Briefing'];
+  if (t.includes('stmt') || t.includes('statement')) return ['badge-stmt', 'Statement'];
+  if (t.includes('icymi'))  return ['badge-def',  'ICYMI'];
   return ['badge-def', 'Release'];
 }
 
-function formatDate(dateStr) {
-  try {
-    return new Date(dateStr).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  } catch(e) { return ''; }
-}
-
-async function loadWHFeed() {
+async function loadWHReleases() {
   const list = document.getElementById('whList');
   try {
-    const res  = await fetch(WH_RSS_JSON);
-    const data = await res.json();
+    const res  = await fetch(WH_SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+    const rows = json.table.rows;
 
-    if (!data.items || !data.items.length) throw new Error('No items');
+    if (!rows || !rows.length) throw new Error('No rows');
 
-    const items = data.items.slice(0, 10);
+    // Sheet columns: date, title, url, summary, type
+    const items = rows
+      .map(r => ({
+        date   : r.c[0]?.v || '',
+        title  : r.c[1]?.v || '',
+        url    : r.c[2]?.v || '#',
+        summary: r.c[3]?.v || '',
+        type   : r.c[4]?.v || '',
+      }))
+      .filter(r => r.title)
+      .reverse()  // newest first
+      .slice(0, 10);
 
     list.innerHTML = items.map(item => {
-      const title = item.title || '';
-      const link  = item.link  || '#';
-      const date  = item.pubDate || '';
-      const [badgeClass, badgeLabel] = typeBadge(title);
-      const cleanTitle = title.replace(/^(fact sheet|executive order|proclamation|presidential memorandum|statement|readout|press briefing|remarks|icymi|in case you missed it):\s*/i,'').trim();
+      const [badgeClass, badgeLabel] = typeBadge(item.type);
+      const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
       return `
         <li>
-          <a class="wh-item" href="${link}" target="_blank" rel="noopener">
+          <a class="wh-item" href="${item.url}" target="_blank" rel="noopener">
             <span class="wh-badge ${badgeClass}">${badgeLabel}</span>
-            <span class="wh-item-title">${cleanTitle}</span>
-            <span class="wh-item-date">${formatDate(date)}</span>
+            <span class="wh-item-title">${item.title}</span>
+            <span class="wh-item-date">${dateStr}</span>
           </a>
         </li>`;
     }).join('');
@@ -528,20 +500,19 @@ async function loadWHFeed() {
     // Populate chyron
     const chyron = document.getElementById('chyronInner');
     const chyronItems = items.slice(0,6).map(item => {
-      const title = (item.title||'').toUpperCase().slice(0,100);
-      const [, label] = typeBadge(item.title||'');
-      return `<div class="chyron-item"><span class="chyron-label">${label}</span>${title}<span class="chyron-dot"></span></div>`;
+      const [, label] = typeBadge(item.type);
+      return `<div class="chyron-item"><span class="chyron-label">${label}</span>${item.title.toUpperCase().slice(0,100)}<span class="chyron-dot"></span></div>`;
     }).join('');
     chyron.innerHTML = chyronItems + chyronItems;
 
   } catch(e) {
-    list.innerHTML = '<li class="wh-loading">Could not load releases — <a href="https://www.whitehouse.gov/news/" target="_blank" style="color:#b8963e">check whitehouse.gov/news directly</a>.</li>';
-    console.error('WH RSS error:', e);
+    list.innerHTML = '<li class="wh-loading">No releases yet — Apps Script will populate this automatically.</li>';
+    console.error('WH sheet error:', e);
   }
 }
 
-loadWHFeed();
-setInterval(loadWHFeed, 30 * 60 * 1000);
+loadWHReleases();
+setInterval(loadWHReleases, 15 * 60 * 1000);
 </script>
 </body>
 </html>
