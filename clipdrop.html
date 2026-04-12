@@ -6,36 +6,6 @@
 <title>Clip Drop · Pluribus</title>
 <link rel="stylesheet" href="design-tokens.css">
 <style>
-:root{
-  --navy:var(--navy);--navy-mid:var(--navy-mid);--navy-card:var(--navy-card);--navy-hover:var(--navy-hover);
-  --crimson:var(--crimson);--crimson-lt:#a31010;
-  --gold:var(--gold);--gold-lt:var(--gold-lt);--gold-dim:rgba(184,150,62,0.15);
-  --sky:var(--sky);--green:var(--green);--purple-blue:var(--purple-blue);--red-medium:var(--red-medium);
-  --text:var(--text);--text-sec:var(--text-sec);--text-dim:var(--text-dim);
-  --border:var(--border);--border-dim:var(--border-dim);
-}
-
-body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
-
-/* TICKER */
-.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
-.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
-.ticker-wrap{display:flex;animation:ticker 90s linear infinite;width:max-content;padding-left:80px}
-.ticker-item{font-size:11px;font-weight:700;letter-spacing:0px;text-transform:uppercase;white-space:nowrap;padding-right:32px;color:rgba(255,255,255,.95)}
-.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* NAV */
-
-/* PAGE */
-.breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.5px;margin-bottom:10px}
-.breadcrumb a{color:var(--gold-lt);text-decoration:none}
-main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
-
-/* SECTION LABEL */
-
-.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
-
 /* ADD PANEL — two columns */
 .add-panel{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px}
 
@@ -43,20 +13,20 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 .input-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:8px;padding:22px 24px}
 .input-card-title{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
 .url-row{display:flex;gap:8px;margin-bottom:10px}
-.url-input{flex:1;border:1px solid var(--border-dim);border-radius:4px;padding:9px 14px;font-size:13px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.url-input{flex:1;border:1px solid var(--border-dim);border-radius:4px;padding:9px 14px;font-size:13px;font-family:var(--font-sans);color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
 .url-input:focus{border-color:var(--gold)}
 .url-input::placeholder{color:var(--text-dim)}
-.note-input{width:100%;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:12px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s;margin-bottom:10px;resize:none}
+.note-input{width:100%;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:12px;font-family:var(--font-sans);color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s;margin-bottom:10px;resize:none}
 .note-input:focus{border-color:var(--gold)}
 .note-input::placeholder{color:var(--text-dim)}
 .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.tag-btn{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:2px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.tag-btn{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:4px 10px;border-radius:2px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
 .tag-btn:hover,.tag-btn.selected{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
 .tag-btn.t-tweet.selected{border-color:var(--sky);color:var(--sky);background:rgba(107,174,214,.1)}
 .tag-btn.t-clip.selected{border-color:var(--green);color:var(--green);background:rgba(61,184,122,.1)}
 .tag-btn.t-article.selected{border-color:var(--gold-lt);color:var(--gold-lt);background:var(--gold-dim)}
 .tag-btn.t-urgent.selected{border-color:var(--red-medium);color:var(--red-medium);background:rgba(139,0,0,.1)}
-.add-btn{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:9px 20px;border-radius:4px;border:none;background:var(--gold);color:var(--navy);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;width:100%}
+.add-btn{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:9px 20px;border-radius:4px;border:none;background:var(--gold);color:var(--navy);cursor:pointer;font-family:var(--font-sans);transition:all .15s;width:100%}
 .add-btn:hover{background:var(--gold-lt)}
 .add-btn:disabled{background:var(--navy-hover);color:var(--text-dim);cursor:default}
 
@@ -68,24 +38,24 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 .upload-zone:hover .upload-drop-area,.upload-zone.drag-over .upload-drop-area{border-color:rgba(184,150,62,0.5)}
 .upload-icon{font-size:28px;margin-bottom:8px;opacity:.5}
 .upload-hint{font-size:12px;color:var(--text-sec);margin-bottom:12px}
-.upload-btn-sm{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:7px 16px;border-radius:3px;border:1px solid var(--gold);background:var(--gold-dim);color:var(--gold-lt);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.upload-btn-sm{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:7px 16px;border-radius:3px;border:1px solid var(--gold);background:var(--gold-dim);color:var(--gold-lt);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
 .upload-btn-sm:hover{background:var(--gold);color:var(--navy)}
 .upload-types{font-size:10px;color:var(--text-dim);margin-top:10px}
 #file-input{display:none}
 
 /* FILTER ROW */
 .filter-row{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
-.clip-search{flex:1;min-width:200px;max-width:300px;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:13px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
+.clip-search{flex:1;min-width:200px;max-width:300px;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:13px;font-family:var(--font-sans);color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
 .clip-search:focus{border-color:var(--gold)}
 .clip-search::placeholder{color:var(--text-dim)}
-.flt{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.flt{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
 .flt:hover,.flt.active{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
 .clip-count{font-size:10px;color:var(--text-dim);font-weight:600;margin-left:auto}
 
 /* CLIPS GRID */
-.clips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.clips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 
-/* URL CARD */
+/* CLIP CARDS */
 .clip-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;overflow:hidden;transition:border-color .2s,transform .15s}
 .clip-card:hover{border-color:var(--border);transform:translateY(-1px)}
 .clip-card-top{padding:14px 16px}
@@ -106,7 +76,7 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 .clip-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid var(--border-dim)}
 .clip-thumb-ph{width:100%;aspect-ratio:16/9;background:var(--navy-mid);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--text-dim);border-bottom:1px solid var(--border-dim)}
 .clip-actions{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--border-dim)}
-.clip-action-btn{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
+.clip-action-btn{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
 .clip-action-btn:hover{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
 .clip-action-btn.danger:hover{border-color:var(--red-medium);color:var(--red-medium);background:rgba(139,0,0,.1)}
 
@@ -114,29 +84,29 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 .empty-state{text-align:center;padding:64px 20px;color:var(--text-dim)}
 .empty-icon{font-size:48px;margin-bottom:16px;opacity:.4}
 .empty-title{font-size:16px;font-weight:800;color:var(--text-sec);margin-bottom:6px}
-.empty-sub{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic}
+.empty-sub{font-size:13px;color:var(--text-dim)}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--navy-card);border:1px solid var(--border);border-radius:6px;padding:12px 18px;font-size:12px;font-weight:700;color:var(--text);z-index:999;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.success{border-color:var(--green);color:var(--green)}
 
-footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:20px}
-.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
-.footer-text span{color:var(--gold)}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 </style>
 </head>
 <body>
 
-<div class="ticker-bar">
-  <div class="ticker-wrap">
-    <span class="ticker-item">Clip Drop · Media &amp; link library · Rep. Brian Mast FL-21</span>
-    <span class="ticker-item">Paste tweet URLs, articles, and clips · Drop images and documents</span>
-    <span class="ticker-item">Stored locally in browser · Private to this device</span>
-    <span class="ticker-item">Clip Drop · Media &amp; link library · Rep. Brian Mast FL-21</span>
-    <span class="ticker-item">Paste tweet URLs, articles, and clips · Drop images and documents</span>
-    <span class="ticker-item">Stored locally in browser · Private to this device</span>
+<div class="chyron">
+  <div class="chyron-inner">
+    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">CLIP DROP</span> Paste tweet URLs, articles, and clips — or drop files directly</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">STORAGE</span> Stored locally in browser · Private to this device</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">CLIP DROP</span> Paste tweet URLs, articles, and clips — or drop files directly</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">STORAGE</span> Stored locally in browser · Private to this device</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
   </div>
 </div>
 
@@ -151,332 +121,194 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
   </div>
 </div>
 
-<div class="breadcrumb"><a href="mast-hq.html">Dashboard</a> › Clip Drop
-  <div class="section-label">Clip Drop</div>
-    <div style="font-size:.7rem;color:var(--text-dim);margin-bottom:20px">Paste tweet URLs, articles, and clips — or drop files directly. Shared library for the comms team.</div>
-</div>
-</div>
+<div class="main-outer">
+  <div class="main-inner">
 
-<main>
-  <div class="section-label">Add to Library</div>
-  <div class="add-panel">
+    <div class="section-label">Add to Library</div>
+    <div class="add-panel">
 
-    <!-- URL INPUT -->
-    <div class="input-card">
-      <div class="input-card-title">📎 Paste a URL</div>
-      <div class="url-row">
-        <input class="url-input" id="url-input" type="url" placeholder="https://x.com/… or any link" oninput="onUrlInput()">
+      <!-- URL INPUT -->
+      <div class="input-card">
+        <div class="input-card-title">📎 Paste a URL</div>
+        <div class="url-row">
+          <input class="url-input" id="url-input" type="url" placeholder="https://x.com/… or any link" oninput="onUrlInput()">
+        </div>
+        <textarea class="note-input" id="note-input" placeholder="Note or context (optional)" rows="2"></textarea>
+        <div class="tag-row" id="tag-row">
+          <button class="tag-btn t-tweet" onclick="selectTag('Tweet',this)">Tweet</button>
+          <button class="tag-btn t-clip"  onclick="selectTag('Clip',this)">Clip</button>
+          <button class="tag-btn t-article" onclick="selectTag('Article',this)">Article</button>
+          <button class="tag-btn t-urgent" onclick="selectTag('Urgent',this)">Urgent</button>
+        </div>
+        <button class="add-btn" id="add-btn" onclick="addURL()" disabled>Save to Library</button>
       </div>
-      <textarea class="note-input" id="note-input" placeholder="Note or context (optional)" rows="2"></textarea>
-      <div class="tag-row" id="tag-row">
-        <button class="tag-btn t-tweet" onclick="selectTag('Tweet',this)">Tweet</button>
-        <button class="tag-btn t-clip"  onclick="selectTag('Clip',this)">Clip</button>
-        <button class="tag-btn t-article" onclick="selectTag('Article',this)">Article</button>
-        <button class="tag-btn t-urgent" onclick="selectTag('Urgent',this)">Urgent</button>
+
+      <!-- FILE DROP -->
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+        <div class="upload-zone-title">📁 Drop Files</div>
+        <div class="upload-drop-area">
+          <div class="upload-icon">⬇</div>
+          <div class="upload-hint">Drag &amp; drop images, video, PDFs, or documents</div>
+          <button class="upload-btn-sm" onclick="event.stopPropagation();document.getElementById('file-input').click()">Choose Files</button>
+          <div class="upload-types">JPG · PNG · MP4 · MOV · PDF · DOCX · PPTX</div>
+        </div>
+        <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
       </div>
-      <button class="add-btn" id="add-btn" onclick="addURL()" disabled>Save to Library</button>
+
     </div>
 
-    <!-- FILE DROP -->
-    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
-      <div class="upload-zone-title">📁 Drop Files</div>
-      <div class="upload-drop-area">
-        <div class="upload-icon">⬇</div>
-        <div class="upload-hint">Drag &amp; drop images, video, PDFs, or documents</div>
-        <button class="upload-btn-sm" onclick="event.stopPropagation();document.getElementById('file-input').click()">Choose Files</button>
-        <div class="upload-types">JPG · PNG · MP4 · MOV · PDF · DOCX · PPTX</div>
-      </div>
-      <input type="file" id="file-input" multiple accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+    <!-- LIBRARY -->
+    <div class="section-label">Library</div>
+    <div class="filter-row">
+      <input class="clip-search" type="text" placeholder="Search…" id="clip-search" oninput="renderClips()">
+      <button class="flt active" onclick="setFilter('all',this)">All</button>
+      <button class="flt" onclick="setFilter('Tweet',this)">Tweets</button>
+      <button class="flt" onclick="setFilter('Clip',this)">Clips</button>
+      <button class="flt" onclick="setFilter('Article',this)">Articles</button>
+      <button class="flt" onclick="setFilter('Urgent',this)">Urgent</button>
+      <button class="flt" onclick="setFilter('file',this)">Files</button>
+      <span class="clip-count" id="clip-count"></span>
+    </div>
+    <div class="clips-grid" id="clips-grid"></div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <div class="empty-icon">📂</div>
+      <div class="empty-title">Library is empty</div>
+      <div class="empty-sub">Paste a tweet or article URL, or drop a file above to get started.</div>
     </div>
 
   </div>
-
-  <!-- LIBRARY -->
-  <div class="section-label">Library</div>
-  <div class="filter-row">
-    <input class="clip-search" type="text" placeholder="Search…" id="clip-search" oninput="renderClips()">
-    <button class="flt active" onclick="setFilter('all',this)">All</button>
-    <button class="flt" onclick="setFilter('Tweet',this)">Tweets</button>
-    <button class="flt" onclick="setFilter('Clip',this)">Clips</button>
-    <button class="flt" onclick="setFilter('Article',this)">Articles</button>
-    <button class="flt" onclick="setFilter('Urgent',this)">Urgent</button>
-    <button class="flt" onclick="setFilter('file',this)">Files</button>
-    <span class="clip-count" id="clip-count"></span>
-  </div>
-  <div class="clips-grid" id="clips-grid"></div>
-  <div class="empty-state" id="empty-state" style="display:none">
-    <div class="empty-icon">📂</div>
-    <div class="empty-title">Library is empty</div>
-    <div class="empty-sub">Paste a tweet or article URL, or drop a file above to get started.</div>
-  </div>
-</main>
+</div>
 
 <div class="toast" id="toast"></div>
 
-<footer>
-  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
-  <div class="footer-text">Clip Drop · Browser storage</div>
-</footer>
-
 <script>
-document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+document.getElementById('navDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
 const STORAGE_KEY = 'pluribus_clipdrop_v2';
 let selectedTag = 'Clip';
 
-// ── STORAGE ──────────────────────────────────────────────────
-function loadClips() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-  catch(e) { return []; }
-}
-function saveClips(clips) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(clips)); }
-  catch(e) { showToast('Storage full — remove some items first', false); }
+function loadClips(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch(e){return[];}}
+function saveClips(clips){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(clips));}catch(e){showToast('Storage full — remove some items first',false);}}
+
+function onUrlInput(){
+  const val=document.getElementById('url-input').value.trim();
+  document.getElementById('add-btn').disabled=!val;
+  if(val.match(/x\.com|twitter\.com/i)) selectTagByName('Tweet');
+  else if(val.match(/youtube\.com|youtu\.be|vimeo\.com/i)) selectTagByName('Clip');
 }
 
-// ── URL INPUT ────────────────────────────────────────────────
-function onUrlInput() {
-  const val = document.getElementById('url-input').value.trim();
-  document.getElementById('add-btn').disabled = !val;
-  // Auto-detect tweet and set tag
-  if (val.match(/x\.com|twitter\.com/i)) {
-    selectTagByName('Tweet');
-  } else if (val.match(/youtube\.com|youtu\.be|vimeo\.com/i)) {
-    selectTagByName('Clip');
-  }
+function selectTagByName(name){
+  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('selected'));
+  const btn=document.querySelector(`.tag-btn.t-${name.toLowerCase()}`);
+  if(btn)btn.classList.add('selected');
+  selectedTag=name;
 }
 
-function selectTagByName(name) {
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
-  const btn = document.querySelector(`.tag-btn.t-${name.toLowerCase()}`);
-  if (btn) btn.classList.add('selected');
-  selectedTag = name;
-}
-
-function selectTag(name, btn) {
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+function selectTag(name,btn){
+  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');
-  selectedTag = name;
+  selectedTag=name;
 }
 
-function isTweet(url) {
-  return /x\.com|twitter\.com/.test(url);
+function isTweet(url){return /x\.com|twitter\.com/.test(url);}
+
+async function getTweetTitle(url){
+  try{
+    const res=await fetch(`https://publish.twitter.com/oembed?url=${encodeURIComponent(url)}&omit_script=true`,{cache:'no-store'});
+    if(!res.ok)return null;
+    const data=await res.json();
+    const tmp=document.createElement('div');
+    tmp.innerHTML=data.html||'';
+    return tmp.textContent.trim().slice(0,200)||null;
+  }catch(e){return null;}
 }
 
-async function getTweetTitle(url) {
-  try {
-    const res = await fetch(`https://publish.twitter.com/oembed?url=${encodeURIComponent(url)}&omit_script=true`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    const data = await res.json();
-    // Strip HTML tags from tweet html to get text
-    const tmp = document.createElement('div');
-    tmp.innerHTML = data.html || '';
-    return tmp.textContent.trim().slice(0, 200) || null;
-  } catch(e) { return null; }
+async function addURL(){
+  const url=document.getElementById('url-input').value.trim();
+  const note=document.getElementById('note-input').value.trim();
+  if(!url)return;
+  const btn=document.getElementById('add-btn');
+  btn.disabled=true;btn.textContent='Saving…';
+  let title=url;
+  if(isTweet(url)){const t=await getTweetTitle(url);if(t)title=t;}
+  else{try{const u=new URL(url);title=u.hostname.replace('www.','')+u.pathname;}catch(e){}}
+  const clips=loadClips();
+  clips.unshift({id:Date.now()+Math.random(),kind:'url',tag:selectedTag,url,title,note,added:Date.now()});
+  saveClips(clips);renderClips();
+  document.getElementById('url-input').value='';
+  document.getElementById('note-input').value='';
+  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('selected'));
+  selectedTag='Clip';btn.disabled=false;btn.textContent='Save to Library';
+  showToast('Saved to library',true);
 }
 
-async function addURL() {
-  const url  = document.getElementById('url-input').value.trim();
-  const note = document.getElementById('note-input').value.trim();
-  if (!url) return;
-
-  const btn = document.getElementById('add-btn');
-  btn.disabled = true;
-  btn.textContent = 'Saving…';
-
-  let title = url;
-  // Try to get tweet text for tweets
-  if (isTweet(url)) {
-    const tweetText = await getTweetTitle(url);
-    if (tweetText) title = tweetText;
-    else title = url;
-  } else {
-    // For non-tweets, use the URL itself as title — clean it up
-    try {
-      const u = new URL(url);
-      title = u.hostname.replace('www.','') + u.pathname;
-    } catch(e) {}
-  }
-
-  const clips = loadClips();
-  clips.unshift({
-    id: Date.now() + Math.random(),
-    kind: 'url',
-    tag: selectedTag,
-    url,
-    title,
-    note,
-    added: Date.now(),
-  });
-  saveClips(clips);
-  renderClips();
-
-  // Reset form
-  document.getElementById('url-input').value = '';
-  document.getElementById('note-input').value = '';
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
-  selectedTag = 'Clip';
-  btn.disabled = false;
-  btn.textContent = 'Save to Library';
-  showToast('Saved to library', true);
+function fileKindTag(mime,name){
+  if(mime.startsWith('image/'))return'image';
+  if(mime.startsWith('video/'))return'video';
+  if(name.match(/\.pdf$/i))return'doc';
+  if(name.match(/\.(doc|docx|xls|xlsx|ppt|pptx|txt)$/i))return'doc';
+  return'file';
 }
 
-// ── FILE HANDLING ─────────────────────────────────────────────
-function fileKindTag(mime, name) {
-  if (mime.startsWith('image/')) return 'image';
-  if (mime.startsWith('video/')) return 'video';
-  if (name.match(/\.pdf$/i)) return 'doc';
-  if (name.match(/\.(doc|docx|xls|xlsx|ppt|pptx|txt)$/i)) return 'doc';
-  return 'file';
-}
-
-function processFiles(files) {
-  const clips = loadClips();
-  let count = 0;
-  const promises = [...files].map(file => new Promise(resolve => {
-    const tag = fileKindTag(file.type, file.name);
-    const reader = new FileReader();
-    reader.onload = e => {
-      clips.unshift({
-        id: Date.now() + Math.random(),
-        kind: 'file',
-        tag,
-        name: file.name,
-        mime: file.type,
-        size: file.size,
-        data: e.target.result,
-        note: '',
-        added: Date.now(),
-      });
-      count++;
-      resolve();
+function processFiles(files){
+  const clips=loadClips();let count=0;
+  const promises=[...files].map(file=>new Promise(resolve=>{
+    const tag=fileKindTag(file.type,file.name);
+    const reader=new FileReader();
+    reader.onload=e=>{
+      clips.unshift({id:Date.now()+Math.random(),kind:'file',tag,name:file.name,mime:file.type,size:file.size,data:e.target.result,note:'',added:Date.now()});
+      count++;resolve();
     };
     reader.readAsDataURL(file);
   }));
-  Promise.all(promises).then(() => {
-    saveClips(clips);
-    renderClips();
-    showToast(`${count} file${count !== 1 ? 's' : ''} added`, true);
+  Promise.all(promises).then(()=>{saveClips(clips);renderClips();showToast(`${count} file${count!==1?'s':''} added`,true);});
+}
+
+let activeFilter='all';
+function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.flt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderClips();}
+
+function badgeClass(tag){
+  const map={Tweet:'badge-tweet',Clip:'badge-clip',Article:'badge-article',Urgent:'badge-urgent',image:'badge-image',video:'badge-video',doc:'badge-doc',file:'badge-file'};
+  return map[tag]||'badge-file';
+}
+
+function formatDate(ts){return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});}
+function formatSize(b){if(!b)return'';if(b<1024*1024)return(b/1024).toFixed(0)+'KB';return(b/1024/1024).toFixed(1)+'MB';}
+
+function renderClips(){
+  const q=(document.getElementById('clip-search').value||'').toLowerCase();
+  const all=loadClips().filter(c=>{
+    const matchFilter=activeFilter==='all'||c.tag===activeFilter||(activeFilter==='file'&&c.kind==='file');
+    const searchStr=[c.title||'',c.name||'',c.url||'',c.note||'',c.tag||''].join(' ').toLowerCase();
+    return matchFilter&&(!q||searchStr.includes(q));
   });
-}
-
-// ── RENDER ────────────────────────────────────────────────────
-let activeFilter = 'all';
-
-function setFilter(f, btn) {
-  activeFilter = f;
-  document.querySelectorAll('.flt').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderClips();
-}
-
-function badgeClass(tag) {
-  const map = { Tweet:'badge-tweet', Clip:'badge-clip', Article:'badge-article', Urgent:'badge-urgent', image:'badge-image', video:'badge-video', doc:'badge-doc', file:'badge-file' };
-  return map[tag] || 'badge-file';
-}
-
-function formatDate(ts) {
-  return new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'});
-}
-function formatSize(b) {
-  if (!b) return '';
-  if (b < 1024*1024) return (b/1024).toFixed(0) + 'KB';
-  return (b/1024/1024).toFixed(1) + 'MB';
-}
-
-function renderClips() {
-  const q = (document.getElementById('clip-search').value || '').toLowerCase();
-  const all = loadClips().filter(c => {
-    const matchFilter = activeFilter === 'all' || c.tag === activeFilter || (activeFilter === 'file' && c.kind === 'file');
-    const searchStr = [c.title||'', c.name||'', c.url||'', c.note||'', c.tag||''].join(' ').toLowerCase();
-    return matchFilter && (!q || searchStr.includes(q));
-  });
-
-  document.getElementById('clip-count').textContent = `${all.length} item${all.length !== 1 ? 's' : ''}`;
-  document.getElementById('empty-state').style.display = all.length ? 'none' : 'block';
-
-  document.getElementById('clips-grid').innerHTML = all.map(c => {
-    const badge = `<span class="clip-badge ${badgeClass(c.tag)}">${c.tag||c.kind}</span>`;
-    const dateStr = `<span class="clip-date">${formatDate(c.added)}</span>`;
-
-    if (c.kind === 'file') {
-      const thumb = c.tag === 'image'
-        ? `<img class="clip-thumb" src="${c.data}" alt="${c.name}" loading="lazy">`
-        : `<div class="clip-thumb-ph">${c.tag==='video'?'🎬':c.tag==='doc'?'📄':'📎'}</div>`;
-      return `<div class="clip-card">
-        ${thumb}
-        <div class="clip-card-top">
-          <div class="clip-badge-row">${badge}${dateStr}</div>
-          <div class="clip-title">${c.name}</div>
-          ${c.note ? `<div class="clip-note">${c.note}</div>` : ''}
-          <div class="clip-url">${formatSize(c.size)}</div>
-        </div>
-        <div class="clip-actions">
-          <button class="clip-action-btn" onclick="downloadFile('${c.id}')">Download</button>
-          <button class="clip-action-btn danger" onclick="deleteClip('${c.id}')">Remove</button>
-        </div>
-      </div>`;
-    } else {
-      // URL card
-      const domain = (() => { try { return new URL(c.url).hostname.replace('www.',''); } catch(e) { return c.url; } })();
-      return `<div class="clip-card">
-        <div class="clip-card-top">
-          <div class="clip-badge-row">${badge}${dateStr}</div>
-          <div class="clip-title">${c.title||c.url}</div>
-          <div class="clip-url">${domain}</div>
-          ${c.note ? `<div class="clip-note">${c.note}</div>` : ''}
-        </div>
-        <div class="clip-actions">
-          <button class="clip-action-btn" onclick="window.open('${c.url.replace(/'/g,'%27')}','_blank')">Open ↗</button>
-          <button class="clip-action-btn" onclick="copyURL('${c.url.replace(/'/g,'%27')}')">Copy URL</button>
-          <button class="clip-action-btn danger" onclick="deleteClip('${c.id}')">Remove</button>
-        </div>
-      </div>`;
+  document.getElementById('clip-count').textContent=`${all.length} item${all.length!==1?'s':''}`;
+  document.getElementById('empty-state').style.display=all.length?'none':'block';
+  document.getElementById('clips-grid').innerHTML=all.map(c=>{
+    const badge=`<span class="clip-badge ${badgeClass(c.tag)}">${c.tag||c.kind}</span>`;
+    const dateStr=`<span class="clip-date">${formatDate(c.added)}</span>`;
+    if(c.kind==='file'){
+      const thumb=c.tag==='image'?`<img class="clip-thumb" src="${c.data}" alt="${c.name}" loading="lazy">`:`<div class="clip-thumb-ph">${c.tag==='video'?'🎬':c.tag==='doc'?'📄':'📎'}</div>`;
+      return`<div class="clip-card">${thumb}<div class="clip-card-top"><div class="clip-badge-row">${badge}${dateStr}</div><div class="clip-title">${c.name}</div>${c.note?`<div class="clip-note">${c.note}</div>`:''}<div class="clip-url">${formatSize(c.size)}</div></div><div class="clip-actions"><button class="clip-action-btn" onclick="downloadFile('${c.id}')">Download</button><button class="clip-action-btn danger" onclick="deleteClip('${c.id}')">Remove</button></div></div>`;
+    }else{
+      const domain=(()=>{try{return new URL(c.url).hostname.replace('www.','');}catch(e){return c.url;}})();
+      return`<div class="clip-card"><div class="clip-card-top"><div class="clip-badge-row">${badge}${dateStr}</div><div class="clip-title">${c.title||c.url}</div><div class="clip-url">${domain}</div>${c.note?`<div class="clip-note">${c.note}</div>`:''}</div><div class="clip-actions"><button class="clip-action-btn" onclick="window.open('${c.url.replace(/'/g,'%27')}','_blank')">Open ↗</button><button class="clip-action-btn" onclick="copyURL('${c.url.replace(/'/g,'%27')}')">Copy URL</button><button class="clip-action-btn danger" onclick="deleteClip('${c.id}')">Remove</button></div></div>`;
     }
   }).join('');
 }
 
-function downloadFile(id) {
-  const c = loadClips().find(x => String(x.id) === String(id));
-  if (!c) return;
-  const a = document.createElement('a');
-  a.href = c.data; a.download = c.name; a.click();
-}
+function downloadFile(id){const c=loadClips().find(x=>String(x.id)===String(id));if(!c)return;const a=document.createElement('a');a.href=c.data;a.download=c.name;a.click();}
+function copyURL(url){navigator.clipboard.writeText(url).then(()=>showToast('URL copied',true));}
+function deleteClip(id){saveClips(loadClips().filter(c=>String(c.id)!==String(id)));renderClips();showToast('Removed',false);}
 
-function copyURL(url) {
-  navigator.clipboard.writeText(url).then(() => showToast('URL copied', true));
-}
+const zone=document.getElementById('upload-zone');
+zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');if(e.dataTransfer.files.length)processFiles(e.dataTransfer.files);});
+document.getElementById('file-input').addEventListener('change',e=>{if(e.target.files.length)processFiles(e.target.files);});
+document.getElementById('url-input').addEventListener('keydown',e=>{if(e.key==='Enter')addURL();});
 
-function deleteClip(id) {
-  saveClips(loadClips().filter(c => String(c.id) !== String(id)));
-  renderClips();
-  showToast('Removed', false);
-}
-
-// ── DRAG & DROP ───────────────────────────────────────────────
-const zone = document.getElementById('upload-zone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-zone.addEventListener('drop', e => {
-  e.preventDefault(); zone.classList.remove('drag-over');
-  if (e.dataTransfer.files.length) processFiles(e.dataTransfer.files);
-});
-document.getElementById('file-input').addEventListener('change', e => {
-  if (e.target.files.length) processFiles(e.target.files);
-});
-
-// Keyboard shortcut — Enter to save URL
-document.getElementById('url-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addURL();
-});
-
-// ── TOAST ─────────────────────────────────────────────────────
-function showToast(msg, success = true) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (success ? ' success' : '');
-  setTimeout(() => { t.className = 'toast'; }, 2500);
-}
+function showToast(msg,success=true){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(success?' success':'');setTimeout(()=>{t.className='toast';},2500);}
 
 renderClips();
 </script>
