@@ -9,12 +9,6 @@
 
 body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:100vh;color:var(--text)}
 
-100%{transform:translateX(-50%)}}
-
-.page-wrap{max-width:var(--page-max);margin:0 auto;padding:24px 32px 56px}
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:16px;flex-wrap:wrap}
-.page-header-left h1{font-family:'Instrument Serif',serif;font-size:1.7rem;color:var(--gold-lt);letter-spacing:.01em;margin-bottom:3px}
-.page-header-left p{font-size:.73rem;color:var(--text-sec)}
 .source-badge{display:inline-flex;align-items:center;gap:6px;font-size:.6rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-dim);background: var(--navy-card);border:1px solid rgba(255,255,255,.06);padding:3px 9px;border-radius:3px;margin-top:7px}
 .source-badge.live{color:var(--green);border-color:rgba(61,184,122,.2);background:rgba(61,184,122,.05)}
 .source-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease-in-out infinite}
@@ -169,13 +163,12 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
   <div class="dp-body" id="dpBody"></div>
 </div>
 
-<div class="page-wrap">
+<div class="main-outer">
+<div class="main-inner">
 
-  <div class="page-header">
-    <div class="page-header-left">
-      <h1>Calendar 2026</h1>
-      <p>119th Congress · Second Session · April – December</p>
-      <div class="source-badge">Scalise Official House Calendar · Revised March 2026</div>
+  <div class="section-label">Calendar 2026
+    <div style="font-size:.7rem;color:var(--text-dim);margin-bottom:6px">119th Congress · Second Session · April – December</div>
+
     </div>
     <div class="source-badge live" style="align-self:flex-start;margin-top:8px">
       <span class="source-dot"></span>House Clerk · Live Legislative Feed
@@ -232,7 +225,8 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
   </div>
   <div class="cal-grid" id="calGrid"></div>
 
-</div>
+</div><!-- end main-inner -->
+</div><!-- end main-outer -->
 
 <script>
 // ─── OFFICIAL SESSION DAYS (Scalise 2026 House Calendar, Revised March 2026) ────

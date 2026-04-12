@@ -9,10 +9,6 @@
 
 body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:100vh;color:var(--text)}
 
-.page-wrap{max-width:960px;margin:0 auto;padding:28px 32px 64px}
-.page-header{margin-bottom:28px}
-.page-header h1{font-family:'Instrument Serif',serif;font-size:1.75rem;color:var(--gold-lt);margin-bottom:4px}
-.page-header p{font-size:.78rem;color:var(--text-sec);max-width:580px;line-height:1.5}
 .prototype-badge{display:inline-flex;align-items:center;gap:5px;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(122,138,255,.12);color:var(--purple-blue);border:1px solid rgba(122,138,255,.2);padding:2px 8px;border-radius:3px;margin-top:8px}
 
 /* ── TWO-COLUMN LAYOUT ── */
@@ -115,12 +111,12 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
 </div>
 </div>
 
-<div class="page-wrap">
+<div class="main-outer">
+<div class="main-inner">
 
-  <div class="page-header">
-    <h1>Blog-to-List Matcher</h1>
+  <h1>Blog-to-List Matcher</h1>
     <p>Select the topic(s) your blog or newsletter covers and get a recommended send list — ranked by relevance and reach, with recency warnings for cold audiences.</p>
-    <div class="prototype-badge">⚙ Prototype — for review &amp; feedback</div>
+    <div class="prototype-badge">⚙ Prototype — for review &amp; feedback
   </div>
 
   <div class="layout">
@@ -157,7 +153,8 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
     </div>
 
   </div>
-</div>
+</div><!-- end main-inner -->
+</div><!-- end main-outer -->
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────────

@@ -39,30 +39,9 @@
     .nav-links a.active { color: var(--gold); }
 
     /* ── LAYOUT ── */
-    .page-wrap {
-      max-width:var(--page-max);
-      margin: 0 auto;
-      padding: 36px 32px 64px;
-    }
-
+    
     /* ── PAGE HEADER ── */
-    .page-header {
-      margin-bottom: 28px;
-    }
-    .page-header h1 {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.9rem;
-      color: var(--gold-lt);
-      letter-spacing: 0.01em;
-      margin-bottom: 6px;
-    }
-    .page-header p {
-      font-size: 0.82rem;
-      color: var(--text-sec);
-      line-height: 1.5;
-      max-width: 600px;
-    }
-    .source-note {
+                .source-note {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -429,16 +408,15 @@
 </div>
 
   <!-- PAGE -->
-  <div class="page-wrap">
+  <div class="main-outer">
+<div class="main-inner">
 
     <!-- HEADER -->
-    <div class="page-header">
-      <h1>Observance Calendar</h1>
+    <h1>Observance Calendar</h1>
       <p>Days, weeks, and months worth recognizing — sourced from Rep. Mast's blog and newsletter archive. Use this to plan content ahead of key commemorative dates.</p>
       <div class="source-note">
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 018 3zm-.5 2.5v3.25l2.5 1.5.5-.85-2-1.2V5.5h-1z" fill="currentColor"/></svg>
         Parsed from 1,110 blog/newsletter documents (2020–2026) — 51 observances identified
-      </div>
     </div>
 
     <!-- UPCOMING STRIP (populated by JS) -->

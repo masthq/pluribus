@@ -11,16 +11,13 @@ body{font-family:'Libre Franklin',sans-serif;background: var(--navy);color:var(-
 
 /* ── CHYRON ─────────────────────────────────────────────────────────────── */
 
-@keyframes chyron-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
+@keyframes chyron-scroll{0%{transform:translateX(0)}
 /* ── NAV ─────────────────────────────────────────────────────────────────── */
 
 /* ── PAGE LAYOUT ─────────────────────────────────────────────────────────── */
-.page-wrap{max-width:var(--page-max);margin:0 auto;padding:24px 32px 60px}
 
 /* ── PAGE HEADER ─────────────────────────────────────────────────────────── */
 .page-eyebrow{font-size:9px;font-weight:700;letter-spacing:.13em;color:var(--text-sec);text-transform:uppercase;margin-bottom:4px}
-.page-title{font-size:24px;font-weight:700;color:var(--text);line-height:1.1;margin-bottom:3px}
 .page-sub{font-size:12px;color:var(--text-sec);margin-bottom:20px;font-family:'Instrument Serif',serif;font-style:italic}
 .page-rule{height:1px;background:var(--border);margin-bottom:24px}
 
@@ -125,7 +122,8 @@ body{font-family:'Libre Franklin',sans-serif;background: var(--navy);color:var(-
 </div>
 
 <!-- PAGE -->
-<div class="page-wrap">
+<div class="main-outer">
+<div class="main-inner">
 
   <div class="page-eyebrow">Executive Branch · Federal Government</div>
   <div class="page-title">Trump Administration</div>
@@ -352,7 +350,8 @@ body{font-family:'Libre Franklin',sans-serif;background: var(--navy);color:var(-
     </div>
   </div>
 
-</div><!-- end page-wrap -->
+</div><!-- end main-inner -->
+</div><!-- end main-outer -->
 
 <!-- ── OVERLAYS ──────────────────────────────────────────────────────────── -->
 <div class="overlay" id="ov-dot">

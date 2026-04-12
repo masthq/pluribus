@@ -9,12 +9,6 @@
 
 body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:100vh}
 
-100%{transform:translateX(-50%)}}
-
-.page-intro{margin-bottom:22px}
-.page-intro h1{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--gold-lt);margin-bottom:4px}
-.page-intro p{font-size:.75rem;color:var(--text-sec)}
-
 .t-gold{background: var(--tile-gold-bg);border-top:2px solid var(--gold)}
 .t-gold .t-gold .t-gold 
 .t-sky{background: var(--tile-sky-bg);border-top:2px solid var(--sky)}
@@ -80,12 +74,9 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
 <div class="main-outer">
   <div class="main-inner">
 
-    <div class="page-intro">
-      <h1>Political Universe</h1>
-      <p>The broader legislative and political landscape — administration, Congress, floor activity, and member socials.</p>
-    </div>
-
-    <!-- ADMINISTRATION -->
+    <div class="section-label">Political Universe</div>
+    <div style="font-size:.7rem;color:var(--text-dim);margin-bottom:14px">The broader legislative and political landscape — administration, Congress, floor activity, and member socials.</div>
+<!-- ADMINISTRATION -->
     <div class="section-label">White House &amp; Administration</div>
     <div class="wh-strip">
       <span class="wh-strip-label">WH Newsroom</span>
@@ -238,7 +229,8 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
     </div>
 
   </div>
-</div>
+</div><!-- end main-inner -->
+</div><!-- end main-outer -->
 
 <script>
 document.getElementById('navDate').textContent =

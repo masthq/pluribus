@@ -9,10 +9,6 @@
 
 body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:100vh;color:var(--text)}
 
-.page-wrap{max-width:960px;margin:0 auto;padding:24px 32px 64px}
-.page-header{margin-bottom:20px}
-.page-header h1{font-family:'Instrument Serif',serif;font-size:1.75rem;color:var(--gold-lt);margin-bottom:4px}
-.page-header p{font-size:.76rem;color:var(--text-sec);max-width:640px;line-height:1.5}
 .proto-badge{display:inline-flex;align-items:center;gap:5px;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(122,138,255,.1);color:var(--purple-blue);border:1px solid rgba(122,138,255,.18);padding:2px 8px;border-radius:3px;margin-top:7px}
 
 /* SOURCE LEGEND */
@@ -208,12 +204,10 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
 </div>
 </div>
 
-<div class="page-wrap">
-  <div class="page-header">
-    <h1>Rapid Response Toolkit</h1>
+<div class="main-outer">
+<div class="main-inner">
+  <h1>Rapid Response Toolkit</h1>
     <p>Approved message frames, talking points, and real archive quotes by topic. Select a topic to load its kit.</p>
-
-  </div>
 
   <!-- SOURCE LEGEND -->
   <div class="source-legend">
@@ -240,7 +234,8 @@ body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:
   <div id="mainArea">
     <div class="no-topic-msg">Select a topic above to load its messaging kit</div>
   </div>
-</div>
+</div><!-- end main-inner -->
+</div><!-- end main-outer -->
 
 <script>
 const TOPICS = [
