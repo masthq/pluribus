@@ -3,512 +3,520 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Administration Hub · Pluribus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<title>Trump Administration · Pluribus</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
-  --crimson:#8b0000;--crimson-lt:#a31010;
-  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
-  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;--red-medium:#d04040;
-  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
-  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Libre Franklin',sans-serif;background:#0a1628;color:#e8e4d9;min-height:100vh}
 
-/* TICKER */
-.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
-.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
-.ticker-wrap{display:flex;animation:ticker 90s linear infinite;width:max-content;padding-left:80px}
-.ticker-wrap.paused{animation-play-state:paused}
-.ticker-item{font-size:11px;font-weight:700;letter-spacing:0px;text-transform:uppercase;white-space:nowrap;padding-right:32px;color:rgba(255,255,255,.95)}
-.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
-.ticker-source{font-size:9px;font-weight:700;color:rgba(255,255,255,.32);margin-right:6px;letter-spacing:0px;text-transform:uppercase}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* ── CHYRON ─────────────────────────────────────────────────────────────── */
+.chyron{background:#8b0000;padding:5px 0;overflow:hidden;white-space:nowrap}
+.chyron-inner{display:inline-flex;gap:40px;padding:0 32px;animation:chyron-scroll 60s linear infinite}
+@keyframes chyron-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.chyron-item{font-size:10px;color:#fff;display:flex;gap:8px;align-items:center;font-weight:700}
+.chyron-label{font-weight:700;font-size:9px;letter-spacing:.09em;opacity:.75}
+.chyron-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.5);flex-shrink:0}
 
-/* NAV */
-nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
-.nav-brand{display:flex;align-items:center;gap:0;padding:10px 0;margin-right:48px;text-decoration:none}
-.nav-seal{width:38px;height:38px;border-radius:50%;border:1.5px solid #b8963e;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent}
-.nav-seal-p{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:#b8963e;line-height:1;margin-top:1px}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+.nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,0.18)}
+.nav-inner{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
+.nav-logo{width:26px;height:26px;border-radius:50%;border:1.5px solid #b8963e;background:transparent;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
+.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color .15s}
+.nav-link:hover{color:#e8e4d9}
+.nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
+.nav-date{margin-left:auto;font-size:11px;color:#9a9585}
 
-.nav-links{display:flex;list-style:none}
-.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
-.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
-.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
-.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
+/* ── PAGE LAYOUT ─────────────────────────────────────────────────────────── */
+.page-wrap{max-width:900px;margin:0 auto;padding:24px 32px 60px}
 
-/* PAGE HEADER */
-.page-header{padding:32px 32px 0;max-width:1440px;margin:0 auto}
-.breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.5px;margin-bottom:10px}
-.breadcrumb a{color:var(--gold-lt);text-decoration:none}
-.breadcrumb a:hover{color:var(--gold)}
-.page-title{font-size:32px;font-weight:900;color:#fff;margin-bottom:4px}
-.page-desc{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px}
-.page-rule{height:1px;background:var(--border);margin-bottom:28px}
+/* ── PAGE HEADER ─────────────────────────────────────────────────────────── */
+.page-eyebrow{font-size:9px;font-weight:700;letter-spacing:.13em;color:#9a9585;text-transform:uppercase;margin-bottom:4px}
+.page-title{font-size:24px;font-weight:700;color:#e8e4d9;line-height:1.1;margin-bottom:3px}
+.page-sub{font-size:12px;color:#9a9585;margin-bottom:20px;font-family:'Instrument Serif',serif;font-style:italic}
+.page-rule{height:1px;background:rgba(184,150,62,0.18);margin-bottom:24px}
 
-/* SECTION LABEL */
-.section-label{font-size:9px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+/* ── SECTION DIVIDER ─────────────────────────────────────────────────────── */
+.section-divider{display:flex;align-items:center;gap:10px;margin-bottom:14px;margin-top:28px}
+.section-divider:first-of-type{margin-top:0}
+.section-divider-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#b8963e;text-transform:uppercase;white-space:nowrap}
+.section-divider-line{flex:1;height:1px;background:rgba(184,150,62,0.22)}
 
-main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
-
-/* WH NEWSROOM — full-width featured strip */
-.wh-strip{background:var(--navy-card);border:1px solid var(--border);border-radius:8px;padding:22px 26px;margin-bottom:32px;border-left:4px solid var(--gold);display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
-.wh-strip-label{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.wh-strip-title{font-size:20px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:6px}
-.wh-strip-meta{font-size:11px;color:var(--text-dim);font-weight:600}
-.wh-strip-releases{flex:1;min-width:280px}
-.wh-strip-list{list-style:none;margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.wh-strip-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--navy-mid);border-radius:5px;border:1px solid var(--border-dim);text-decoration:none;transition:border-color .15s,background .15s;cursor:pointer}
-.wh-strip-item:hover{border-color:var(--border);background:var(--navy-hover)}
-.wh-type-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:3px 7px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+/* ── WH NEWSROOM ─────────────────────────────────────────────────────────── */
+.wh-newsroom{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-bottom:8px}
+.wh-releases{background:#13110a;border:1px solid rgba(184,150,62,0.18);border-left:3px solid #b8963e;border-radius:5px;padding:16px 18px}
+.wh-releases-label{font-size:9px;font-weight:700;letter-spacing:.10em;color:#b8963e;text-transform:uppercase;margin-bottom:12px}
+.wh-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.wh-item{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;background:#0a1628;border-radius:3px;border:1px solid rgba(255,255,255,0.06);text-decoration:none;transition:border-color .15s,background .15s;cursor:pointer}
+.wh-item:hover{border-color:rgba(184,150,62,0.25);background:#0f1f3d}
+.wh-badge{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0;margin-top:1px}
 .badge-eo{background:rgba(139,0,0,.2);color:#d04040}
-.badge-fs{background:rgba(184,150,62,.15);color:var(--gold-lt)}
-.badge-proc{background:rgba(107,174,214,.12);color:var(--sky)}
-.badge-stmt{background:rgba(255,255,255,.06);color:var(--text-sec)}
-.badge-memo{background:rgba(122,138,255,.12);color:var(--purple-blue)}
-.badge-icymi{background:rgba(255,255,255,.05);color:var(--text-dim)}
-.badge-rdout{background:rgba(61,184,122,.1);color:var(--green)}
-.badge-def{background:rgba(255,255,255,.05);color:var(--text-dim)}
-.wh-item-title{font-size:12px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px}
-.wh-item-summary{font-size:11px;color:var(--text-sec);line-height:1.4}
-.wh-item-date{font-size:10px;color:var(--text-dim);font-weight:600;white-space:nowrap;margin-left:auto;flex-shrink:0;margin-top:2px}
-.wh-empty{font-size:12px;color:var(--text-dim);font-style:italic;padding:12px 0}
+.badge-fs{background:rgba(184,150,62,.15);color:#c9a84c}
+.badge-proc{background:rgba(107,174,214,.12);color:#6baed6}
+.badge-stmt{background:rgba(255,255,255,.06);color:#9a9585}
+.badge-memo{background:rgba(122,138,255,.12);color:#7a8aff}
+.badge-rdout{background:rgba(61,184,122,.10);color:#3db87a}
+.badge-def{background:rgba(255,255,255,.05);color:#4a4a42}
+.wh-item-title{font-size:11.5px;font-weight:600;color:#e8e4d9;line-height:1.3;flex:1}
+.wh-item-date{font-size:9px;color:#4a4a42;font-weight:600;white-space:nowrap;margin-left:auto;flex-shrink:0;margin-top:2px}
+.wh-loading{font-size:11px;color:#4a4a42;font-style:italic;padding:8px 0}
 
-/* CABINET GRID */
-.cabinet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:40px}
-.cab-tile{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;padding:20px 18px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s,background .15s;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;min-height:160px}
-.cab-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.ct-gold::before{background:var(--gold)}
-.ct-crimson::before{background:var(--crimson)}
-.ct-sky::before{background:var(--sky)}
-.ct-green::before{background:var(--green)}
-.ct-purple::before{background:var(--purple-blue)}
+/* ── SECRETARIES X EMBED ─────────────────────────────────────────────────── */
+.secretaries-panel{background:#13110a;border:1px solid rgba(184,150,62,0.18);border-left:3px solid #3db87a;border-radius:5px;padding:16px 18px;display:flex;flex-direction:column}
+.secretaries-label{font-size:9px;font-weight:700;letter-spacing:.10em;color:#3db87a;text-transform:uppercase;margin-bottom:12px;flex-shrink:0}
+.secretaries-embed{flex:1;min-height:380px;border-radius:3px;overflow:hidden;background:#0a1628}
+.secretaries-embed iframe{width:100%;height:400px;border:none;border-radius:3px}
+
+/* ── CABINET GRID ────────────────────────────────────────────────────────── */
+.cabinet-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.cab-tile{background:#111e35;border:1px solid rgba(184,150,62,0.10);border-radius:5px;padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s,background .15s;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;min-height:130px}
+.cab-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.ct-gold::before{background:#b8963e}
+.ct-crimson::before{background:#8b0000}
+.ct-sky::before{background:#6baed6}
+.ct-green::before{background:#3db87a}
+.ct-purple::before{background:#7a8aff}
 .ct-neutral::before{background:rgba(255,255,255,.08)}
-.cab-tile:hover{border-color:var(--border);transform:translateY(-2px);background:var(--navy-hover)}
-.cab-dept{font-size:9px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px}
-.cab-name{font-size:17px;font-weight:900;color:var(--text);line-height:1.15;letter-spacing:-.2px;margin-bottom:4px}
-.cab-sec{font-size:11px;color:var(--text-sec);margin-bottom:auto}
-.cab-footer{margin-top:14px;padding-top:10px;border-top:1px solid var(--border-dim);display:flex;align-items:center;justify-content:space-between}
-.cab-status{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:rgba(255,255,255,.04);color:var(--text-dim)}
-.cab-status.active{background:rgba(61,184,122,.1);color:var(--green)}
-.cab-arrow{font-size:14px;color:var(--text-dim);opacity:0;transition:opacity .15s,transform .15s;transform:translateX(-4px)}
+.cab-tile:hover{border-color:rgba(184,150,62,0.28);transform:translateY(-1px);background:#162440}
+.cab-dept{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4a4a42;margin-bottom:6px}
+.cab-name{font-size:14px;font-weight:700;color:#e8e4d9;line-height:1.15;margin-bottom:3px}
+.cab-sec{font-size:10.5px;color:#9a9585;margin-bottom:auto;line-height:1.3}
+.cab-footer{margin-top:12px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between}
+.cab-status{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:2px;background:rgba(255,255,255,.04);color:#4a4a42}
+.cab-status.active{background:rgba(61,184,122,.10);color:#3db87a}
+.cab-arrow{font-size:12px;color:#4a4a42;opacity:0;transition:opacity .15s,transform .15s;transform:translateX(-4px)}
 .cab-tile:hover .cab-arrow{opacity:1;transform:translateX(0)}
 
-/* OVERLAY */
+/* ── AGENCIES GRID ───────────────────────────────────────────────────────── */
+.agencies-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.agency-tile{background:#111e35;border:1px solid rgba(184,150,62,0.10);border-radius:5px;padding:14px 16px;min-height:80px;display:flex;flex-direction:column;justify-content:space-between;opacity:.6;transition:opacity .15s,border-color .15s}
+.agency-tile:hover{opacity:.85;border-color:rgba(184,150,62,0.2)}
+.agency-abbr{font-size:13px;font-weight:700;color:#9a9585;margin-bottom:4px}
+.agency-name{font-size:9.5px;color:#4a4a42;line-height:1.3}
+.agency-soon{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4a4a42;margin-top:8px}
+
+/* ── OVERLAY ─────────────────────────────────────────────────────────────── */
 .overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(6,12,24,0.97);flex-direction:column}
 .overlay.open{display:flex}
-.overlay-header{background:var(--navy);border-bottom:2px solid var(--gold);padding:16px 32px;display:flex;align-items:center;gap:16px;flex-shrink:0}
-.overlay-back{background:none;border:1px solid var(--border-dim);color:var(--text-sec);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:4px;cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px}
-.overlay-back::before{content:'←'}
-.overlay-back:hover{border-color:var(--gold);color:var(--gold)}
-.overlay-title{font-size:16px;font-weight:900;color:#fff}
-.overlay-badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:var(--gold-dim);color:var(--gold-lt)}
-.overlay-body{flex:1;overflow-y:auto;padding:28px 32px;max-width:900px}
+.overlay-header{background:#0a1628;border-bottom:2px solid #b8963e;padding:12px 32px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.overlay-back{background:none;border:1px solid rgba(184,150,62,0.25);color:#9a9585;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:6px 12px;border-radius:3px;cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px}
+.overlay-back:hover{border-color:#b8963e;color:#b8963e}
+.overlay-title{font-size:14px;font-weight:700;color:#fff}
+.overlay-badge{font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;background:rgba(184,150,62,0.15);color:#c9a84c}
+.overlay-body{flex:1;overflow-y:auto;padding:28px 32px;max-width:860px}
 .ov-coming-soon{text-align:center;padding:60px 20px}
-.ov-cs-icon{font-size:48px;margin-bottom:16px}
-.ov-cs-title{font-size:20px;font-weight:900;color:#fff;margin-bottom:8px}
-.ov-cs-sub{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;line-height:1.6}
+.ov-cs-icon{font-size:40px;margin-bottom:14px}
+.ov-cs-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.ov-cs-sub{font-size:12px;color:#9a9585;font-family:'Instrument Serif',serif;font-style:italic;line-height:1.7;max-width:480px;margin:0 auto}
 
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:20px}
-.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
-.footer-text span{color:var(--gold)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(184,150,62,0.25);border-radius:4px}
 </style>
 </head>
 <body>
 
-<div class="ticker-bar" onmouseenter="document.getElementById('wh-ticker').classList.add('paused')" onmouseleave="document.getElementById('wh-ticker').classList.remove('paused')">
-  <div class="ticker-wrap" id="wh-ticker">
-    <span class="ticker-item">Loading White House releases…</span>
+<!-- CHYRON -->
+<div class="chyron">
+  <div class="chyron-inner" id="chyronInner">
+    <div class="chyron-item"><span class="chyron-label">WH</span> Loading White House releases…</div>
   </div>
 </div>
 
-<nav>
-          <a class="nav-brand" href="dashboard_v2.html">
-    <div class="nav-seal"><span class="nav-seal-p">P</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="dashboard_v2.html">Dashboard</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li><a href="clipdrop.html">Clip Drop</a></li>
-  </ul>
-  <div class="nav-right"><span id="nav-date"></span></div>
-</nav>
-
-<div class="page-header">
-  <div class="breadcrumb"><a href="dashboard_v2.html">Dashboard</a> › Administration Hub</div>
-  <div class="page-title">Administration Hub</div>
-  <div class="page-desc">Federal cabinet agencies, secretaries, and White House press releases — organized for FL-21 comms.</div>
-  <div class="page-rule"></div>
+<!-- NAV -->
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="dashboard_v2.html" class="nav-logo">P</a>
+    <a href="dashboard_v2.html" class="nav-link">Dashboard</a>
+    <a href="resources.html" class="nav-link">Resources</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <a href="whitehouse.html" class="nav-link active">Administration</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
 </div>
 
-<main>
+<!-- PAGE -->
+<div class="page-wrap">
 
-  <!-- WH NEWSROOM STRIP -->
-  <div class="section-label">White House Newsroom</div>
-  <div class="wh-strip">
-    <div class="wh-strip-releases" style="flex:1">
-      <div class="wh-strip-label">Latest Releases · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="43202c2e2e362d2a2022372a2c2d30032e222a2f6d342b2a37262b2c3630266d242c35">[email&#160;protected]</a></div>
-      <ul class="wh-strip-list" id="wh-releases-list">
-        <li style="color:var(--text-dim);font-size:12px;font-style:italic">Loading White House releases…</li>
+  <div class="page-eyebrow">Executive Branch · Federal Government</div>
+  <div class="page-title">Trump Administration</div>
+  <div class="page-sub">Cabinet secretaries, federal agencies, and White House press releases — organized for FL-21 comms.</div>
+  <div class="page-rule"></div>
+
+  <!-- WH NEWSROOM + SECRETARIES -->
+  <div class="section-divider">
+    <span class="section-divider-label">White House Newsroom</span>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="wh-newsroom">
+    <!-- LEFT: WH RSS releases -->
+    <div class="wh-releases">
+      <div class="wh-releases-label">● Latest Releases — whitehouse.gov</div>
+      <ul class="wh-list" id="whList">
+        <li class="wh-loading">Loading releases…</li>
       </ul>
     </div>
+
+    <!-- RIGHT: Cabinet Secretaries X List -->
+    <div class="secretaries-panel">
+      <div class="secretaries-label">● Cabinet Secretaries · X/Twitter</div>
+      <div class="secretaries-embed">
+        <a class="twitter-timeline"
+           href="https://twitter.com/i/lists/2043113595169644567"
+           data-tweet-limit="5"
+           data-chrome="noheader nofooter noborders transparent"
+           data-theme="dark"
+           data-height="400">
+          Cabinet Secretaries
+        </a>
+      </div>
+    </div>
   </div>
 
-  <!-- CABINET GRID -->
-  <div class="section-label">Federal Cabinet</div>
+  <!-- FEDERAL CABINET -->
+  <div class="section-divider">
+    <span class="section-divider-label">Federal Cabinet</span>
+    <div class="section-divider-line"></div>
+  </div>
+
   <div class="cabinet-grid">
 
-    <!-- DOT -->
     <div class="cab-tile ct-gold" onclick="openOv('dot')">
-      <div class="cab-dept">Department of Transportation</div>
+      <div class="cab-dept">Dept. of Transportation</div>
       <div class="cab-name">USDOT</div>
       <div class="cab-sec">Sec. Sean Duffy</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · T&I</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">T&I Committee</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- DOD -->
     <div class="cab-tile ct-crimson" onclick="openOv('dod')">
-      <div class="cab-dept">Department of Defense</div>
+      <div class="cab-dept">Dept. of Defense</div>
       <div class="cab-name">Pentagon</div>
       <div class="cab-sec">Sec. Pete Hegseth</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · NDAA</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">NDAA · Military</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- VA -->
     <div class="cab-tile ct-sky" onclick="openOv('va')">
       <div class="cab-dept">Dept. of Veterans Affairs</div>
       <div class="cab-name">VA</div>
       <div class="cab-sec">Sec. Doug Collins</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · VEA</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">VEA · Veterans</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- DHS -->
     <div class="cab-tile ct-crimson" onclick="openOv('dhs')">
       <div class="cab-dept">Dept. of Homeland Security</div>
       <div class="cab-name">DHS</div>
       <div class="cab-sec">Sec. Kristi Noem</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · Border</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">Border · Safety</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- State -->
     <div class="cab-tile ct-purple" onclick="openOv('state')">
-      <div class="cab-dept">Department of State</div>
+      <div class="cab-dept">Dept. of State</div>
       <div class="cab-name">State Dept.</div>
       <div class="cab-sec">Sec. Marco Rubio</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · HFAC</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">HFAC</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- Treasury -->
     <div class="cab-tile ct-gold" onclick="openOv('treasury')">
-      <div class="cab-dept">Department of the Treasury</div>
+      <div class="cab-dept">Dept. of the Treasury</div>
       <div class="cab-name">Treasury</div>
       <div class="cab-sec">Sec. Scott Bessent</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · OBBB</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">OBBB · Tax</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- EPA -->
     <div class="cab-tile ct-green" onclick="openOv('epa')">
       <div class="cab-dept">Environmental Protection Agency</div>
       <div class="cab-name">EPA</div>
       <div class="cab-sec">Admin. Lee Zeldin</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · Water</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">Water · Everglades</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- DOJ -->
     <div class="cab-tile ct-crimson" onclick="openOv('doj')">
-      <div class="cab-dept">Department of Justice</div>
+      <div class="cab-dept">Dept. of Justice</div>
       <div class="cab-name">DOJ</div>
       <div class="cab-sec">AG Pam Bondi</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · Law Enf.</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">Law Enf.</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- USACE -->
     <div class="cab-tile ct-sky" onclick="openOv('usace')">
       <div class="cab-dept">Army Corps of Engineers</div>
       <div class="cab-name">USACE</div>
       <div class="cab-sec">Under DOD / Army</div>
-      <div class="cab-footer">
-        <span class="cab-status active">Active · WRDA</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status active">WRDA · Water</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- SBA -->
     <div class="cab-tile ct-gold" onclick="openOv('sba')">
       <div class="cab-dept">Small Business Administration</div>
       <div class="cab-name">SBA</div>
       <div class="cab-sec">Admin. Kelly Loeffler</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- Interior -->
     <div class="cab-tile ct-green" onclick="openOv('interior')">
-      <div class="cab-dept">Department of the Interior</div>
+      <div class="cab-dept">Dept. of the Interior</div>
       <div class="cab-name">Interior</div>
       <div class="cab-sec">Sec. Doug Burgum</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- USDA -->
     <div class="cab-tile ct-green" onclick="openOv('usda')">
       <div class="cab-dept">Dept. of Agriculture</div>
       <div class="cab-name">USDA</div>
       <div class="cab-sec">Sec. Brooke Rollins</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- Education -->
     <div class="cab-tile ct-neutral" onclick="openOv('edu')">
-      <div class="cab-dept">Department of Education</div>
+      <div class="cab-dept">Dept. of Education</div>
       <div class="cab-name">Education</div>
       <div class="cab-sec">Sec. Linda McMahon</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- HHS -->
     <div class="cab-tile ct-neutral" onclick="openOv('hhs')">
-      <div class="cab-dept">Dept. of Health & Human Services</div>
+      <div class="cab-dept">Dept. of Health &amp; Human Services</div>
       <div class="cab-name">HHS</div>
       <div class="cab-sec">Sec. RFK Jr.</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- Commerce -->
     <div class="cab-tile ct-neutral" onclick="openOv('commerce')">
-      <div class="cab-dept">Department of Commerce</div>
+      <div class="cab-dept">Dept. of Commerce</div>
       <div class="cab-name">Commerce</div>
       <div class="cab-sec">Sec. Howard Lutnick</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
-    <!-- Energy -->
     <div class="cab-tile ct-neutral" onclick="openOv('energy')">
-      <div class="cab-dept">Department of Energy</div>
+      <div class="cab-dept">Dept. of Energy</div>
       <div class="cab-name">DOE</div>
       <div class="cab-sec">Sec. Chris Wright</div>
-      <div class="cab-footer">
-        <span class="cab-status">Coming soon</span>
-        <span class="cab-arrow">→</span>
-      </div>
+      <div class="cab-footer"><span class="cab-status">Coming soon</span><span class="cab-arrow">→</span></div>
     </div>
 
   </div>
-</main>
 
-<!-- OVERLAYS — active agencies -->
+  <!-- FEDERAL AGENCIES -->
+  <div class="section-divider">
+    <span class="section-divider-label">Federal Agencies</span>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="agencies-grid" id="agenciesGrid">
+    <!-- Placeholder tiles — replace with full list when ready -->
+    <div class="agency-tile">
+      <div class="agency-abbr">FEMA</div>
+      <div class="agency-name">Federal Emergency Mgmt. Agency</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">FDA</div>
+      <div class="agency-name">Food &amp; Drug Administration</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">CDC</div>
+      <div class="agency-name">Centers for Disease Control</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">NIH</div>
+      <div class="agency-name">National Institutes of Health</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">NOAA</div>
+      <div class="agency-name">Natl. Oceanic &amp; Atmospheric Admin.</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">NASA</div>
+      <div class="agency-name">Natl. Aeronautics &amp; Space Admin.</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">FCC</div>
+      <div class="agency-name">Federal Communications Commission</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">FTC</div>
+      <div class="agency-name">Federal Trade Commission</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">SEC</div>
+      <div class="agency-name">Securities &amp; Exchange Commission</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">CFPB</div>
+      <div class="agency-name">Consumer Financial Protection Bureau</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">SSA</div>
+      <div class="agency-name">Social Security Administration</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+    <div class="agency-tile">
+      <div class="agency-abbr">IRS</div>
+      <div class="agency-name">Internal Revenue Service</div>
+      <div class="agency-soon">Feed coming soon</div>
+    </div>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<!-- ── OVERLAYS ──────────────────────────────────────────────────────────── -->
 <div class="overlay" id="ov-dot">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('dot')">Back</button><div class="overlay-title">Dept. of Transportation · Sec. Duffy</div><div class="overlay-badge">T&I Committee</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🚧</div><div class="ov-cs-title">USDOT Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to USDOT's press list and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6cbc7d5d2c5c9cbcbd5ced7e6c1cbc7cfca88c5c9cb">[email&#160;protected]</a> to auto-populate this tile with releases, grant announcements, and infrastructure updates relevant to FL-21.<br><br>Key items to watch: Brightline/FEC MEGA grant status, St. Lucie River Railroad Bridge, Florida DOT coordination.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('dot')">← Back</button><div class="overlay-title">Dept. of Transportation · Sec. Duffy</div><div class="overlay-badge">T&I Committee</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🚧</div><div class="ov-cs-title">USDOT Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to USDOT's press list and forward to mastcommshq@gmail.com to auto-populate this tile.<br><br>Key items: Brightline/FEC MEGA grant status, St. Lucie River Railroad Bridge, Florida DOT coordination.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-dod">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('dod')">Back</button><div class="overlay-title">Department of Defense · Sec. Hegseth</div><div class="overlay-badge">NDAA · Military</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⭐</div><div class="ov-cs-title">Pentagon Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOD press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fa979b898e9995979789928bba9d979b9396d4999597">[email&#160;protected]</a>.<br><br>Key items: NDAA implementation, Navy SEAL UDT Museum designation, military readiness, Fort Lauderdale base updates.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('dod')">← Back</button><div class="overlay-title">Dept. of Defense · Sec. Hegseth</div><div class="overlay-badge">NDAA · Military</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⭐</div><div class="ov-cs-title">Pentagon Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOD press releases and forward to mastcommshq@gmail.com.<br><br>Key items: NDAA implementation, Navy SEAL UDT Museum designation, military readiness.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-va">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('va')">Back</button><div class="overlay-title">Dept. of Veterans Affairs · Sec. Collins</div><div class="overlay-badge">Veterans · VEA</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🎖️</div><div class="ov-cs-title">VA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to VA press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a6cbc7d5d2c5c9cbcbd5ced7e6c1cbc7cfca88c5c9cb">[email&#160;protected]</a>.<br><br>Key items: Veterans Equal Access Act implementation, Palm Beach Gardens VA clinic, OBBB VA provisions, veteran healthcare access.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('va')">← Back</button><div class="overlay-title">Dept. of Veterans Affairs · Sec. Collins</div><div class="overlay-badge">Veterans · VEA</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🎖️</div><div class="ov-cs-title">VA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to VA press releases and forward to mastcommshq@gmail.com.<br><br>Key items: Veterans Equal Access Act implementation, Palm Beach Gardens VA clinic, OBBB VA provisions.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-dhs">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('dhs')">Back</button><div class="overlay-title">Dept. of Homeland Security · Sec. Noem</div><div class="overlay-badge">Border · Safety</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🛡️</div><div class="ov-cs-title">DHS Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DHS press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c515d4f485f5351514f544d7c5b515d5550125f5351">[email&#160;protected]</a>.<br><br>Key items: Border crossing data, Dalilah's Law CDL enforcement, ICE operations, OBBB border provisions implementation.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('dhs')">← Back</button><div class="overlay-title">Dept. of Homeland Security · Sec. Noem</div><div class="overlay-badge">Border · Safety</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🛡️</div><div class="ov-cs-title">DHS Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DHS press releases and forward to mastcommshq@gmail.com.<br><br>Key items: Border crossing data, Dalilah's Law CDL enforcement, ICE operations, OBBB border provisions.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-state">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('state')">Back</button><div class="overlay-title">Department of State · Sec. Rubio</div><div class="overlay-badge">HFAC Chair</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🌐</div><div class="ov-cs-title">State Dept. Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to State Department press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="026f637176616d6f6f716a7342656f636b6e2c616d6f">[email&#160;protected]</a>.<br><br>Key items: Foreign Affairs Committee coordination, Iran negotiations, Israel policy, sanctions updates.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('state')">← Back</button><div class="overlay-title">Dept. of State · Sec. Rubio</div><div class="overlay-badge">HFAC</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🌐</div><div class="ov-cs-title">State Dept. Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to State Department press releases and forward to mastcommshq@gmail.com.<br><br>Key items: Foreign Affairs Committee coordination, Iran negotiations, Israel policy, sanctions updates.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-treasury">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('treasury')">Back</button><div class="overlay-title">Department of the Treasury · Sec. Bessent</div><div class="overlay-badge">OBBB · Tax</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">💰</div><div class="ov-cs-title">Treasury Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Treasury press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2b464a585f4844464658435a6b4c464a424705484446">[email&#160;protected]</a>.<br><br>Key items: OBBB/Working Families Tax Cuts implementation, IRS guidance, tariff policy, Ways & Means coordination.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('treasury')">← Back</button><div class="overlay-title">Dept. of the Treasury · Sec. Bessent</div><div class="overlay-badge">OBBB · Tax</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">💰</div><div class="ov-cs-title">Treasury Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Treasury press releases and forward to mastcommshq@gmail.com.<br><br>Key items: OBBB/Working Families Tax Cuts implementation, IRS guidance, tariff policy.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-epa">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('epa')">Back</button><div class="overlay-title">EPA · Admin. Zeldin</div><div class="overlay-badge">Water · Everglades</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🌊</div><div class="ov-cs-title">EPA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to EPA press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="99f4f8eaedfaf6f4f4eaf1e8d9fef4f8f0f5b7faf6f4">[email&#160;protected]</a>.<br><br>Key items: WOTUS rule updates, Everglades restoration funding, harmful algal bloom action plan (CAB Act), water quality enforcement.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('epa')">← Back</button><div class="overlay-title">EPA · Admin. Zeldin</div><div class="overlay-badge">Water · Everglades</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🌊</div><div class="ov-cs-title">EPA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to EPA press releases and forward to mastcommshq@gmail.com.<br><br>Key items: WOTUS rule updates, Everglades restoration funding, harmful algal bloom action plan (CAB Act).</div></div></div>
 </div>
 
 <div class="overlay" id="ov-doj">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('doj')">Back</button><div class="overlay-title">Dept. of Justice · AG Bondi</div><div class="overlay-badge">Law Enforcement</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⚖️</div><div class="ov-cs-title">DOJ Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOJ press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e18c809295828e8c8c928990a1868c80888dcf828e8c">[email&#160;protected]</a>.<br><br>Key items: Medal of Sacrifice Act implementation, law enforcement grants, immigration enforcement, CDL/Dalilah's Law prosecutions.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('doj')">← Back</button><div class="overlay-title">Dept. of Justice · AG Bondi</div><div class="overlay-badge">Law Enforcement</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⚖️</div><div class="ov-cs-title">DOJ Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOJ press releases and forward to mastcommshq@gmail.com.<br><br>Key items: Medal of Sacrifice Act implementation, law enforcement grants, CDL/Dalilah's Law prosecutions.</div></div></div>
 </div>
 
 <div class="overlay" id="ov-usace">
-  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('usace')">Back</button><div class="overlay-title">Army Corps of Engineers</div><div class="overlay-badge">WRDA · Water</div></div>
-  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">💧</div><div class="ov-cs-title">USACE Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to USACE Jacksonville District press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="94f9f5e7e0f7fbf9f9e7fce5d4f3f9f5fdf8baf7fbf9">[email&#160;protected]</a>.<br><br>Key items: EAA Reservoir construction timeline, Lake Okeechobee discharge schedules, WRDA 2026 project authorizations, Herbert Hoover Dike status.</div></div></div>
+  <div class="overlay-header"><button class="overlay-back" onclick="closeOv('usace')">← Back</button><div class="overlay-title">Army Corps of Engineers</div><div class="overlay-badge">WRDA · Water</div></div>
+  <div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">💧</div><div class="ov-cs-title">USACE Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to USACE Jacksonville District press releases and forward to mastcommshq@gmail.com.<br><br>Key items: EAA Reservoir construction timeline, Lake Okeechobee discharge schedules, WRDA 2026 authorizations.</div></div></div>
 </div>
 
-<div class="overlay" id="ov-sba"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('sba')">Back</button><div class="overlay-title">SBA · Admin. Loeffler</div><div class="overlay-badge">Small Business</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🏢</div><div class="ov-cs-title">SBA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to SBA press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="f499958780979b9999879c85b49399959d98da979b99">[email&#160;protected]</a>.</div></div></div></div>
-<div class="overlay" id="ov-interior"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('interior')">Back</button><div class="overlay-title">Interior · Sec. Burgum</div><div class="overlay-badge">Public Lands</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🏔️</div><div class="ov-cs-title">Interior Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Interior press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e38e829097808c8e8e908b92a3848e828a8fcd808c8e">[email&#160;protected]</a>.</div></div></div></div>
-<div class="overlay" id="ov-usda"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('usda')">Back</button><div class="overlay-title">USDA · Sec. Rollins</div><div class="overlay-badge">Agriculture</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🌾</div><div class="ov-cs-title">USDA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to USDA press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7bab6a4a3b4b8babaa4bfa697b0bab6bebbf9b4b8ba">[email&#160;protected]</a>.</div></div></div></div>
-<div class="overlay" id="ov-edu"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('edu')">Back</button><div class="overlay-title">Education · Sec. McMahon</div><div class="overlay-badge">School Choice</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">📚</div><div class="ov-cs-title">Education Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Education Dept. press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0964687a7d6a6664647a6178496e64686065276a6664">[email&#160;protected]</a>.</div></div></div></div>
-<div class="overlay" id="ov-hhs"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('hhs')">Back</button><div class="overlay-title">HHS · Sec. RFK Jr.</div><div class="overlay-badge">Healthcare</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🏥</div><div class="ov-cs-title">HHS Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to HHS press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="305d514344535f5d5d43584170575d51595c1e535f5d">[email&#160;protected]</a>.</div></div></div></div>
-<div class="overlay" id="ov-commerce"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('commerce')">Back</button><div class="overlay-title">Commerce · Sec. Lutnick</div><div class="overlay-badge">Trade · Tariffs</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">📊</div><div class="ov-cs-title">Commerce Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Commerce press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="90fdf1e3e4f3fffdfde3f8e1d0f7fdf1f9fcbef3fffd">[email&#160;protected]</a>.</div></div></div></div>
-<div class="overlay" id="ov-energy"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('energy')">Back</button><div class="overlay-title">Dept. of Energy · Sec. Wright</div><div class="overlay-badge">Energy Policy</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⚡</div><div class="ov-cs-title">DOE Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOE press releases and forward to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c4a9a5b7b0a7aba9a9b7acb584a3a9a5ada8eaa7aba9">[email&#160;protected]</a>.</div></div></div></div>
+<div class="overlay" id="ov-sba"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('sba')">← Back</button><div class="overlay-title">SBA · Admin. Loeffler</div><div class="overlay-badge">Small Business</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🏢</div><div class="ov-cs-title">SBA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to SBA press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
+<div class="overlay" id="ov-interior"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('interior')">← Back</button><div class="overlay-title">Interior · Sec. Burgum</div><div class="overlay-badge">Public Lands</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🏔️</div><div class="ov-cs-title">Interior Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Interior press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
+<div class="overlay" id="ov-usda"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('usda')">← Back</button><div class="overlay-title">USDA · Sec. Rollins</div><div class="overlay-badge">Agriculture</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🌾</div><div class="ov-cs-title">USDA Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to USDA press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
+<div class="overlay" id="ov-edu"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('edu')">← Back</button><div class="overlay-title">Education · Sec. McMahon</div><div class="overlay-badge">School Choice</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">📚</div><div class="ov-cs-title">Education Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Education Dept. press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
+<div class="overlay" id="ov-hhs"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('hhs')">← Back</button><div class="overlay-title">HHS · Sec. RFK Jr.</div><div class="overlay-badge">Healthcare</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">🏥</div><div class="ov-cs-title">HHS Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to HHS press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
+<div class="overlay" id="ov-commerce"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('commerce')">← Back</button><div class="overlay-title">Commerce · Sec. Lutnick</div><div class="overlay-badge">Trade · Tariffs</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">📊</div><div class="ov-cs-title">Commerce Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to Commerce press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
+<div class="overlay" id="ov-energy"><div class="overlay-header"><button class="overlay-back" onclick="closeOv('energy')">← Back</button><div class="overlay-title">Dept. of Energy · Sec. Wright</div><div class="overlay-badge">Energy Policy</div></div><div class="overlay-body"><div class="ov-coming-soon"><div class="ov-cs-icon">⚡</div><div class="ov-cs-title">DOE Feed Coming Soon</div><div class="ov-cs-sub">Subscribe to DOE press releases and forward to mastcommshq@gmail.com.</div></div></div></div>
 
-<footer>
-  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
-  <div class="footer-text">Administration Hub · Federal Cabinet</div>
-</footer>
+<!-- X embed script -->
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
-// ── WH TICKER ──────────────────────────────────────────────
-function parseCSVTicker(text) {
-  const rows = [];
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
-  for (let i = 1; i < lines.length; i++) {
-    const fields = [];
-    let cur = '', inQ = false;
-    for (const ch of lines[i]) {
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { fields.push(cur.trim()); cur = ''; }
-      else cur += ch;
-    }
-    fields.push(cur.trim());
-    if (fields.length >= 2 && fields[0]) {
-      const obj = {};
-      headers.forEach((h, j) => obj[h] = (fields[j]||'').replace(/^"|"$/g,''));
-      rows.push(obj);
-    }
+<script>
+// ── DATE ──────────────────────────────────────────────────────────────────
+document.getElementById('navDate').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+
+// ── OVERLAY ───────────────────────────────────────────────────────────────
+function openOv(id) {
+  document.getElementById('ov-' + id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeOv(id) {
+  document.getElementById('ov-' + id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.overlay.open').forEach(o => {
+      o.classList.remove('open');
+      document.body.style.overflow = '';
+    });
   }
-  return rows;
+});
+
+// ── WH RSS FEED ───────────────────────────────────────────────────────────
+const WH_RSS    = 'https://www.whitehouse.gov/feed/';
+const CORS_PROXY = 'https://api.allorigins.win/get?url=';
+
+function typeBadge(title) {
+  const t = (title||'').toLowerCase();
+  if (t.startsWith('executive order'))        return ['badge-eo',   'E.O.'];
+  if (t.startsWith('fact sheet'))             return ['badge-fs',   'Fact Sheet'];
+  if (t.startsWith('proclamation'))           return ['badge-proc', 'Proclamation'];
+  if (t.startsWith('presidential memorandum'))return ['badge-memo', 'Memo'];
+  if (t.startsWith('statement'))              return ['badge-stmt', 'Statement'];
+  if (t.startsWith('readout'))                return ['badge-rdout','Readout'];
+  if (t.startsWith('press briefing'))         return ['badge-stmt', 'Briefing'];
+  if (t.startsWith('remarks'))                return ['badge-stmt', 'Remarks'];
+  if (t.startsWith('icymi') || t.startsWith('in case you missed'))
+                                              return ['badge-def',  'ICYMI'];
+  return ['badge-def', 'Release'];
 }
 
-async function initWHTicker() {
-  const wrap = document.getElementById('wh-ticker');
-  if (!wrap) return;
-  const FALLBACK = [
-    { title: 'White House releases will appear here automatically', label: 'WH', link: 'https://www.whitehouse.gov/news/' },
-    { title: 'Set up the Apps Script and Gmail filter to populate this feed', label: 'SETUP', link: '#' },
-    { title: 'Administration Hub · Federal Cabinet · FL-21', label: 'PLURIBUS', link: '#' },
-  ];
-  let items = [];
+function formatDate(dateStr) {
   try {
-    const res = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTqGKG1uKOtR6Q3Hvyr0rQvm85TufTTA9XWSprDYbD_RE1zVtladWACO5LTPSpjBgbNKxrNF40glAsa/pub?output=csv&t=' + Date.now(), { cache: 'no-store' });
-    if (res.ok) {
-      const text = await res.text();
-      const lines = text.trim().split('\n');
-      if (lines.length > 1) {
-        const rows = parseCSVTicker(text);
-        const dates = [...new Set(rows.map(r => r.date))].sort().reverse();
-        const latest = dates[0];
-        rows.filter(r => r.date === latest).forEach(r => {
-          if (r.title && r.title.length > 5) {
-            items.push({ title: r.title, label: r.type || 'WH', link: r.url || 'https://www.whitehouse.gov/news/' });
-          }
-        });
-      }
-    }
-  } catch(e) {}
-  if (items.length < 2) items = FALLBACK;
-  const makeSpan = ({title, label, link}) => {
-    const safe = title.replace(/"/g,'&quot;').toUpperCase().slice(0,130);
-    const href = (link||'#').replace(/'/g,'%27');
-    return `<span class="ticker-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" title="${safe}"><span class="ticker-source">${label}</span>${safe}</span>`;
-  };
-  const half = items.map(makeSpan).join('');
-  wrap.innerHTML = half + half;
-  const totalChars = items.reduce((n,i) => n + i.title.length, 0);
-  wrap.style.animationDuration = Math.max(60, Math.min(120, Math.round(totalChars * 0.45))) + 's';
-}
-initWHTicker();
-setInterval(initWHTicker, 15 * 60 * 1000);
-// ── END WH TICKER ───────────────────────────────────────────
-
-</script><script>
-document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-
-// ── WH RELEASES from spreadsheet ──
-const WH_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTqGKG1uKOtR6Q3Hvyr0rQvm85TufTTA9XWSprDYbD_RE1zVtladWACO5LTPSpjBgbNKxrNF40glAsa/pub?output=csv';
-
-function typeBadgeClass(type) {
-  if (!type) return 'badge-def';
-  const t = type.toLowerCase();
-  if (t.includes('exec') || t.includes('order') || t.includes('eo')) return 'badge-eo';
-  if (t.includes('fact')) return 'badge-fs';
-  if (t.includes('proc')) return 'badge-proc';
-  if (t.includes('memo')) return 'badge-memo';
-  if (t.includes('icymi')) return 'badge-icymi';
-  if (t.includes('read')) return 'badge-rdout';
-  if (t.includes('stmt') || t.includes('statement')) return 'badge-stmt';
-  return 'badge-def';
+    return new Date(dateStr).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  } catch(e) { return ''; }
 }
 
-function parseCSVSimple(text) {
-  const rows = [];
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.replace(/"/g,'').trim());
-  for (let i = 1; i < lines.length; i++) {
-    const fields = [];
-    let cur = '', inQ = false;
-    for (const ch of lines[i]) {
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { fields.push(cur.trim()); cur = ''; }
-      else cur += ch;
-    }
-    fields.push(cur.trim());
-    if (fields.length >= 3 && fields[0]) {
-      const obj = {};
-      headers.forEach((h, j) => obj[h] = (fields[j]||'').replace(/^"|"$/g,''));
-      rows.push(obj);
-    }
+async function loadWHFeed() {
+  const list = document.getElementById('whList');
+  try {
+    const res  = await fetch(CORS_PROXY + encodeURIComponent(WH_RSS));
+    const data = await res.json();
+    const parser = new DOMParser();
+    const xml  = parser.parseFromString(data.contents, 'text/xml');
+    const items = Array.from(xml.querySelectorAll('item')).slice(0, 10);
+
+    if (!items.length) throw new Error('No items');
+
+    list.innerHTML = items.map(item => {
+      const title = item.querySelector('title')?.textContent || '';
+      const link  = item.querySelector('link')?.textContent || '#';
+      const date  = item.querySelector('pubDate')?.textContent || '';
+      const [badgeClass, badgeLabel] = typeBadge(title);
+      const cleanTitle = title.replace(/^(fact sheet|executive order|proclamation|presidential memorandum|statement|readout|press briefing|remarks|icymi|in case you missed it):\s*/i,'').trim();
+      return `
+        <li>
+          <a class="wh-item" href="${link}" target="_blank" rel="noopener">
+            <span class="wh-badge ${badgeClass}">${badgeLabel}</span>
+            <span class="wh-item-title">${cleanTitle}</span>
+            <span class="wh-item-date">${formatDate(date)}</span>
+          </a>
+        </li>`;
+    }).join('');
+
+    // Populate chyron with WH items
+    const chyron = document.getElementById('chyronInner');
+    const chyronItems = items.slice(0,6).map(item => {
+      const title = (item.querySelector('title')?.textContent||'').toUpperCase().slice(0,100);
+      const [, label] = typeBadge(item.querySelector('title')?.textContent||'');
+      return `<div class="chyron-item"><span class="chyron-label">${label}</span>${title}<span class="chyron-dot"></span></div>`;
+    }).join('');
+    chyron.innerHTML = chyronItems + chyronItems;
+
+  } catch(e) {
+    list.innerHTML = '<li class="wh-loading">Could not load releases — check whitehouse.gov/news directly.</li>';
+    console.error('WH RSS error:', e);
   }
-  return rows;
 }
 
-async function loadWHReleases() {
-  const list = document.getElementById('wh-releases-list');
+loadWHFeed();
+setInterval(loadWHFeed, 30 * 60 * 1000); // refresh every 30 min
+</script>
+</body>
+</html>
