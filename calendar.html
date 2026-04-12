@@ -510,48 +510,82 @@ function copyBlogPrompt(btn,labelEnc){
   navigator.clipboard.writeText(t).then(()=>{ btn.textContent='✓ Copied!'; setTimeout(()=>{btn.textContent='📋 Copy newsletter/blog prompt';},2000); });
 }
 
-// ─── HOUSE CLERK RSS ──────────────────────────────────────────────────────────
+// ─── LEGISLATIVE RSS FEED ─────────────────────────────────────────────────────
+// Uses rss2json.com — a dedicated RSS-to-JSON API that handles CORS server-side.
+// Free tier: 1 req/sec, 10k/day — more than enough for a small internal tool.
+// Tries Congress.gov "House Floor Today" first (most relevant), then falls back
+// to Congress.gov "Bills Presented to President", then a direct fetch attempt.
+// clerk.house.gov itself blocks CORS from all browsers regardless of host.
+const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
+const FEED_SOURCES = [
+  {
+    url: 'https://www.congress.gov/rss/house-floor-today.xml',
+    label: 'House Floor Today · Congress.gov',
+  },
+  {
+    url: 'https://www.congress.gov/rss/bills-presented-to-president.xml',
+    label: 'Bills to President · Congress.gov',
+  },
+  {
+    url: 'https://www.congress.gov/rss/most-viewed-bills.xml',
+    label: 'Most-Viewed Bills · Congress.gov',
+  },
+];
+
 async function fetchClerkFeed(){
   const feed=document.getElementById('clerkFeed');
   const timeEl=document.getElementById('clerkTime');
-  const PROXY='https://api.allorigins.win/raw?url=';
-  const URLS=[
-    'https://clerk.house.gov/rss/legact.aspx',
-    'https://clerk.house.gov/legislative/legvotes.aspx?rss=true',
-  ];
-  for(const rssUrl of URLS){
+
+  for(const source of FEED_SOURCES){
     try{
-      const res=await fetch(PROXY+encodeURIComponent(rssUrl),{signal:AbortSignal.timeout(9000)});
+      const apiUrl = RSS2JSON + encodeURIComponent(source.url) + '&count=8';
+      const res = await fetch(apiUrl, {signal: AbortSignal.timeout(10000)});
       if(!res.ok) continue;
-      const txt=await res.text();
-      const xml=(new DOMParser()).parseFromString(txt,'text/xml');
-      const items=Array.from(xml.querySelectorAll('item')).slice(0,7);
-      if(!items.length) continue;
-      clerkItems=items.map(it=>{
-        const title=it.querySelector('title')?.textContent?.trim()||'';
-        const link=it.querySelector('link')?.textContent?.trim()||'';
-        const desc=it.querySelector('description')?.textContent?.trim()||'';
-        const pubDate=it.querySelector('pubDate')?.textContent?.trim()||'';
-        let dateKey=null;
-        try{const d=new Date(pubDate);if(!isNaN(d))dateKey=dK(d.getFullYear(),d.getMonth()+1,d.getDate());}catch(e){}
-        return{title,link,description:desc,pubDate,dateKey};
+      const data = await res.json();
+      if(data.status !== 'ok' || !data.items?.length) continue;
+
+      clerkItems = data.items.map(item => {
+        const title = item.title?.trim() || '';
+        const link  = item.link?.trim() || '';
+        const desc  = item.description?.replace(/<[^>]+>/g,'').trim() || '';
+        const pubDate = item.pubDate || '';
+        let dateKey = null;
+        try{ const d=new Date(pubDate); if(!isNaN(d)) dateKey=dK(d.getFullYear(),d.getMonth()+1,d.getDate()); }catch(e){}
+        return {title, link, description: desc, pubDate, dateKey};
       });
-      feed.innerHTML='';
-      clerkItems.forEach(ci=>{
-        const div=document.createElement('div'); div.className='clerk-feed-item';
-        const dateStr=ci.pubDate?new Date(ci.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
-        div.innerHTML=`<div class="clerk-feed-date">${dateStr}</div><div class="clerk-feed-title">${ci.title}</div>`;
-        if(ci.link) div.addEventListener('click',()=>window.open(ci.link,'_blank'));
+
+      // Update header label to reflect actual source
+      document.querySelector('.clerk-eyebrow').innerHTML =
+        `<span class="clerk-live-dot"></span>${source.label}`;
+
+      feed.innerHTML = '';
+      clerkItems.forEach(ci => {
+        const div = document.createElement('div');
+        div.className = 'clerk-feed-item';
+        const dateStr = ci.pubDate
+          ? new Date(ci.pubDate).toLocaleDateString('en-US',{month:'short',day:'numeric'})
+          : '';
+        div.innerHTML = `<div class="clerk-feed-date">${dateStr}</div><div class="clerk-feed-title">${ci.title}</div>`;
+        if(ci.link) div.addEventListener('click', ()=>window.open(ci.link,'_blank'));
         feed.appendChild(div);
       });
-      timeEl.textContent='Updated '+new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+
+      timeEl.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
       renderCalendar();
-      return;
-    }catch(e){ continue; }
+      return; // success — stop trying
+
+    } catch(e){ continue; }
   }
-  // All failed
-  feed.innerHTML=`<div class="clerk-feed-empty">RSS unavailable — <a href="https://clerk.house.gov/legislative/legact.aspx" target="_blank" style="color:#9aa4f0">view at clerk.house.gov ↗</a></div>`;
-  timeEl.textContent='Feed unavailable';
+
+  // All sources failed — show a clean fallback with direct links
+  feed.innerHTML = `
+    <div class="clerk-feed-empty">
+      Feed temporarily unavailable —
+      <a href="https://clerk.house.gov/legislative/legact.aspx" target="_blank" style="color:#9aa4f0">Clerk.house.gov ↗</a>
+      &nbsp;·&nbsp;
+      <a href="https://www.congress.gov/floor-schedule" target="_blank" style="color:#9aa4f0">Congress.gov floor ↗</a>
+    </div>`;
+  timeEl.textContent = 'Feed unavailable';
 }
 
 // ─── CONTROLS ─────────────────────────────────────────────────────────────────
