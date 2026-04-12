@@ -450,6 +450,61 @@ function copyCodes(){
 document.getElementById('navDate').textContent =
   new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 buildTopics();
+
+// ── PRE-FILL FROM RAPID RESPONSE HANDOFF ─────────────────────────────────────
+// Reads topic from sessionStorage (set by rapid-response.html) or URL ?topic=
+(function(){
+  const urlParam = new URLSearchParams(window.location.search).get('topic');
+  const stored   = sessionStorage.getItem('rr_topic');
+  const incoming = urlParam || stored;
+  if(!incoming) return;
+
+  // Clear the sessionStorage so it doesn't persist across unrelated visits
+  sessionStorage.removeItem('rr_topic');
+
+  // Map Rapid Response topic values to List Matcher topic values
+  // (they mostly align, but RR uses 'obbb' which LM includes under 'economy')
+  const RR_TO_LM = {
+    water:      ['water','wrda','environment','estuaries'],
+    veterans:   ['veterans','military','gold-star'],
+    border:     ['border','immigration','police'],
+    economy:    ['economy','tax','small-business'],
+    obbb:       ['obbb','economy','tax','seniors'],
+    doge:       ['doge','government','economy'],
+    healthcare: ['healthcare','seniors'],
+    police:     ['police','border','veterans'],
+    military:   ['military','veterans','dod'],
+    israel:     ['antisemitism','foreign-policy'],
+  };
+
+  const topicsToSelect = RR_TO_LM[incoming] || [incoming];
+
+  // Select the matching chips
+  topicsToSelect.forEach(tv => {
+    selectedTopics.add(tv);
+    const chip = document.querySelector(`.topic-chip[data-val="${tv}"]`);
+    if(chip) chip.classList.add('selected');
+  });
+
+  // Show a handoff banner
+  const banner = document.createElement('div');
+  banner.style.cssText = `
+    background:rgba(139,0,0,.1);border:1px solid rgba(139,0,0,.25);
+    border-radius:5px;padding:10px 14px;margin-bottom:14px;
+    font-size:.7rem;color:#c06060;display:flex;align-items:center;gap:10px;
+  `;
+  const topicLabel = incoming.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  banner.innerHTML = `
+    <span>←</span>
+    <span>Pre-filled from <strong>Rapid Response</strong>: <strong>${topicLabel}</strong> topic selected. Run the match or adjust topics above.</span>
+    <button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#885858;cursor:pointer;font-size:.8rem">✕</button>
+  `;
+  const resultsCol = document.getElementById('resultsCol');
+  resultsCol.parentElement.insertBefore(banner, resultsCol.parentElement.firstChild);
+
+  // Auto-run the match
+  runMatch();
+})();
 </script>
 </body>
 </html>
