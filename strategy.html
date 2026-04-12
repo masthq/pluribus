@@ -4,21 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Strategy · Pluribus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design-tokens.css">
 <style>
 :root {
-  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
-  --crimson:#8b0000;--crimson-lt:#a31010;
-  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
-  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;
-  --red-medium:#d04040;--red-muted:#c06060;
-  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
-  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+  --navy:var(--navy);--navy-mid:var(--navy-mid);--navy-card:var(--navy-card);--navy-hover:var(--navy-hover);
+  --crimson:var(--crimson);--crimson-lt:#a31010;
+  --gold:var(--gold);--gold-lt:var(--gold-lt);--gold-dim:rgba(184,150,62,0.15);
+  --sky:var(--sky);--green:var(--green);--purple-blue:var(--purple-blue);
+  --red-medium:var(--red-medium);--red-muted:var(--red-muted);
+  --text:var(--text);--text-sec:var(--text-sec);--text-dim:var(--text-dim);
+  --border:var(--border);--border-dim:var(--border-dim);
   --font-sans:'Libre Franklin',sans-serif;--font-serif:'Instrument Serif',serif;
   --page-pad:32px;--radius-sm:3px;--radius-md:6px;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+
 body{font-family:var(--font-sans);background:var(--navy);color:var(--text);min-height:100vh}
 
 /* TICKER */
@@ -30,15 +29,6 @@ body{font-family:var(--font-sans);background:var(--navy);color:var(--text);min-h
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* NAV */
-nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
-.nav-brand{display:flex;align-items:center;padding:10px 0;margin-right:48px;text-decoration:none}
-.nav-seal{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;background:transparent}
-.nav-seal-p{font-family:var(--font-serif);font-style:italic;font-size:22px;color:var(--gold);line-height:1;margin-top:1px}
-.nav-links{display:flex;list-style:none}
-.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
-.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
-.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
-.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
 
 /* PAGE HEADER */
 .page-header{padding:36px 32px 0;max-width:1440px;margin:0 auto}
@@ -83,9 +73,9 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 
 /* URGENCY BADGE on due date */
 .due-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:3px}
-.due-overdue{background:rgba(139,0,0,.2);color:#d04040}
-.due-soon{background:rgba(184,150,62,.15);color:#c9a84c}
-.due-ok{background:rgba(61,184,122,.1);color:#3db87a}
+.due-overdue{background:rgba(139,0,0,.2);color:var(--red-medium)}
+.due-soon{background:rgba(184,150,62,.15);color:var(--gold-lt)}
+.due-ok{background:rgba(61,184,122,.1);color:var(--green)}
 .due-none{color:var(--text-dim);font-size:11px}
 
 /* PROGRESS BADGE */
@@ -97,7 +87,7 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 
 /* LOCATION BADGE */
 .loc-badge{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:3px 8px;border-radius:2px;display:inline-block}
-.loc-dc{background:rgba(139,0,0,.15);color:#c06060}
+.loc-dc{background:rgba(139,0,0,.15);color:var(--red-muted)}
 .loc-district{background:rgba(107,174,214,.1);color:var(--sky)}
 .loc-other{background:rgba(255,255,255,.05);color:var(--text-sec)}
 
@@ -118,7 +108,7 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 tr:hover .row-actions{opacity:1}
 .row-btn{font-size:9px;font-weight:700;padding:3px 7px;border-radius:2px;border:1px solid var(--border-dim);background:transparent;color:var(--text-dim);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
 .row-btn:hover{border-color:var(--gold);color:var(--gold-lt)}
-.row-btn.del:hover{border-color:var(--crimson-lt);color:#d04040}
+.row-btn.del:hover{border-color:var(--crimson-lt);color:var(--red-medium)}
 
 /* LOADING */
 .loading-row td{text-align:center;padding:40px;color:var(--text-dim);font-size:12px}
@@ -154,7 +144,7 @@ tr:hover .row-actions{opacity:1}
 #other-name-group.visible{display:flex}
 
 /* DELETE CONFIRM */
-.delete-confirm{background:rgba(139,0,0,.12);border:1px solid rgba(139,0,0,.3);border-radius:6px;padding:16px;margin-bottom:20px;font-size:12px;color:#d04040;line-height:1.5;display:none}
+.delete-confirm{background:rgba(139,0,0,.12);border:1px solid rgba(139,0,0,.3);border-radius:6px;padding:16px;margin-bottom:20px;font-size:12px;color:var(--red-medium);line-height:1.5;display:none}
 .delete-confirm.visible{display:block}
 
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
@@ -184,17 +174,16 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
 </div>
 
 <!-- NAV -->
-<nav>
-  <a class="nav-brand" href="dashboard_v2.html">
-    <div class="nav-seal"><span class="nav-seal-p">P</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="dashboard_v2.html">Dashboard</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li><a href="clipdrop.html">Clip Drop</a></li>
-  </ul>
-  <div class="nav-right"><span id="nav-date"></span></div>
-</nav>
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="mast-hq.html" class="nav-logo">P</a>
+    <a href="mast-hq.html" class="nav-link active">Mast HQ</a>
+    <a href="political-universe.html" class="nav-link">Political Universe</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</div>
 
 <!-- PAGE HEADER -->
 <div class="page-header">

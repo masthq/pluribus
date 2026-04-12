@@ -15,48 +15,15 @@
     }
 
     /* ── CHYRON ── */
-    .chyron {
-      background: var(--crimson);
-      width: 100%;
-      padding: 7px 32px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
+    
     .chyron a { color: #fff; text-decoration: none; opacity: 0.7; }
     .chyron a:hover { opacity: 1; }
     .chyron-sep { opacity: 0.35; }
 
     /* ── NAV ── */
-    nav {
-      background: var(--navy-mid);
-      border-bottom: 1px solid var(--border-dim);
-      padding: 0 32px;
-      display: flex;
-      align-items: center;
-      gap: 0;
-      height: 52px;
-    }
-    .nav-brand {
-      font-family: 'Instrument Serif', serif;
-      font-size: 1.15rem;
-      color: var(--gold);
-      letter-spacing: 0.03em;
-      margin-right: 28px;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2px;
-      flex: 1;
-      flex-wrap: wrap;
-    }
+    
+    
+    
     .nav-links a {
       color: var(--text-sec);
       font-size: 0.72rem;
@@ -73,7 +40,7 @@
 
     /* ── LAYOUT ── */
     .page-wrap {
-      max-width: 900px;
+      max-width:var(--page-max);
       margin: 0 auto;
       padding: 36px 32px 64px;
     }
@@ -450,20 +417,16 @@
   </div>
 
   <!-- NAV -->
-  <nav>
-    <a class="nav-brand" href="index.html">Pluribus</a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="district.html">District</a>
-      <a href="clip-drop.html">Clip Drop</a>
-      <a href="social-approvals.html">Social</a>
-      <a href="messaging-archive.html">Messaging</a>
-      <a href="press-directory.html">Press Dir</a>
-      <a href="local-officials.html">Officials</a>
-      <a href="outreach.html">Outreach</a>
-      <a href="observance-calendar.html" class="active">Observances</a>
-    </div>
-  </nav>
+  <div class="nav-outer">
+  <div class="nav-inner">
+    <a href="mast-hq.html" class="nav-logo">P</a>
+    <a href="mast-hq.html" class="nav-link active">Mast HQ</a>
+    <a href="political-universe.html" class="nav-link">Political Universe</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</div>
 
   <!-- PAGE -->
   <div class="page-wrap">

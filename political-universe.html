@@ -4,63 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Political Universe — Pluribus</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design-tokens.css">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh}
-.chyron{background:#8b0000;padding:5px 0;overflow:hidden;white-space:nowrap}
-.chyron-inner{display:inline-flex;gap:40px;padding:0 32px;animation:scroll 32s linear infinite}
-@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.chyron-item{font-size:10px;color:#fff;display:flex;gap:8px;align-items:center;font-weight:700}
-.chyron-label{font-weight:700;font-size:9px;letter-spacing:.09em;opacity:.75}
-.chyron-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
-.nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,.18)}
-.nav-inner{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
-.nav-logo{width:26px;height:26px;border-radius:50%;border:1.5px solid #b8963e;background:transparent;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
-.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer;text-decoration:none;white-space:nowrap}
-.nav-link:hover{color:#e8e4d9}
-.nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
-.nav-date{margin-left:auto;font-size:11px;color:#9a9585}
-.main-outer{width:100%}
-.main-inner{max-width:900px;margin:0 auto;padding:20px 32px 48px}
+
+body{background: var(--navy);font-family:'Libre Franklin',sans-serif;min-height:100vh}
+
+100%{transform:translateX(-50%)}}
+
 .page-intro{margin-bottom:22px}
-.page-intro h1{font-family:'Instrument Serif',serif;font-size:1.5rem;color:#c9a84c;margin-bottom:4px}
-.page-intro p{font-size:.75rem;color:#9a9585}
-.section-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#9a9585;text-transform:uppercase;margin-bottom:10px}
-.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-.tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden;text-decoration:none}
-.tile:hover{filter:brightness(1.12)}
-.tile-tag{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
-.tile-title{font-size:15px;font-weight:600;line-height:1.2;margin-bottom:3px}
-.tile-sub{font-size:10.5px;line-height:1.4}
-.t-gold{background:#181406;border-top:2px solid #b8963e}
-.t-gold .tile-tag{color:#b8963e}.t-gold .tile-title{color:#e8dfc0}.t-gold .tile-sub{color:#9a8c6a}
-.t-sky{background:#080f18;border-top:2px solid #6baed6}
-.t-sky .tile-tag{color:#6baed6}.t-sky .tile-title{color:#c8dde8}.t-sky .tile-sub{color:#5a8090}
-.t-crimson{background:#120808;border-top:2px solid #8b0000}
-.t-crimson .tile-tag{color:#c06060}.t-crimson .tile-title{color:#e8c8c8}.t-crimson .tile-sub{color:#885858}
-.t-green{background:#07100b;border-top:2px solid #3db87a}
-.t-green .tile-tag{color:#3db87a}.t-green .tile-title{color:#c0e0cc}.t-green .tile-sub{color:#4a8060}
-.t-purple{background:#09091a;border-top:2px solid #7a8aff}
-.t-purple .tile-tag{color:#7a8aff}.t-purple .tile-title{color:#cdd0f0}.t-purple .tile-sub{color:#5a6090}
+.page-intro h1{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--gold-lt);margin-bottom:4px}
+.page-intro p{font-size:.75rem;color:var(--text-sec)}
+
+.t-gold{background: var(--tile-gold-bg);border-top:2px solid var(--gold)}
+.t-gold .t-gold .t-gold 
+.t-sky{background: var(--tile-sky-bg);border-top:2px solid var(--sky)}
+.t-sky .t-sky .t-sky 
+.t-crimson{background: var(--tile-crimson-bg);border-top:2px solid var(--crimson)}
+.t-crimson .t-crimson .t-crimson 
+.t-green{background: var(--tile-green-bg);border-top:2px solid var(--green)}
+.t-green .t-green .t-green 
+.t-purple{background: var(--tile-purple-bg);border-top:2px solid var(--purple-blue)}
+.t-purple .t-purple .t-purple 
 
 /* section divider */
 .section-divider{display:flex;align-items:center;gap:10px;margin:18px 0 10px}
-.section-divider-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#6baed6;text-transform:uppercase;white-space:nowrap}
+.section-divider-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:var(--sky);text-transform:uppercase;white-space:nowrap}
 .section-divider-line{flex:1;height:1px;background:rgba(107,174,214,.18)}
 
 /* WH news ticker */
-.wh-strip{background:#181406;border:1px solid rgba(184,150,62,.18);border-left:3px solid #b8963e;border-radius:0 5px 5px 0;padding:12px 18px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
-.wh-strip-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#b8963e;white-space:nowrap}
-.wh-strip-text{font-size:.72rem;color:#9a8c6a;line-height:1.4;flex:1}
-.wh-strip-link{font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#b8963e;text-decoration:none;white-space:nowrap;opacity:.7}
+.wh-strip{background: var(--tile-gold-bg);border:1px solid rgba(184,150,62,.18);border-left:3px solid var(--gold);border-radius:0 5px 5px 0;padding:12px 18px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.wh-strip-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.wh-strip-text{font-size:.72rem;color:var(--tile-gold-sub);line-height:1.4;flex:1}
+.wh-strip-link{font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gold);text-decoration:none;white-space:nowrap;opacity:.7}
 .wh-strip-link:hover{opacity:1}
 
 /* member socials embed placeholder */
-.socials-placeholder{background:#07100b;border:1px solid rgba(61,184,122,.15);border-radius:5px;padding:20px 18px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-.socials-placeholder-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3db87a}
-.socials-placeholder-sub{font-size:.65rem;color:#4a8060}
+.socials-placeholder{background: var(--tile-green-bg);border:1px solid rgba(61,184,122,.15);border-radius:5px;padding:20px 18px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.socials-placeholder-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+.socials-placeholder-sub{font-size:.65rem;color:var(--tile-green-sub)}
 .socials-embed-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 </style>
 </head>
@@ -93,6 +74,7 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
     <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
     <div class="nav-date" id="navDate"></div>
   </div>
+</div>
 </div>
 
 <div class="main-outer">

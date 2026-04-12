@@ -4,23 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Outreach & Affiliations · Pluribus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design-tokens.css">
 <style>
 :root{
-  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
-  --crimson:#8b0000;--crimson-lt:#a31010;
-  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
-  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;--red-medium:#d04040;
-  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
-  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+  --navy:var(--navy);--navy-mid:var(--navy-mid);--navy-card:var(--navy-card);--navy-hover:var(--navy-hover);
+  --crimson:var(--crimson);--crimson-lt:#a31010;
+  --gold:var(--gold);--gold-lt:var(--gold-lt);--gold-dim:rgba(184,150,62,0.15);
+  --sky:var(--sky);--green:var(--green);--purple-blue:var(--purple-blue);--red-medium:var(--red-medium);
+  --text:var(--text);--text-sec:var(--text-sec);--text-dim:var(--text-dim);
+  --border:var(--border);--border-dim:var(--border-dim);
   --font-sans:'Libre Franklin',sans-serif;
   --page-pad:32px;--radius-sm:3px;--radius-md:6px;
-  --status-fresh-bg:rgba(61,184,122,0.15);--status-fresh-text:#3db87a;
-  --status-warm-bg:rgba(184,150,62,0.15);--status-warm-text:#c9a84c;
-  --status-cold-bg:rgba(139,0,0,0.15);--status-cold-text:#d04040;
+  --status-fresh-bg:rgba(61,184,122,0.15);--status-fresh-text:var(--green);
+  --status-warm-bg:rgba(184,150,62,0.15);--status-warm-text:var(--gold-lt);
+  --status-cold-bg:rgba(139,0,0,0.15);--status-cold-text:var(--red-medium);
 }
-*{margin:0;padding:0;box-sizing:border-box}
+
 body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
 
 .ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
@@ -29,20 +28,6 @@ body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--
 .ticker-item{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95)}
 .ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 var(--page-pad);display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
-.nav-brand{display:flex;align-items:center;gap:0;padding:10px 0;margin-right:48px;text-decoration:none}
-.nav-seal{width:38px;height:38px;border-radius:50%;border:1.5px solid #b8963e;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent}
-.nav-seal-p{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:#b8963e;line-height:1;margin-top:1px}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-
-.nav-links{display:flex;list-style:none}
-.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
-.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
-.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
-.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
 
 .page-header{padding:32px var(--page-pad) 0;max-width:1440px;margin:0 auto}
 .breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:10px}
@@ -55,7 +40,7 @@ nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 var(--p
 main{padding:0 var(--page-pad) 48px;max-width:1440px;margin:0 auto}
 
 /* TABS */
-.tab-nav{display:flex;gap:6px;border-bottom:1px solid var(--border-dim);padding-bottom:0;margin-bottom:28px}
+.tab-
 .tab-btn{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:10px 18px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--text-sec);cursor:pointer;font-family:var(--font-sans);transition:all .15s}
 .tab-btn:hover{color:var(--text)}
 .tab-btn.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
@@ -187,20 +172,19 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
   </div>
 </div>
 
-<nav>
-          <a class="nav-brand" href="dashboard_v2.html">
-    <div class="nav-seal"><span class="nav-seal-p">P</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="dashboard_v2.html">Dashboard</a></li>
-    <li><a href="resources.html" class="active">Resources</a></li>
-    <li><a href="clipdrop.html">Clip Drop</a></li>
-  </ul>
-  <div class="nav-right"><span id="nav-date"></span></div>
-</nav>
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="mast-hq.html" class="nav-logo">P</a>
+    <a href="mast-hq.html" class="nav-link active">Mast HQ</a>
+    <a href="political-universe.html" class="nav-link">Political Universe</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</div>
 
 <div class="page-header">
-  <div class="breadcrumb"><a href="resources.html">Resources</a> › Outreach &amp; Affiliations</div>
+  <div class="breadcrumb"><a href="political-universe.html">Political Universe</a> › Outreach &amp; Affiliations</div>
   <div class="page-title">Outreach &amp; Affiliations</div>
   <div class="page-desc">Send counts and last-send dates are real — parsed from 279 blog docs (2025–2026). Excludes VF voter file codes and 499-size test lists.</div>
   <div class="page-rule"></div>

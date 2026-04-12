@@ -4,18 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clip Drop · Pluribus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="design-tokens.css">
 <style>
 :root{
-  --navy:#0a1628;--navy-mid:#0f1f3d;--navy-card:#111e35;--navy-hover:#162440;
-  --crimson:#8b0000;--crimson-lt:#a31010;
-  --gold:#b8963e;--gold-lt:#c9a84c;--gold-dim:rgba(184,150,62,0.15);
-  --sky:#6baed6;--green:#3db87a;--purple-blue:#7a8aff;--red-medium:#d04040;
-  --text:#e8e4d9;--text-sec:#9a9585;--text-dim:#4a4a42;
-  --border:rgba(184,150,62,0.18);--border-dim:rgba(255,255,255,0.06);
+  --navy:var(--navy);--navy-mid:var(--navy-mid);--navy-card:var(--navy-card);--navy-hover:var(--navy-hover);
+  --crimson:var(--crimson);--crimson-lt:#a31010;
+  --gold:var(--gold);--gold-lt:var(--gold-lt);--gold-dim:rgba(184,150,62,0.15);
+  --sky:var(--sky);--green:var(--green);--purple-blue:var(--purple-blue);--red-medium:var(--red-medium);
+  --text:var(--text);--text-sec:var(--text-sec);--text-dim:var(--text-dim);
+  --border:var(--border);--border-dim:var(--border-dim);
 }
-*{margin:0;padding:0;box-sizing:border-box}
+
 body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
 
 /* TICKER */
@@ -27,19 +26,6 @@ body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* NAV */
-nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;display:flex;align-items:stretch;position:sticky;top:0;z-index:200}
-.nav-brand{display:flex;align-items:center;gap:0;padding:10px 0;margin-right:48px;text-decoration:none}
-.nav-seal{width:38px;height:38px;border-radius:50%;border:1.5px solid #b8963e;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:transparent}
-.nav-seal-p{font-family:'Instrument Serif',serif;font-style:italic;font-size:22px;color:#b8963e;line-height:1;margin-top:1px}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-.nav-title{font-size:14px;font-weight:800;color:#fff;line-height:1.1}
-.nav-sub{font-size:9px;color:var(--gold-lt);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
-
-.nav-links{display:flex;list-style:none}
-.nav-links li a{display:flex;align-items:center;padding:0 22px;color:rgba(255,255,255,.45);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;height:100%;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .15s,border-color .15s}
-.nav-links li a:hover{color:#fff;border-bottom-color:rgba(184,150,62,.35)}
-.nav-links li a.active{color:var(--gold-lt);border-bottom-color:var(--gold)}
-.nav-right{display:flex;align-items:center;margin-left:auto;font-size:11px;color:var(--text-sec);font-weight:600}
 
 /* PAGE */
 .page-header{padding:32px 32px 0;max-width:1440px;margin:0 auto}
@@ -51,7 +37,7 @@ nav{background:var(--navy);border-bottom:2px solid var(--gold);padding:0 32px;di
 main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 
 /* SECTION LABEL */
-.section-label{font-size:9px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+
 .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
 /* ADD PANEL — two columns */
@@ -112,9 +98,9 @@ main{padding:0 32px 48px;max-width:1440px;margin:0 auto}
 .badge-tweet{background:rgba(107,174,214,.15);color:var(--sky)}
 .badge-clip{background:rgba(61,184,122,.1);color:var(--green)}
 .badge-article{background:rgba(184,150,62,.12);color:var(--gold-lt)}
-.badge-urgent{background:rgba(139,0,0,.15);color:#d04040}
+.badge-urgent{background:rgba(139,0,0,.15);color:var(--red-medium)}
 .badge-image{background:rgba(107,174,214,.12);color:var(--sky)}
-.badge-video{background:rgba(139,0,0,.12);color:#d04040}
+.badge-video{background:rgba(139,0,0,.12);color:var(--red-medium)}
 .badge-doc{background:rgba(184,150,62,.12);color:var(--gold-lt)}
 .badge-file{background:rgba(255,255,255,.05);color:var(--text-sec)}
 .clip-date{font-size:10px;color:var(--text-dim);font-weight:600;margin-left:auto}
@@ -158,20 +144,19 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
   </div>
 </div>
 
-<nav>
-          <a class="nav-brand" href="dashboard_v2.html">
-    <div class="nav-seal"><span class="nav-seal-p">P</span></div>
-  </a>
-  <ul class="nav-links">
-    <li><a href="dashboard_v2.html">Dashboard</a></li>
-    <li><a href="resources.html">Resources</a></li>
-    <li><a href="clipdrop.html" class="active">Clip Drop</a></li>
-  </ul>
-  <div class="nav-right"><span id="nav-date"></span></div>
-</nav>
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="mast-hq.html" class="nav-logo">P</a>
+    <a href="mast-hq.html" class="nav-link">Mast HQ</a>
+    <a href="political-universe.html" class="nav-link">Political Universe</a>
+    <a href="clipdrop.html" class="nav-link active">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</div>
 
 <div class="page-header">
-  <div class="breadcrumb"><a href="dashboard_v2.html">Dashboard</a> › Clip Drop</div>
+  <div class="breadcrumb"><a href="mast-hq.html">Dashboard</a> › Clip Drop</div>
   <div class="page-title">Clip Drop</div>
   <div class="page-desc">Paste tweet URLs, articles, and clips — or drop files directly. Shared library for the comms team.</div>
   <div class="page-rule"></div>
