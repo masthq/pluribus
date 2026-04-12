@@ -13,20 +13,35 @@
 .page-desc{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:32px;line-height:1.6}
 .page-rule{height:1px;background:var(--border);margin-bottom:32px}
 
-.resource-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:40px}
-.res-tile{border-radius:6px;border:1px solid var(--border-dim);background:var(--navy-card);padding:28px 24px;cursor:pointer;transition:border-color .2s,transform .15s,background .2s;text-decoration:none;display:flex;flex-direction:column;min-height:200px;position:relative;overflow:hidden}
-.res-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
-.res-tile-gold::before{background:var(--gold)}
-.res-tile-sky::before{background:var(--sky)}
-.res-tile-crimson::before{background:var(--crimson)}
-.res-tile-neutral::before{background:rgba(255,255,255,0.08)}
-.res-tile:hover{border-color:var(--border);transform:translateY(-2px);background:var(--navy-hover)}
-.res-tile-icon{font-size:9px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:auto}
-.res-tile-name{font-size:20px;font-weight:900;color:var(--text);line-height:1.1;letter-spacing:-0.2px;margin-top:24px;margin-bottom:8px}
-.res-tile-desc{font-size:12px;color:#cdc8bf;line-height:1.5;font-family:'Instrument Serif',serif;font-style:italic}
-.res-tile-count{position:absolute;top:20px;right:20px;font-size:11px;font-weight:800;color:var(--gold);opacity:.7}
-.res-tile-arrow{position:absolute;bottom:20px;right:20px;font-size:16px;color:var(--gold);opacity:0;transition:opacity .15s,transform .15s;transform:translateX(-4px)}
-.res-tile:hover .res-tile-arrow{opacity:1;transform:translateX(0)}
+.resource-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.res-tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden;text-decoration:none;border:none}
+.res-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.res-tile-gold{background:#181406}.res-tile-gold::before{background:var(--gold)}
+.res-tile-sky{background:#080f18}.res-tile-sky::before{background:var(--sky)}
+.res-tile-crimson{background:#120808}.res-tile-crimson::before{background:var(--crimson)}
+.res-tile-neutral{background:#09091a}.res-tile-neutral::before{background:rgba(255,255,255,0.08)}
+.res-tile:hover{filter:brightness(1.12)}
+.res-tile-top{display:flex;flex-direction:column}
+.res-tile-icon{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+.res-tile-gold .res-tile-icon{color:var(--gold)}
+.res-tile-sky .res-tile-icon{color:var(--sky)}
+.res-tile-crimson .res-tile-icon{color:#c06060}
+.res-tile-neutral .res-tile-icon{color:#7a8aff}
+.res-tile-name{font-size:15px;font-weight:600;line-height:1.2;margin-bottom:3px}
+.res-tile-gold .res-tile-name{color:#e8dfc0}
+.res-tile-sky .res-tile-name{color:#c8dde8}
+.res-tile-crimson .res-tile-name{color:#e8c8c8}
+.res-tile-neutral .res-tile-name{color:#cdd0f0}
+.res-tile-desc{font-size:10.5px;line-height:1.4}
+.res-tile-gold .res-tile-desc{color:#9a8c6a}
+.res-tile-sky .res-tile-desc{color:#5a8090}
+.res-tile-crimson .res-tile-desc{color:#885858}
+.res-tile-neutral .res-tile-desc{color:#5a6090}
+.res-tile-count{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-top:4px}
+.res-tile-gold .res-tile-count{color:#9a8c6a}
+.res-tile-sky .res-tile-count{color:#5a8090}
+.res-tile-crimson .res-tile-count{color:#885858}
+.res-tile-neutral .res-tile-count{color:#5a6090}
 
 .res-panel{display:none}
 .res-panel.active{display:block}
@@ -94,25 +109,37 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
 </head>
 <body>
 
-<!-- CHYRON — uses .chyron / .chyron-inner / .chyron-item from design-tokens.css -->
 <div class="chyron">
   <div class="chyron-inner">
     <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
-    <div class="chyron-item"><span class="chyron-label">RESOURCES</span> Press Directory · Strategy · Messaging · Local Officials · Outreach</div>
-    <div class="chyron-dot"></div>
+    <div class="chyron-item"><span class="chyron-label">WORLD</span> Peruvians head to polls hoping to break cycle of instability</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">BUSINESS</span> Markets stabilize after tariff pause announcement</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
     <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
-    <div class="chyron-item"><span class="chyron-label">RESOURCES</span> Press Directory · Strategy · Messaging · Local Officials · Outreach</div>
-    <div class="chyron-dot"></div>
+    <div class="chyron-item"><span class="chyron-label">WORLD</span> Peruvians head to polls hoping to break cycle of instability</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">BUSINESS</span> Markets stabilize after tariff pause announcement</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
   </div>
 </div>
 
-<!-- NAV — uses .nav-outer / .nav-inner / .nav-logo / .nav-link from design-tokens.css -->
 <div class="nav-outer">
   <div class="nav-inner">
     <a href="dashboard_v2.html" class="nav-logo">P</a>
     <a href="dashboard_v2.html" class="nav-link">Dashboard</a>
     <a href="resources.html" class="nav-link active">Resources</a>
     <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <a href="whitehouse.html" class="nav-link">Administration</a>
     <div class="nav-date" id="nav-date"></div>
   </div>
 </div>
@@ -129,37 +156,48 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
     <div class="section-label">Select a section</div>
     <div class="resource-grid">
       <div class="res-tile res-tile-gold" onclick="showPanel('press')">
-        <div class="res-tile-icon">Contact database</div>
-        <div class="res-tile-count" id="count-press"></div>
-        <div class="res-tile-name">Press Directory</div>
-        <div class="res-tile-desc">Full database — national TV, local print, bookers, radio, foreign affairs, environment, veterans beat.</div>
-        <div class="res-tile-arrow">→</div>
+        <div class="res-tile-top">
+          <div class="res-tile-icon">Contact database</div>
+          <div class="res-tile-name">Press Directory</div>
+        </div>
+        <div>
+          <div class="res-tile-desc">National TV, local print, bookers, specialty beats.</div>
+          <div class="res-tile-count" id="count-press"></div>
+        </div>
       </div>
       <div class="res-tile res-tile-gold" onclick="window.location.href='strategy.html'">
-        <div class="res-tile-icon">Long-term planning</div>
-        <div class="res-tile-name">Strategy</div>
-        <div class="res-tile-desc">Project tracker — deadlines, deliverables, progress, and assigned staff across DC and district.</div>
-        <div class="res-tile-arrow">→</div>
+        <div class="res-tile-top">
+          <div class="res-tile-icon">Long-term planning</div>
+          <div class="res-tile-name">Strategy</div>
+        </div>
+        <div class="res-tile-desc">Deadlines, deliverables, progress, and assigned staff.</div>
       </div>
       <div class="res-tile res-tile-sky" onclick="window.location.href='messaging.html'">
-        <div class="res-tile-icon">Archive</div>
-        <div class="res-tile-name">Messaging Archive</div>
-        <div class="res-tile-desc">Press release top lines and blog copy organized by topic and legislation.</div>
-        <div class="res-tile-arrow">→</div>
+        <div class="res-tile-top">
+          <div class="res-tile-icon">Archive</div>
+          <div class="res-tile-name">Messaging Archive</div>
+        </div>
+        <div class="res-tile-desc">Press releases and blog copy by topic and legislation.</div>
       </div>
       <div class="res-tile res-tile-crimson" onclick="showPanel('officials')">
-        <div class="res-tile-icon">District contacts</div>
-        <div class="res-tile-count" id="count-officials"></div>
-        <div class="res-tile-name">Local Officials</div>
-        <div class="res-tile-desc">Mayors, commissioners, city managers, and state legislators across Palm Beach, Martin, and St. Lucie counties.</div>
-        <div class="res-tile-arrow">→</div>
+        <div class="res-tile-top">
+          <div class="res-tile-icon">District contacts</div>
+          <div class="res-tile-name">Local Officials</div>
+        </div>
+        <div>
+          <div class="res-tile-desc">Mayors, commissioners, and state legislators across FL-21.</div>
+          <div class="res-tile-count" id="count-officials"></div>
+        </div>
       </div>
       <div class="res-tile res-tile-neutral" onclick="window.location.href='affiliations.html'">
-        <div class="res-tile-icon">Outreach</div>
-        <div class="res-tile-count">35 lists</div>
-        <div class="res-tile-name">Outreach &amp; Affiliations</div>
-        <div class="res-tile-desc">List directory, send planning matrix by topic, and outreach tracker with real send history from 276 blog docs.</div>
-        <div class="res-tile-arrow">→</div>
+        <div class="res-tile-top">
+          <div class="res-tile-icon">Outreach</div>
+          <div class="res-tile-name">Outreach &amp; Affiliations</div>
+        </div>
+        <div>
+          <div class="res-tile-desc">List directory, send matrix, and outreach tracker.</div>
+          <div class="res-tile-count">35 lists</div>
+        </div>
       </div>
     </div>
   </main>
@@ -532,6 +570,66 @@ function showLanding() {
 
 document.getElementById('count-press').textContent = PRESS.length + ' contacts';
 document.getElementById('count-officials').textContent = OFFICIALS.length + ' officials';
+</script>
+
+<script>
+// ── LIVE CHYRON (matches dashboard) ──────────────────────────
+(function(){
+  const GUARDIAN_KEY = '94981b8b-9fdc-4fa5-bb48-1992aad9bfa6';
+  const CLIPS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUhXu1o6z68hw9uY1nuAikdoTPswTPxgLcicD8rkz-xm_j_Al3N9U4EJMjtCiTonT0y-22QfS_8R2I/pub?output=csv';
+  const SECTIONS = [{tag:'us-news',label:'US NEWS'},{tag:'politics',label:'POLITICS'},{tag:'world',label:'WORLD'},{tag:'business',label:'BUSINESS'}];
+
+  function parseCSV(text){
+    const rows=[];const lines=text.trim().split('\n');
+    const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+    for(let i=1;i<lines.length;i++){
+      const fields=[];let cur='',inQ=false;
+      for(const ch of lines[i]){if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){fields.push(cur.trim());cur='';}else cur+=ch;}
+      fields.push(cur.trim());
+      if(fields.length>=2&&fields[0]){const obj={};headers.forEach((h,j)=>obj[h]=(fields[j]||'').replace(/^"|"$/g,''));rows.push(obj);}
+    }return rows;
+  }
+
+  async function initChyron(){
+    const inner=document.querySelector('.chyron-inner');
+    if(!inner)return;
+    let items=[];
+
+    // 1. Try clips sheet first
+    try{
+      const res=await fetch(CLIPS_CSV+'&t='+Date.now(),{cache:'no-store'});
+      if(res.ok){const text=await res.text();const lines=text.trim().split('\n');
+        if(lines.length>1){const rows=parseCSV(text);
+          const dates=[...new Set(rows.map(r=>r.date))].sort().reverse();
+          rows.filter(r=>r.date===dates[0]).forEach(r=>{if(r.headline&&r.headline.length>8)items.push({title:r.headline,label:r.outlet||'CLIPS',link:r.url||'#'});});
+        }
+      }
+    }catch(e){}
+
+    // 2. Try Guardian
+    if(items.length<4){
+      try{
+        const reqs=SECTIONS.map(s=>fetch(`https://content.guardianapis.com/search?section=${s.tag}&api-key=${GUARDIAN_KEY}&page-size=6&order-by=newest&show-fields=headline`,{cache:'no-store'}).then(r=>r.json()).then(d=>{(d?.response?.results||[]).forEach(r=>{items.push({title:(r.fields?.headline||r.webTitle||'').replace(/ \| .*/,'').trim(),link:r.webUrl||'#',label:s.label});});}).catch(()=>{}));
+        await Promise.allSettled(reqs);
+      }catch(e){}
+    }
+
+    if(items.length<4)return; // keep static fallback
+
+    items=items.sort(()=>Math.random()-.5);
+    const makeItem=({title,label,link})=>{
+      const safe=title.replace(/"/g,'&quot;').toUpperCase().slice(0,130);
+      const href=(link||'#').replace(/'/g,'%27');
+      return `<div class="chyron-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" style="cursor:pointer"><span class="chyron-label">${label}</span>${safe}</div><div class="chyron-item"><span class="chyron-dot"></span></div>`;
+    };
+    const half=items.map(makeItem).join('');
+    inner.innerHTML=half+half;
+    const totalChars=items.reduce((n,i)=>n+i.title.length,0);
+    inner.style.animationDuration=Math.max(40,Math.min(90,Math.round(totalChars*0.28)))+'s';
+  }
+  initChyron();
+  setInterval(initChyron,15*60*1000);
+})();
 </script>
 </body>
 </html>
