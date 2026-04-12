@@ -3,108 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resources · Pluribus</title>
-<link rel="stylesheet" href="design-tokens.css">
+<title>Political Universe — Pluribus</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
 <style>
-/* ── Only styles NOT in design-tokens.css ─────────────────── */
-.page-header{padding:36px 32px 0;max-width:1440px;margin:0 auto}
-.page-eyebrow{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.page-title{font-size:36px;font-weight:900;color:#fff;line-height:1;letter-spacing:-0.5px;margin-bottom:6px}
-.page-desc{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:32px;line-height:1.6}
-.page-rule{height:1px;background:var(--border);margin-bottom:32px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh}
+.chyron{background:#8b0000;padding:5px 0;overflow:hidden;white-space:nowrap}
+.chyron-inner{display:inline-flex;gap:40px;padding:0 32px;animation:scroll 32s linear infinite}
+@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.chyron-item{font-size:10px;color:#fff;display:flex;gap:8px;align-items:center;font-weight:700}
+.chyron-label{font-weight:700;font-size:9px;letter-spacing:.09em;opacity:.75}
+.chyron-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
+.nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,.18)}
+.nav-inner{max-width:900px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
+.nav-logo{width:26px;height:26px;border-radius:50%;border:1.5px solid #b8963e;background:transparent;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
+.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;cursor:pointer;text-decoration:none;white-space:nowrap}
+.nav-link:hover{color:#e8e4d9}
+.nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
+.nav-date{margin-left:auto;font-size:11px;color:#9a9585}
+.main-outer{width:100%}
+.main-inner{max-width:900px;margin:0 auto;padding:20px 32px 48px}
+.page-intro{margin-bottom:22px}
+.page-intro h1{font-family:'Instrument Serif',serif;font-size:1.5rem;color:#c9a84c;margin-bottom:4px}
+.page-intro p{font-size:.75rem;color:#9a9585}
+.section-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#9a9585;text-transform:uppercase;margin-bottom:10px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden;text-decoration:none}
+.tile:hover{filter:brightness(1.12)}
+.tile-tag{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
+.tile-title{font-size:15px;font-weight:600;line-height:1.2;margin-bottom:3px}
+.tile-sub{font-size:10.5px;line-height:1.4}
+.t-gold{background:#181406;border-top:2px solid #b8963e}
+.t-gold .tile-tag{color:#b8963e}.t-gold .tile-title{color:#e8dfc0}.t-gold .tile-sub{color:#9a8c6a}
+.t-sky{background:#080f18;border-top:2px solid #6baed6}
+.t-sky .tile-tag{color:#6baed6}.t-sky .tile-title{color:#c8dde8}.t-sky .tile-sub{color:#5a8090}
+.t-crimson{background:#120808;border-top:2px solid #8b0000}
+.t-crimson .tile-tag{color:#c06060}.t-crimson .tile-title{color:#e8c8c8}.t-crimson .tile-sub{color:#885858}
+.t-green{background:#07100b;border-top:2px solid #3db87a}
+.t-green .tile-tag{color:#3db87a}.t-green .tile-title{color:#c0e0cc}.t-green .tile-sub{color:#4a8060}
+.t-purple{background:#09091a;border-top:2px solid #7a8aff}
+.t-purple .tile-tag{color:#7a8aff}.t-purple .tile-title{color:#cdd0f0}.t-purple .tile-sub{color:#5a6090}
 
-.resource-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
-.res-tile{border-radius:5px;padding:16px 18px 14px;cursor:pointer;min-height:90px;display:flex;flex-direction:column;justify-content:space-between;transition:filter .15s;position:relative;overflow:hidden;text-decoration:none;border:none}
-.res-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.res-tile-gold{background:#181406}.res-tile-gold::before{background:var(--gold)}
-.res-tile-sky{background:#080f18}.res-tile-sky::before{background:var(--sky)}
-.res-tile-crimson{background:#120808}.res-tile-crimson::before{background:var(--crimson)}
-.res-tile-neutral{background:#09091a}.res-tile-neutral::before{background:rgba(255,255,255,0.08)}
-.res-tile:hover{filter:brightness(1.12)}
-.res-tile-top{display:flex;flex-direction:column}
-.res-tile-icon{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:5px}
-.res-tile-gold .res-tile-icon{color:var(--gold)}
-.res-tile-sky .res-tile-icon{color:var(--sky)}
-.res-tile-crimson .res-tile-icon{color:#c06060}
-.res-tile-neutral .res-tile-icon{color:#7a8aff}
-.res-tile-name{font-size:15px;font-weight:600;line-height:1.2;margin-bottom:3px}
-.res-tile-gold .res-tile-name{color:#e8dfc0}
-.res-tile-sky .res-tile-name{color:#c8dde8}
-.res-tile-crimson .res-tile-name{color:#e8c8c8}
-.res-tile-neutral .res-tile-name{color:#cdd0f0}
-.res-tile-desc{font-size:10.5px;line-height:1.4}
-.res-tile-gold .res-tile-desc{color:#9a8c6a}
-.res-tile-sky .res-tile-desc{color:#5a8090}
-.res-tile-crimson .res-tile-desc{color:#885858}
-.res-tile-neutral .res-tile-desc{color:#5a6090}
-.res-tile-count{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.6;margin-top:4px}
-.res-tile-gold .res-tile-count{color:#9a8c6a}
-.res-tile-sky .res-tile-count{color:#5a8090}
-.res-tile-crimson .res-tile-count{color:#885858}
-.res-tile-neutral .res-tile-count{color:#5a6090}
+/* section divider */
+.section-divider{display:flex;align-items:center;gap:10px;margin:18px 0 10px}
+.section-divider-label{font-size:9px;font-weight:700;letter-spacing:.13em;color:#6baed6;text-transform:uppercase;white-space:nowrap}
+.section-divider-line{flex:1;height:1px;background:rgba(107,174,214,.18)}
 
-.res-panel{display:none}
-.res-panel.active{display:block}
-.back-btn{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-sec);background:none;border:1px solid var(--border-dim);border-radius:4px;padding:7px 14px;cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px;margin-bottom:28px}
-.back-btn::before{content:'←'}
-.back-btn:hover{border-color:var(--gold);color:var(--gold)}
-.panel-title{font-size:24px;font-weight:900;color:#fff;margin-bottom:6px}
-.panel-sub{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px}
+/* WH news ticker */
+.wh-strip{background:#181406;border:1px solid rgba(184,150,62,.18);border-left:3px solid #b8963e;border-radius:0 5px 5px 0;padding:12px 18px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.wh-strip-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#b8963e;white-space:nowrap}
+.wh-strip-text{font-size:.72rem;color:#9a8c6a;line-height:1.4;flex:1}
+.wh-strip-link{font-size:8px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#b8963e;text-decoration:none;white-space:nowrap;opacity:.7}
+.wh-strip-link:hover{opacity:1}
 
-.dir-controls{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
-.dir-search{flex:1;min-width:200px;max-width:320px;border:1px solid var(--border-dim);border-radius:4px;padding:8px 14px;font-size:13px;font-family:'Libre Franklin',sans-serif;color:var(--text);background:var(--navy-mid);outline:none;transition:border-color .15s}
-.dir-search:focus{border-color:var(--gold)}
-.dir-search::placeholder{color:var(--text-dim)}
-.filter-group{display:flex;gap:6px;flex-wrap:wrap}
-.dir-filter{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:6px 12px;border-radius:3px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;white-space:nowrap}
-.dir-filter:hover,.dir-filter.active{border-color:var(--gold);color:var(--gold-lt);background:var(--gold-dim)}
-.results-count{font-size:10px;color:var(--text-dim);font-weight:600;margin-left:auto;align-self:center}
-
-.table-wrap{overflow-x:auto;border-radius:6px;border:1px solid var(--border-dim)}
-.dir-table{width:100%;border-collapse:collapse;min-width:800px}
-.dir-table th{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);padding:10px 14px;border-bottom:1px solid var(--border-dim);text-align:left;background:var(--navy-mid);white-space:nowrap;cursor:pointer;user-select:none}
-.dir-table th:hover{color:var(--gold-lt)}
-.dir-table td{padding:10px 14px;border-bottom:1px solid var(--border-dim);font-size:12px;color:var(--text-sec);vertical-align:middle}
-.dir-table tbody tr:last-child td{border-bottom:none}
-.dir-table tbody tr:hover td{background:var(--navy-hover);color:var(--text)}
-.dir-name{font-size:13px;font-weight:700;color:var(--text)!important}
-.dir-outlet{color:var(--text-sec);font-weight:600}
-.dir-phone{font-size:11px;color:var(--text-dim)!important}
-.dir-email{color:var(--text-sec)!important;font-size:11px}
-
-.beat-tag{font-size:8px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:2px;display:inline-block;white-space:nowrap}
-.bt-national{background:var(--tag-crimson-bg);color:#d04040}
-.bt-local{background:var(--tag-sky-bg);color:var(--sky)}
-.bt-tv{background:var(--tag-gold-bg);color:var(--gold-lt)}
-.bt-radio{background:var(--tag-neutral-bg);color:var(--text-sec)}
-.bt-print{background:var(--tag-neutral-bg);color:#9a9585}
-.bt-podcast{background:var(--tag-sky-bg);color:#8ab8d4}
-.bt-foreign{background:var(--tag-crimson-bg);color:#c06060}
-.bt-environment{background:var(--tag-green-bg);color:var(--green)}
-.bt-veterans{background:var(--tag-gold-bg);color:var(--gold)}
-.bt-ways{background:var(--tag-blue-bg);color:#7a8aff}
-
-.copy-btn{font-size:9px;font-weight:700;padding:2px 6px;border-radius:2px;border:1px solid var(--border-dim);background:transparent;color:var(--text-dim);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s;margin-left:4px}
-.copy-btn:hover{border-color:var(--gold);color:var(--gold-lt)}
-.copy-btn.copied{border-color:var(--green);color:var(--green)}
-
-.msg-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.msg-tag{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid var(--border-dim);background:transparent;color:var(--text-sec);cursor:pointer;font-family:'Libre Franklin',sans-serif;transition:all .15s}
-.msg-tag:hover,.msg-tag.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold-lt)}
-.msg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.msg-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;padding:20px;cursor:pointer;transition:border-color .2s,transform .15s}
-.msg-card:hover{border-color:var(--border);transform:translateY(-1px)}
-.msg-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:10px}
-.msg-card-topic{font-size:8px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;padding:3px 8px;border-radius:2px}
-.msg-card-date{font-size:10px;color:var(--text-dim);font-weight:600;flex-shrink:0}
-.msg-card-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:8px}
-.msg-card-topline{font-size:12px;color:#cdc8bf;line-height:1.5;font-family:'Instrument Serif',serif;font-style:italic;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.msg-card-type{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);margin-top:12px}
-
-::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;margin-top:20px}
-.footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
-.footer-text span{color:var(--gold)}
+/* member socials embed placeholder */
+.socials-placeholder{background:#07100b;border:1px solid rgba(61,184,122,.15);border-radius:5px;padding:20px 18px;text-align:center;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.socials-placeholder-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3db87a}
+.socials-placeholder-sub{font-size:.65rem;color:#4a8060}
+.socials-embed-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -118,518 +75,192 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
     <div class="chyron-item"><span class="chyron-dot"></span></div>
     <div class="chyron-item"><span class="chyron-label">BUSINESS</span> Markets stabilize after tariff pause announcement</div>
     <div class="chyron-item"><span class="chyron-dot"></span></div>
-    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
-    <div class="chyron-item"><span class="chyron-dot"></span></div>
-    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
     <div class="chyron-item"><span class="chyron-label">WORLD</span> Peruvians head to polls hoping to break cycle of instability</div>
     <div class="chyron-item"><span class="chyron-dot"></span></div>
     <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
     <div class="chyron-item"><span class="chyron-dot"></span></div>
     <div class="chyron-item"><span class="chyron-label">BUSINESS</span> Markets stabilize after tariff pause announcement</div>
     <div class="chyron-item"><span class="chyron-dot"></span></div>
-    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
-    <div class="chyron-item"><span class="chyron-dot"></span></div>
   </div>
 </div>
 
 <div class="nav-outer">
   <div class="nav-inner">
-    <a href="dashboard_v2.html" class="nav-logo">P</a>
-    <a href="dashboard_v2.html" class="nav-link">Dashboard</a>
-    <a href="resources.html" class="nav-link active">Resources</a>
+    <a href="mast-hq.html" class="nav-logo">P</a>
+    <a href="mast-hq.html" class="nav-link">Mast HQ</a>
+    <a href="political-universe.html" class="nav-link active">Political Universe</a>
     <a href="clipdrop.html" class="nav-link">Clip Drop</a>
     <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
-    <a href="whitehouse.html" class="nav-link">Administration</a>
-    <div class="nav-date" id="nav-date"></div>
+    <div class="nav-date" id="navDate"></div>
   </div>
 </div>
 
-<!-- LANDING -->
-<div id="view-landing">
-  <div class="page-header">
-    <div class="page-eyebrow">Internal Library</div>
-    <div class="page-title">Resources</div>
-    <div class="page-desc">Political and practical references for the comms team.</div>
-    <div class="page-rule"></div>
-  </div>
-  <main class="main-inner">
-    <div class="section-label">Select a section</div>
-    <div class="resource-grid">
-      <div class="res-tile res-tile-gold" onclick="showPanel('press')">
-        <div class="res-tile-top">
-          <div class="res-tile-icon">Contact database</div>
-          <div class="res-tile-name">Press Directory</div>
-        </div>
+<div class="main-outer">
+  <div class="main-inner">
+
+    <div class="page-intro">
+      <h1>Political Universe</h1>
+      <p>The broader legislative and political landscape — administration, Congress, floor activity, and member socials.</p>
+    </div>
+
+    <!-- ADMINISTRATION -->
+    <div class="section-label">White House &amp; Administration</div>
+    <div class="wh-strip">
+      <span class="wh-strip-label">WH Newsroom</span>
+      <span class="wh-strip-text">Latest releases, statements, and executive actions from the Trump Administration</span>
+      <a href="whitehouse.html" class="wh-strip-link">Open →</a>
+    </div>
+    <div class="grid-4">
+      <a href="whitehouse.html" class="tile t-gold">
         <div>
-          <div class="res-tile-desc">National TV, local print, bookers, specialty beats.</div>
-          <div class="res-tile-count" id="count-press"></div>
+          <div class="tile-tag">Newsroom</div>
+          <div class="tile-title">Trump Administration</div>
         </div>
-      </div>
-      <div class="res-tile res-tile-gold" onclick="window.location.href='strategy.html'">
-        <div class="res-tile-top">
-          <div class="res-tile-icon">Long-term planning</div>
-          <div class="res-tile-name">Strategy</div>
-        </div>
-        <div class="res-tile-desc">Deadlines, deliverables, progress, and assigned staff.</div>
-      </div>
-      <div class="res-tile res-tile-sky" onclick="window.location.href='messaging.html'">
-        <div class="res-tile-top">
-          <div class="res-tile-icon">Archive</div>
-          <div class="res-tile-name">Messaging Archive</div>
-        </div>
-        <div class="res-tile-desc">Press releases and blog copy by topic and legislation.</div>
-      </div>
-      <div class="res-tile res-tile-crimson" onclick="showPanel('officials')">
-        <div class="res-tile-top">
-          <div class="res-tile-icon">District contacts</div>
-          <div class="res-tile-name">Local Officials</div>
-        </div>
+        <div class="tile-sub">Cabinet · Agencies · WH releases</div>
+      </a>
+      <a href="https://www.whitehouse.gov/briefing-room/" target="_blank" class="tile t-gold">
         <div>
-          <div class="res-tile-desc">Mayors, commissioners, and state legislators across FL-21.</div>
-          <div class="res-tile-count" id="count-officials"></div>
+          <div class="tile-tag">Live</div>
+          <div class="tile-title">WH Briefing Room</div>
         </div>
-      </div>
-      <div class="res-tile res-tile-neutral" onclick="window.location.href='affiliations.html'">
-        <div class="res-tile-top">
-          <div class="res-tile-icon">Outreach</div>
-          <div class="res-tile-name">Outreach &amp; Affiliations</div>
-        </div>
+        <div class="tile-sub">Statements · Proclamations · EOs</div>
+      </a>
+      <a href="https://www.whitehouse.gov/administration/cabinet/" target="_blank" class="tile t-gold">
         <div>
-          <div class="res-tile-desc">List directory, send matrix, and outreach tracker.</div>
-          <div class="res-tile-count">35 lists</div>
+          <div class="tile-tag">Personnel</div>
+          <div class="tile-title">Cabinet Directory</div>
         </div>
+        <div class="tile-sub">All secretaries &amp; agency heads</div>
+      </a>
+      <a href="https://www.whitehouse.gov/presidential-actions/" target="_blank" class="tile t-gold">
+        <div>
+          <div class="tile-tag">Executive</div>
+          <div class="tile-title">Executive Orders</div>
+        </div>
+        <div class="tile-sub">EOs · Proclamations · Memoranda</div>
+      </a>
+    </div>
+
+    <!-- CONGRESS / FLOOR -->
+    <div class="section-divider">
+      <div class="section-divider-label">Congress &amp; Floor</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="grid-4">
+      <a href="https://www.congress.gov/floor-schedule" target="_blank" class="tile t-sky">
+        <div>
+          <div class="tile-tag">Today</div>
+          <div class="tile-title">House Floor Schedule</div>
+        </div>
+        <div class="tile-sub">Legislation up for consideration today</div>
+      </a>
+      <a href="https://clerk.house.gov/evs/2026/index.asp" target="_blank" class="tile t-crimson">
+        <div>
+          <div class="tile-tag">House Floor</div>
+          <div class="tile-title">Recent Votes</div>
+        </div>
+        <div class="tile-sub">119th Congress · 2026 roll calls</div>
+      </a>
+      <a href="https://www.congress.gov/search?q=%7B%22source%22%3A%22legislation%22%7D" target="_blank" class="tile t-sky">
+        <div>
+          <div class="tile-tag">Congress.gov</div>
+          <div class="tile-title">Bill Lookup</div>
+        </div>
+        <div class="tile-sub">Search any bill instantly</div>
+      </a>
+      <a href="https://www.congress.gov/committee-schedule" target="_blank" class="tile t-sky">
+        <div>
+          <div class="tile-tag">Committees</div>
+          <div class="tile-title">Hearing Schedule</div>
+        </div>
+        <div class="tile-sub">All committee hearings this week</div>
+      </a>
+    </div>
+
+    <!-- LEADERSHIP & CONFERENCE -->
+    <div class="grid-4">
+      <a href="https://www.majorityleader.gov/floor" target="_blank" class="tile t-gold">
+        <div>
+          <div class="tile-tag">Scalise</div>
+          <div class="tile-title">Majority Leader</div>
+        </div>
+        <div class="tile-sub">Floor schedule · Weekly calendar</div>
+      </a>
+      <a href="https://www.speaker.gov/" target="_blank" class="tile t-gold">
+        <div>
+          <div class="tile-tag">Johnson</div>
+          <div class="tile-title">Speaker's Office</div>
+        </div>
+        <div class="tile-sub">Statements · Conference priorities</div>
+      </a>
+      <a href="https://www.gop.gov/" target="_blank" class="tile t-crimson">
+        <div>
+          <div class="tile-tag">House GOP</div>
+          <div class="tile-title">Conference</div>
+        </div>
+        <div class="tile-sub">Message · Caucus materials</div>
+      </a>
+      <a href="https://www.nrcc.org/" target="_blank" class="tile t-crimson">
+        <div>
+          <div class="tile-tag">Cycle</div>
+          <div class="tile-title">NRCC</div>
+        </div>
+        <div class="tile-sub">Cycle messaging · Opposition</div>
+      </a>
+    </div>
+
+    <!-- MEMBER SOCIALS -->
+    <div class="section-divider">
+      <div class="section-divider-label">Member Socials</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <div class="socials-embed-row">
+      <div class="socials-placeholder">
+        <div class="socials-placeholder-label">House GOP · X/Twitter Feed</div>
+        <div class="socials-placeholder-sub">Top House Republicans — curated list embed · coming soon</div>
+      </div>
+      <div class="socials-placeholder">
+        <div class="socials-placeholder-label">Senate GOP · X/Twitter Feed</div>
+        <div class="socials-placeholder-sub">Senate Republicans + Leadership · coming soon</div>
       </div>
     </div>
-  </main>
-</div>
+    <div class="grid-4" style="margin-bottom:0">
+      <a href="https://x.com/HouseGOP" target="_blank" class="tile t-green">
+        <div>
+          <div class="tile-tag">X / Twitter</div>
+          <div class="tile-title">@HouseGOP</div>
+        </div>
+        <div class="tile-sub">Official House GOP account</div>
+      </a>
+      <a href="https://x.com/SteveScalise" target="_blank" class="tile t-green">
+        <div>
+          <div class="tile-tag">Majority Leader</div>
+          <div class="tile-title">@SteveScalise</div>
+        </div>
+        <div class="tile-sub">Floor updates · Conference messaging</div>
+      </a>
+      <a href="https://x.com/SpeakerJohnson" target="_blank" class="tile t-green">
+        <div>
+          <div class="tile-tag">Speaker</div>
+          <div class="tile-title">@SpeakerJohnson</div>
+        </div>
+        <div class="tile-sub">Speaker statements &amp; priorities</div>
+      </a>
+      <a href="https://x.com/POTUS" target="_blank" class="tile t-green">
+        <div>
+          <div class="tile-tag">White House</div>
+          <div class="tile-title">@POTUS</div>
+        </div>
+        <div class="tile-sub">Presidential statements</div>
+      </a>
+    </div>
 
-<!-- PRESS DIRECTORY -->
-<div id="view-press" class="res-panel">
-  <div class="page-header">
-    <button class="back-btn" onclick="showLanding()">Resources</button>
-    <div class="panel-title">Press Directory</div>
-    <div class="panel-sub">Full contact database from your 2026 press list — national, local, bookers, specialty beats.</div>
-    <div class="page-rule"></div>
   </div>
-  <main class="main-inner">
-    <div class="dir-controls">
-      <input class="dir-search" type="text" placeholder="Search name, outlet, show, email…" id="dir-search" oninput="filterDir()">
-      <div class="filter-group" id="filter-group">
-        <button class="dir-filter active" onclick="setFilter('all',this)">All</button>
-        <button class="dir-filter" onclick="setFilter('National TV',this)">National TV</button>
-        <button class="dir-filter" onclick="setFilter('National Radio',this)">Radio</button>
-        <button class="dir-filter" onclick="setFilter('National Print',this)">National Print</button>
-        <button class="dir-filter" onclick="setFilter('Palm Beach',this)">Palm Beach</button>
-        <button class="dir-filter" onclick="setFilter('Treasure Coast',this)">Treasure Coast</button>
-        <button class="dir-filter" onclick="setFilter('Podcast',this)">Podcast</button>
-        <button class="dir-filter" onclick="setFilter('Foreign Affairs',this)">Foreign Affairs</button>
-        <button class="dir-filter" onclick="setFilter('Environment',this)">Environment</button>
-        <button class="dir-filter" onclick="setFilter('Veterans',this)">Veterans</button>
-        <button class="dir-filter" onclick="setFilter('Ways and Means',this)">Ways &amp; Means</button>
-        <button class="dir-filter" onclick="setFilter('Fox Schedule',this)">Fox Schedule</button>
-        <button class="dir-filter" onclick="setFilter('Capitol Hill',this)">Capitol Hill</button>
-      </div>
-      <div class="results-count" id="results-count"></div>
-    </div>
-    <div class="table-wrap">
-      <table class="dir-table">
-        <thead>
-          <tr>
-            <th onclick="sortTable('name')">Name ↕</th>
-            <th onclick="sortTable('org')">Outlet / Show ↕</th>
-            <th onclick="sortTable('dma')">DMA / Beat ↕</th>
-            <th onclick="sortTable('type')">Type ↕</th>
-            <th onclick="sortTable('role')">Role</th>
-            <th>Phone</th>
-            <th onclick="sortTable('email')">Email ↕</th>
-          </tr>
-        </thead>
-        <tbody id="dir-tbody"></tbody>
-      </table>
-    </div>
-  </main>
 </div>
-
-<!-- LOCAL OFFICIALS -->
-<div id="view-officials" class="res-panel">
-  <div class="page-header">
-    <button class="back-btn" onclick="showLanding()">Resources</button>
-    <div class="panel-title">Local Officials</div>
-    <div class="panel-sub">Mayors, commissioners, and city managers across the FL-21 district.</div>
-    <div class="page-rule"></div>
-  </div>
-  <main class="main-inner">
-    <div class="dir-controls">
-      <input class="dir-search" type="text" placeholder="Search name, city, position…" id="off-search" oninput="filterOfficials()">
-      <div class="filter-group">
-        <button class="dir-filter active" onclick="setOfficialFilter('all',this)">All</button>
-        <button class="dir-filter" onclick="setOfficialFilter('Palm Beach County',this)">Palm Beach County</button>
-        <button class="dir-filter" onclick="setOfficialFilter('Martin County',this)">Martin County</button>
-        <button class="dir-filter" onclick="setOfficialFilter('St. Lucie County',this)">St. Lucie County</button>
-      </div>
-      <div class="results-count" id="off-count"></div>
-    </div>
-    <div class="table-wrap">
-      <table class="dir-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Jurisdiction</th>
-            <th>Position</th>
-            <th>Phone</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody id="off-tbody"></tbody>
-      </table>
-    </div>
-  </main>
-</div>
-
-<footer>
-  <div class="footer-text">Rep. Brian Mast · FL-21 · <span>Pluribus</span> · Internal use only</div>
-  <div class="footer-text">Resources · Internal library</div>
-</footer>
 
 <script>
-document.getElementById('nav-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-
-const PRESS = [
-  {name:'Sarah Schornstein',org:'Fox Business',show:'',role:'Booker/Researcher',dma:'National TV',type:'National TV',phone:'212-601-2375 / 929-797-0195',email:'Sarah.Schornstein@fox.com'},
-  {name:'Ally Botto',org:'Fox News',show:'Fox & Friends',role:'Booker',dma:'National TV',type:'National TV',phone:'929-687-0566',email:'ally.botto@fox.com'},
-  {name:'Alexandra Zuccaro',org:'Fox News',show:'Fox & Friends Weekend',role:'Booking Producer',dma:'National TV',type:'National TV',phone:'917-846-6575',email:'alexandra.zuccaro@fox.com'},
-  {name:'Patrick Reap',org:'Newsmax 2',show:'National Update',role:'Booking Producer',dma:'National TV',type:'National TV',phone:'202-577-4913',email:'preap@newsmax.com'},
-  {name:'Debbie Berger',org:'CNN',show:'Situation Room',role:'Senior Editorial Producer',dma:'National TV',type:'National TV',phone:'202-676-7432',email:'debbie.berger@cnn.com'},
-  {name:'Laura Roberts',org:'CNN',show:'Situation Room',role:'Producer',dma:'National TV',type:'National TV',phone:'',email:'laura.roberts@cnn.com'},
-  {name:'Hank Butler',org:'CNN',show:'Laura Coates Live',role:'Editorial Producer',dma:'National TV',type:'National TV',phone:'929-446-5964',email:'hank.butler@cnn.com'},
-  {name:'Wendy Brokaw',org:'CNN',show:'The Lead w/ Jake Tapper',role:'Editorial Producer',dma:'National TV',type:'National TV',phone:'240-459-5429',email:'wendy.brokaw@cnn.com'},
-  {name:'Maggie Edwards',org:'Fox Business',show:"Varney & Co",role:'Booker',dma:'National TV',type:'National TV',phone:'332-227-4958',email:'maggie.edwards@fox.com'},
-  {name:'Bonnie Druker',org:'CNN',show:'CNN News Central',role:'Senior Editorial Producer',dma:'National TV',type:'National TV',phone:'646-581-1452',email:'Bonnie.Druker@CNN.com'},
-  {name:'David Goodman',org:'CNN',show:'CNN News Central 2-4p',role:'Senior Editorial Producer',dma:'National TV',type:'National TV',phone:'332-213-6775',email:'david.c.goodman@cnn.com'},
-  {name:'Theodore Stephan',org:'Fox News',show:'America Reports',role:'Senior Booking Producer',dma:'National TV',type:'National TV',phone:'646-960-2240',email:'Theodore.Stephan@fox.com'},
-  {name:'Jasmine Amro',org:'Fox News',show:'Sunday Morning Futures',role:'Booker',dma:'National TV',type:'National TV',phone:'',email:'Jasmine.Amro@fox.com'},
-  {name:'Jacob Miller',org:'OANN',show:'',role:'Producer/Writer',dma:'National TV',type:'National TV',phone:'',email:'Jacob.Miller@oann.com'},
-  {name:'Mansee Khurana',org:'NPR',show:'',role:'Producer Network Booking',dma:'National Radio',type:'National Radio',phone:'925-353-7897',email:'mkhurana@npr.org'},
-  {name:'Luca Balbo',org:'ABC',show:'ABC News Live Prime',role:'Producer',dma:'National TV',type:'National TV',phone:'845-625-8951',email:'Luca.Balbo@abc.com'},
-  {name:'Peter Caterina',org:'Fox Radio',show:'Kilmeade Radio',role:'Producer',dma:'National Radio',type:'National Radio',phone:'',email:'Peter.Caterina@fox.com'},
-  {name:'Michael Binns',org:'SiriusXM Patriot 125',show:'The Wilkow Majority',role:'Senior Producer',dma:'National Radio',type:'National Radio',phone:'646-313-2290',email:'Michael.Binns@siriusxm.com'},
-  {name:'Justin Belisle',org:'The Dan Bongino Show',show:'',role:'Senior Producer/Booking',dma:'Podcast',type:'Podcast',phone:'772-485-7089',email:'justin@bongino.com'},
-  {name:'Kimberly Miller',org:'Palm Beach Post',show:'',role:'Reporter',dma:'Palm Beach',type:'National Print',phone:'561-820-4435',email:'kmiller@pbpost.com'},
-  {name:'Jane Musgrave',org:'Palm Beach Post',show:'',role:'Reporter',dma:'Palm Beach',type:'National Print',phone:'561-820-4457',email:'jmusgrave@pbpost.com'},
-  {name:'Frank Cerabino',org:'Palm Beach Post',show:'',role:'Columnist',dma:'Palm Beach',type:'National Print',phone:'',email:'frank_cerabino@pbpost.com'},
-  {name:'Wayne Washington',org:'Palm Beach Post',show:'',role:'Political Reporter',dma:'Palm Beach',type:'National Print',phone:'',email:'wwashington@pbpost.com'},
-  {name:'Adam Willson',org:'St. Lucie Voice',show:'',role:'Reporter',dma:'Treasure Coast',type:'National Print',phone:'',email:'alatenwillson@gmail.com'},
-  {name:'Will Greenlee',org:'TCPalm',show:'',role:'Breaking News Reporter',dma:'Treasure Coast',type:'National Print',phone:'772-692-8936',email:'will.greenlee@tcpalm.com'},
-  {name:'Melissa Holsman',org:'TCPalm',show:'',role:'Investigative Reporter',dma:'Treasure Coast',type:'National Print',phone:'772-221-4213',email:'melissa.holsman@tcpalm.com'},
-  {name:'Cheryl Smith',org:'TCPalm',show:'',role:'Politics Editor',dma:'Treasure Coast',type:'National Print',phone:'772-409-1331',email:'cheryl.smith@tcpalm.com'},
-  {name:'Adam Neal',org:'TCPalm',show:'',role:'Managing Editor',dma:'Treasure Coast',type:'National Print',phone:'772-978-2319',email:'adam.neal@tcpalm.com'},
-  {name:'Dan Rorabaugh',org:'TCPalm',show:'',role:'Planning Editor',dma:'Treasure Coast',type:'National Print',phone:'772-223-4757',email:'drorabaugh@gannett.com'},
-  {name:'Lamaur Stancil',org:'TCPalm',show:'',role:'Breaking News Reporter',dma:'Treasure Coast',type:'National Print',phone:'772-978-2374',email:'lamaur.stancil@tcpalm.com'},
-  {name:'Michael Sokol',org:'WPBF (ABC)',show:'',role:'Assignment Manager',dma:'Palm Beach',type:'National TV',phone:'561-514-7531',email:'MSokol@hearst.com'},
-  {name:'Patricia Mucerino',org:'WPBF (ABC)',show:'',role:'Assignment Editor',dma:'Palm Beach',type:'National TV',phone:'561-624-6398',email:'pmucerino@hearst.com'},
-  {name:'Terri Parker',org:'WPBF (ABC)',show:'',role:'Reporter',dma:'Palm Beach',type:'National TV',phone:'',email:'tparker@hearst.com'},
-  {name:'Angela Rozier',org:'WPBF (ABC)',show:'',role:'Reporter',dma:'Palm Beach',type:'National TV',phone:'',email:'arozier@hearst.com'},
-  {name:'Jade Jarvis',org:'WPBF (ABC)',show:'',role:'Reporter',dma:'Palm Beach',type:'National TV',phone:'561-629-4715',email:'Jade.Jarvis@hearst.com'},
-  {name:'Jon Shainman',org:'WPTV (NBC)',show:'',role:'Reporter',dma:'Palm Beach',type:'National TV',phone:'',email:'JShainman@wptv.com'},
-  {name:'Hollani Davis',org:'WPTV (NBC)',show:'',role:'Anchor',dma:'Palm Beach',type:'National TV',phone:'',email:'hollani.davis@wptv.com'},
-  {name:'Kate Hussey',org:'WPTV (NBC)',show:'',role:'Reporter',dma:'Palm Beach',type:'National TV',phone:'561-718-5938',email:'kate.hussey@wptv.com'},
-  {name:'Cassandra Garcia',org:'WPTV (NBC)',show:'',role:'Reporter',dma:'Palm Beach',type:'National TV',phone:'561-356-0437',email:'cassandra.garcia@wptv.com'},
-  {name:'Brian Mudd',org:'WJNO',show:'',role:'Program Director/Host',dma:'Palm Beach',type:'National Radio',phone:'561-616-6756',email:'brianmudd@iheartmedia.com'},
-  {name:'Joel Malkin',org:'WJNO',show:'',role:'News Director',dma:'Palm Beach',type:'National Radio',phone:'561-616-6758',email:'JoelMalkin@iheartmedia.com'},
-  {name:'Sarah Ferris',org:'Politico',show:'',role:'Minority House Reporter',dma:'Capitol Hill',type:'National Print',phone:'203-815-3947',email:'sferris@politico.com'},
-  {name:'Chad Pergram',org:'Fox News',show:'',role:'Senior Congressional Correspondent',dma:'Capitol Hill',type:'National TV',phone:'202-253-5295',email:'chad.pergram@fox.com'},
-  {name:'Melanie Zanona',org:'CNN',show:'',role:'Reporter',dma:'Capitol Hill',type:'National TV',phone:'',email:'mzanona@thehill.com'},
-  {name:'Jake Sherman',org:'Punchbowl News',show:'',role:'Congressional Reporter',dma:'Capitol Hill',type:'National Print',phone:'',email:'jake@punchbowl.news'},
-  {name:'Annie Grayer',org:'CNN',show:'',role:'Reporter',dma:'Capitol Hill',type:'National TV',phone:'',email:'agrayer@cnn.com'},
-  {name:'Andrew Desiderio',org:'Politico',show:'',role:'Congressional Reporter',dma:'Capitol Hill',type:'National Print',phone:'215-255-5014',email:'adesiderio@politico.com'},
-  {name:'Kadia Goba',org:'Axios',show:'',role:'Congressional Reporter',dma:'Capitol Hill',type:'National Print',phone:'',email:'kadia.goba@axios.com'},
-  {name:'Lisa Desjardins',org:'PBS NewsHour',show:'',role:'Correspondent',dma:'Capitol Hill',type:'National TV',phone:'202-379-6015',email:'ldesjardins@newshour.org'},
-  {name:'Marianna Sotomayor',org:'NBC News',show:'',role:'Capitol Hill Associate Producer',dma:'Capitol Hill',type:'National TV',phone:'202-657-9110',email:'Marianna.sotomayor@nbcuni.com'},
-  {name:'Natalie Andrews',org:'Wall Street Journal',show:'',role:'Capitol Hill Reporter',dma:'Capitol Hill',type:'National Print',phone:'202-862-1386',email:'natalie.andrews@WSJ.COM'},
-  {name:'Claudia Grisales',org:'NPR',show:'',role:'Congressional Reporter',dma:'Capitol Hill',type:'National Radio',phone:'202-513-3709',email:'cgrisales@npr.org'},
-  {name:'Lisa Mascaro',org:'AP',show:'',role:'Chief Congressional Correspondent',dma:'Capitol Hill',type:'National Print',phone:'202-641-9490',email:'lmascaro@ap.org'},
-  {name:'Andrew Murray',org:'Fox News',show:'Fox & Friends',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'',email:'Andrew.Murray@foxnews.com'},
-  {name:'Nicole Croteau',org:'Fox News',show:'Fox & Friends',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'929-505-4995',email:'nicole.croteau@fox.com'},
-  {name:'Ellie Bufkin',org:'Fox News',show:'Fox & Friends',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'917-843-6348',email:'ellie.bufkin@fox.com'},
-  {name:'Julie Talarico',org:'Fox News',show:"America's Newsroom",role:'Senior Booker',dma:'Fox Schedule',type:'National TV',phone:'202-412-6825',email:'julie.talarico@fox.com'},
-  {name:'Ryan Tillman',org:'Fox News',show:"America's Newsroom",role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'202-381-6326',email:'ryan.tillman@fox.com'},
-  {name:'Kaitlyn Chamberlin',org:'Fox News',show:'Faulkner Focus',role:'Senior Booking Producer',dma:'Fox Schedule',type:'National TV',phone:'646-509-8051',email:'kaitlyn.chamberlin@fox.com'},
-  {name:'Courtney Leopold',org:'Fox News',show:'The Story w/ MacCallum',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'929-243-2657',email:'courtney.leopold@fox.com'},
-  {name:'Bryn McCarthy',org:'Fox News',show:'Special Report w/ Bret Baier',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'202-860-6319',email:'bryn.mccarthy@fox.com'},
-  {name:'Colin Sacco',org:'Fox News',show:'Hannity',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'347-949-2200',email:'colin.sacco@fox.com'},
-  {name:'Alyssa Carey',org:'Fox News',show:'Hannity',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'646-256-8439',email:'alyssa.carey@fox.com'},
-  {name:'Tara Nicaj',org:'Fox News',show:'Life Liberty & Levin',role:'Producer',dma:'Fox Schedule',type:'National TV',phone:'917-821-8351',email:'tara.nicaj@fox.com'},
-  {name:'Emily Tubb',org:'Fox News',show:'Sunday Morning Futures',role:'Booking Producer',dma:'Fox Schedule',type:'National TV',phone:'646-957-5948',email:'emily.tubb@fox.com'},
-  {name:'Antaria Phillips',org:'Fox News',show:'Fox Report w/ Jon Scott',role:'Weekend Booking Producer',dma:'Fox Schedule',type:'National TV',phone:'646-574-5020',email:'antaria.phillips@fox.com'},
-  {name:'Christina Robbins',org:'Fox News',show:'DC Booking',role:'DC Booking Supervisor',dma:'Fox Schedule',type:'National TV',phone:'202-824-6321',email:'christina.robbins@foxnews.com'},
-  {name:'JJ Smith',org:'Fox Business',show:'Mornings with Maria',role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'929-286-6384',email:'jj.smith@fox.com'},
-  {name:'Ari Chavez',org:'Fox Business',show:"Varney & Company",role:'Booker',dma:'Fox Schedule',type:'National TV',phone:'347-702-3164',email:'ari.chavez@fox.com'},
-  {name:'Jenna DeThomasis',org:'Fox Business',show:'Cavuto: Coast to Coast',role:'Booker/Segment Producer',dma:'Fox Schedule',type:'National TV',phone:'646-629-1991',email:'jenna.dethomasis@fox.com'},
-  {name:'Lauren Peake',org:'Fox Business',show:'The Evening Edit',role:'Booker/Researcher',dma:'Fox Schedule',type:'National TV',phone:'929-656-0928',email:'lauren.peake@fox.com'},
-  {name:'Nahal Toosi',org:'Politico',show:'',role:'Senior Foreign Affairs Correspondent',dma:'Foreign Affairs',type:'National Print',phone:'',email:'ntoosi@politico.com'},
-  {name:'Matt Berg',org:'Politico',show:'',role:'National Security Reporter',dma:'Foreign Affairs',type:'National Print',phone:'',email:'mberg@politico.com'},
-  {name:'Jennifer Griffin',org:'Fox News',show:'',role:'National Security Correspondent',dma:'Foreign Affairs',type:'National TV',phone:'',email:'Jennifer.Griffin@foxnews.com'},
-  {name:'Trey Yingst',org:'Fox News',show:'',role:'Foreign Correspondent - Israel',dma:'Foreign Affairs',type:'National TV',phone:'',email:'Trey.Yingst@foxnews.com'},
-  {name:'Natasha Bertrand',org:'CNN',show:'',role:'Pentagon Correspondent',dma:'Foreign Affairs',type:'National TV',phone:'',email:'natasha.bertrand@cnn.com'},
-  {name:'Andrea Mitchell',org:'NBC',show:'',role:'Chief Foreign Affairs Correspondent',dma:'Foreign Affairs',type:'National TV',phone:'',email:'Andrea.Mitchell@nbcuni.com'},
-  {name:'Martha Raddatz',org:'ABC',show:'',role:'Chief Global Affairs Correspondent',dma:'Foreign Affairs',type:'National TV',phone:'',email:'Martha.Raddatz@abc.com'},
-  {name:'Adam Kredo',org:'Washington Free Beacon',show:'',role:'Defense & Foreign Affairs Reporter',dma:'Foreign Affairs',type:'National Print',phone:'267-968-7292',email:'kredo@freebeacon.com'},
-  {name:'Jack Detsch',org:'Foreign Policy',show:'',role:'Pentagon & National Security Reporter',dma:'Foreign Affairs',type:'National Print',phone:'',email:'jack.detsch@foreignpolicy.com'},
-  {name:'Patricia Zengerle',org:'Reuters',show:'',role:'National Security & Foreign Policy',dma:'Foreign Affairs',type:'National Print',phone:'202-250-9928',email:'patricia.zengerle@thomsonreuters.com'},
-  {name:'Nancy Youssef',org:'Wall Street Journal',show:'',role:'National Security Correspondent',dma:'Foreign Affairs',type:'National Print',phone:'',email:'nancy.youssef@wsj.com'},
-  {name:'David Sanger',org:'New York Times',show:'',role:'Chief Washington Correspondent',dma:'Foreign Affairs',type:'National Print',phone:'',email:'sanger@nytimes.com'},
-  {name:'Eve Samples',org:'Friends of the Everglades',show:'',role:'Communications',dma:'Environment',type:'National Print',phone:'',email:'eve.samples@everglades.org'},
-  {name:'Mark Perry',org:'Florida Oceanographic Society',show:'',role:'Director',dma:'Environment',type:'National Print',phone:'772-486-3858',email:'mperry@floridaocean.org'},
-  {name:'Eric Eikenberg',org:'Everglades Foundation',show:'',role:'CEO',dma:'Environment',type:'National Print',phone:'',email:'eric@evergladesfoundation.org'},
-  {name:'Jenny Staletovich',org:'WLRN',show:'',role:'Environmental Reporter',dma:'Environment',type:'National TV',phone:'',email:'JStaletovich@wlrnnews.org'},
-  {name:'Bruce Ritchie',org:'Politico',show:'',role:'Florida environment & energy reporter',dma:'Environment',type:'National Print',phone:'',email:'britchie@politico.com'},
-  {name:'Donovan Slack',org:'USA Today',show:'',role:'Veterans Affairs Correspondent',dma:'Veterans',type:'National Print',phone:'703-854-8926',email:'dslack@usatoday.com'},
-  {name:'Leo Shane',org:'Military Times',show:'',role:'Reporter',dma:'Veterans',type:'National Print',phone:'',email:'lshane@militarytimes.com'},
-  {name:'Nikki Wentling',org:'Stars & Stripes',show:'',role:'Reporter',dma:'Veterans',type:'National Print',phone:'',email:'wentling.nikki@stripes.com'},
-  {name:'Eric Dehm',org:'Connecting Vets',show:'',role:'Host',dma:'Veterans',type:'Podcast',phone:'202-971-8050',email:'eric@connectingvets.com'},
-  {name:'Abbie Bennett',org:'Connecting Vets',show:'',role:'Reporter',dma:'Veterans',type:'National Print',phone:'',email:'abbie@connectingvets.com'},
-  {name:'Hope Yen',org:'AP',show:'',role:'Veterans Correspondent',dma:'Veterans',type:'National Print',phone:'202-641-9459',email:'HYen@ap.org'},
-  {name:"Katy O'Donnell",org:'Politico',show:'',role:'Tax Reporter',dma:'Ways and Means',type:'National Print',phone:'',email:'kodonnell@politico.com'},
-  {name:'Laura Davidson',org:'Bloomberg',show:'',role:'Tax Reporter',dma:'Ways and Means',type:'National Print',phone:'',email:'ldavison@bna.com'},
-  {name:'Dylan Moroses',org:'Tax Notes Today',show:'',role:'Reporter',dma:'Ways and Means',type:'National Print',phone:'703-531-4837',email:'dylan.moroses@taxanalysts.org'},
-  {name:'William Hoffman',org:'Tax Notes Today',show:'',role:'IRS Reporter',dma:'Ways and Means',type:'National Print',phone:'703-864-6007',email:'william.hoffman@taxanalysts.org'},
-  {name:'Sarah Baker',org:'MSNBC',show:'Daytime',role:'Political Booking',dma:'National TV',type:'National TV',phone:'202-885-4533',email:'sarah.baker@nbcuni.com'},
-  {name:'Carly Rubel',org:'MSNBC',show:'MTP Daily',role:'Booking Producer',dma:'National TV',type:'National TV',phone:'646-593-0973',email:'Carly.Rubel@nbcuni.com'},
-  {name:'Gregory Overzat',org:'MSNBC',show:'Kasie DC',role:'Booking Producer',dma:'National TV',type:'National TV',phone:'202-661-2533',email:'Gregory.Overzat@nbcuni.com'},
-  {name:'Liz Alesse',org:'ABC',show:'This Week',role:'Senior Producer',dma:'National TV',type:'National TV',phone:'202-222-7841',email:'liz.alesse@abc.com'},
-  {name:'Mae Joo',org:'ABC',show:'This Week',role:'Coordinating Producer',dma:'National TV',type:'National TV',phone:'202-510-3056',email:'mae.joo@abc.com'},
-  {name:'Avery Miller',org:'ABC',show:'Powerhouse Politics Podcast',role:'Producer',dma:'Podcast',type:'Podcast',phone:'202-744-6642',email:'avery.s.miller@abc.com'},
-  {name:'Catherine Reynolds',org:'CBS News',show:'Face the Nation',role:'Producer',dma:'National TV',type:'National TV',phone:'646-479-0131',email:'ReynoldsC@cbsnews.com'},
-  {name:'Rebecca Kaplan',org:'CBS News',show:'',role:'Capitol Hill Producer',dma:'Capitol Hill',type:'National TV',phone:'202-302-7249',email:'kaplanr@cbsnews.com'},
-  {name:'John Bachman',org:'Newsmax',show:'',role:'Sr VP Content',dma:'National TV',type:'National TV',phone:'561-686-1165',email:'johnb@newsmax.com'},
-  {name:'Corey Inganamort',org:'Newsmax',show:'Sean Spicer',role:'Producer',dma:'National TV',type:'National TV',phone:'',email:'Corey.Inganamort@gmail.com'},
-  {name:'Eric Price',org:'Newsmax',show:'American Agenda',role:'Booker',dma:'National TV',type:'National TV',phone:'',email:'ericp@newsmax.com'},
-  {name:'Marisa Schultz',org:'Fox News Digital',show:'',role:'Reporter',dma:'National TV',type:'National TV',phone:'202-819-5560',email:'marisa.schultz@fox.com'},
-  {name:'Jessica Chasmar',org:'Fox News Digital',show:'',role:'Reporter',dma:'National TV',type:'National TV',phone:'561-307-9042',email:'jessica.chasmar@fox.com'},
-  {name:'Hannah Bleau',org:'Breitbart',show:'',role:'Reporter',dma:'National Print',type:'National Print',phone:'',email:'hbleau@breitbart.com'},
-  {name:'Charlie Spiering',org:'Breitbart',show:'',role:'Reporter',dma:'National Print',type:'National Print',phone:'',email:'cspiering@breitbart.com'},
-  {name:'Peter Hasson',org:'Daily Caller',show:'',role:'Reporter',dma:'National Print',type:'National Print',phone:'',email:'phasson@dailycallernewsfoundation.org'},
-  {name:'Henry Rodgers',org:'Daily Caller',show:'',role:'Reporter',dma:'National Print',type:'National Print',phone:'',email:'hrodgers@dailycaller.com'},
-  {name:'Mollie Hemingway',org:'The Federalist',show:'',role:'Senior Editor',dma:'National Print',type:'National Print',phone:'',email:'mzhemingway@thefederalist.com'},
-  {name:'Jim Geraghty',org:'National Review',show:'',role:'Political Correspondent',dma:'National Print',type:'National Print',phone:'',email:'jgeraghty@nationalreview.com'},
-  {name:'Tim Alberta',org:'Politico',show:'',role:'Staff Writer',dma:'National Print',type:'National Print',phone:'',email:'talberta@politico.com'},
-];
-
-const OFFICIALS = [
-  {name:'Maria Marino',jurisdiction:'Palm Beach Gardens',position:'Mayor',county:'Palm Beach County',phone:'',email:'mmarino@pbgfl.com'},
-  {name:'Carl Woods',jurisdiction:'Palm Beach Gardens',position:'Vice Mayor',county:'Palm Beach County',phone:'',email:'cwoods@pbgfl.com'},
-  {name:'Jason Haselkorn',jurisdiction:'Juno Beach',position:'Mayor',county:'Palm Beach County',phone:'',email:'jhaselkorn@Juno-Beach.fl.us'},
-  {name:'Todd Wodraska',jurisdiction:'Jupiter',position:'Mayor',county:'Palm Beach County',phone:'',email:'toddw@jupiter.fl.us'},
-  {name:'Ron Delaney',jurisdiction:'Jupiter',position:'Vice Mayor',county:'Palm Beach County',phone:'',email:'rond@jupiter.fl.us'},
-  {name:'Mark Bernard',jurisdiction:'Palm Beach County',position:'Mayor',county:'Palm Beach County',phone:'',email:'MBernard@pbcgov.org'},
-  {name:'Dave Kerner',jurisdiction:'Palm Beach County',position:'Vice Mayor',county:'Palm Beach County',phone:'',email:'DKerner@pbcgov.org'},
-  {name:'Hal Valeche',jurisdiction:'Palm Beach County',position:'Commissioner',county:'Palm Beach County',phone:'',email:'HValeche@pbcgov.org'},
-  {name:'Scott Singer',jurisdiction:'Boca Raton',position:'Mayor',county:'Palm Beach County',phone:'',email:'ssinger@ci.boca-raton.fl.us'},
-  {name:'Steven Grant',jurisdiction:'Boynton Beach',position:'Mayor',county:'Palm Beach County',phone:'',email:'GrantS@bbfl.us'},
-  {name:'Shelly Petrolia',jurisdiction:'Delray Beach',position:'Mayor',county:'Palm Beach County',phone:'',email:'Petrolia@mydelraybeach.com'},
-  {name:'David Norris',jurisdiction:'North Palm Beach',position:'Mayor',county:'Palm Beach County',phone:'',email:'dnorris@village-npb.org'},
-  {name:"Michael O'Rourke",jurisdiction:'Lake Park',position:'Mayor',county:'Palm Beach County',phone:'',email:"mo'rourke@lakeparkflorida.gov"},
-  {name:'Catherine Higgins',jurisdiction:'Atlantis',position:'Mayor',county:'Palm Beach County',phone:'',email:'chiggins@atlantisfl.gov'},
-  {name:'Jay Foy',jurisdiction:'Haverhill',position:'Mayor',county:'Palm Beach County',phone:'',email:'jfoy@townofhaverhill-fl.gov'},
-  {name:'Rhoda Zelniker',jurisdiction:'Highland Beach',position:'Mayor',county:'Palm Beach County',phone:'',email:'rzelniker@highlandbeach.us'},
-  {name:'Roger Manning',jurisdiction:'Westlake',position:'Mayor',county:'Palm Beach County',phone:'',email:'rmanning@westlakegov.com'},
-  {name:'Joel Flores',jurisdiction:'Greenacres',position:'Mayor',county:'Palm Beach County',phone:'',email:'jflores@greenacresfl.gov'},
-  {name:'Michael Brown',jurisdiction:'Hypoluxo',position:'Mayor',county:'Palm Beach County',phone:'',email:'mcbrown@hypoluxo.org'},
-  {name:'MaryLynn Magar',jurisdiction:'State Rep. District 82',position:'State Representative',county:'Palm Beach County',phone:'561-371-3120',email:'MaryLynn.Magar@myfloridahouse.gov'},
-  {name:'Rick Roth',jurisdiction:'State Rep. District 85',position:'State Representative',county:'Palm Beach County',phone:'',email:'Rick.roth@myfloridahouse.gov'},
-  {name:'Doug Smith',jurisdiction:'Martin County',position:'Commissioner',county:'Martin County',phone:'772-221-2359',email:'dsmith@martin.fl.us'},
-  {name:'Stacy Hetherington',jurisdiction:'Martin County',position:'Commissioner',county:'Martin County',phone:'772-288-5421',email:'shetherington@martin.fl.us'},
-  {name:'Harold Jenkins',jurisdiction:'Martin County',position:'Commissioner',county:'Martin County',phone:'772-221-2357',email:'hjenkins@martin.fl.us'},
-  {name:'Sarah Heard',jurisdiction:'Martin County',position:'Commissioner',county:'Martin County',phone:'772-221-2358',email:'sheard@martin.fl.us'},
-  {name:'Edward Ciampini',jurisdiction:'Martin County',position:'Commissioner',county:'Martin County',phone:'772-221-1357',email:'eciampi@martin.fl.us'},
-  {name:'Toby Overdorf',jurisdiction:'State Rep. District 83',position:'State Representative',county:'Martin County',phone:'772-221-4961',email:'Toby.Overdorf@myfloridahouse.gov'},
-  {name:'Becky Bruner',jurisdiction:'Stuart',position:'Mayor',county:'Martin County',phone:'772-288-5312',email:'bbruner@ci.stuart.fl.us'},
-  {name:'Eula Clarke',jurisdiction:'Stuart',position:'Vice Mayor',county:'Martin County',phone:'772-288-5312',email:'eclarke@ci.stuart.fl.us'},
-  {name:'Kelli Glass Leighton',jurisdiction:'Stuart',position:'Commissioner',county:'Martin County',phone:'772-288-5312',email:'kglass@ci.stuart.fl.us'},
-  {name:'Susan Gibbs',jurisdiction:'Indiantown',position:'Mayor',county:'Martin County',phone:'772-597-9900',email:'sthomas@indiantown.org'},
-  {name:'Vinny Barile',jurisdiction:'Sewalls Point',position:'Mayor',county:'Martin County',phone:'772-287-2455',email:'vbarile@sewallspoint.org'},
-  {name:'Whitney Pidot',jurisdiction:'Jupiter Island',position:'Mayor',county:'Martin County',phone:'772-545-0100',email:'thmail@tji.martin.fl.us'},
-  {name:'Martha Ann Kneiss',jurisdiction:'Martin County',position:'Public Affairs',county:'Martin County',phone:'772-288-5566',email:'mkneiss@martin.fl.us'},
-  {name:'Chris Dzadovsky',jurisdiction:'St. Lucie County',position:'Commissioner',county:'St. Lucie County',phone:'',email:'dzadovskyc@stlucieco.org'},
-  {name:'Sean Mitchell',jurisdiction:'St. Lucie County',position:'Commissioner',county:'St. Lucie County',phone:'',email:'MitchellSE@stlucieco.org'},
-  {name:'Linda Bartz',jurisdiction:'St. Lucie County',position:'Commissioner',county:'St. Lucie County',phone:'',email:'BartzL@stlucieco.org'},
-  {name:'Frannie Hutchinson',jurisdiction:'St. Lucie County',position:'Commissioner',county:'St. Lucie County',phone:'',email:'hutchinsonf@stlucieco.org'},
-  {name:'Cathy Townsend',jurisdiction:'St. Lucie County',position:'Commissioner',county:'St. Lucie County',phone:'',email:'TownsendC@stlucieco.org'},
-  {name:'Greg Oravec',jurisdiction:'Port St. Lucie',position:'Mayor',county:'St. Lucie County',phone:'',email:'mayor@cityofpsl.com'},
-  {name:'Shannon Martin',jurisdiction:'Port St. Lucie',position:'Vice Mayor',county:'St. Lucie County',phone:'',email:'Shannon.Martin@cityofpsl.com'},
-  {name:'Stephanie Morgan',jurisdiction:'Port St. Lucie',position:'Councilwoman',county:'St. Lucie County',phone:'',email:'Stephanie.Morgan@cityofpsl.com'},
-  {name:'Jolien Caraballo',jurisdiction:'Port St. Lucie',position:'Councilwoman',county:'St. Lucie County',phone:'',email:'Jolien.Caraballo@cityofpsl.com'},
-  {name:'Cary Pigman',jurisdiction:'State Rep. District 55',position:'State Representative',county:'St. Lucie County',phone:'',email:'cary.pigman@myfloridahouse.gov'},
-  {name:'Erin Grall',jurisdiction:'State Rep. District 54',position:'State Representative',county:'St. Lucie County',phone:'',email:'Erin.grall@myfloridahouse.gov'},
-  {name:'Linda Hudson',jurisdiction:'Fort Pierce',position:'Mayor',county:'St. Lucie County',phone:'',email:'lhudson@city-ftpierce.com'},
-  {name:'Karen Ostrand',jurisdiction:'Ocean Breeze',position:'Mayor',county:'St. Lucie County',phone:'772-334-6826',email:'mayor@townofoceanbreeze.org'},
-];
-
-let currentFilter = 'all';
-let currentSort = {col:'name',asc:true};
-
-function dmaTagClass(dma) {
-  if (dma==='Palm Beach'||dma==='Treasure Coast') return 'bt-local';
-  if (dma==='National TV') return 'bt-tv';
-  if (dma==='National Radio') return 'bt-radio';
-  if (dma==='National Print'||dma==='Capitol Hill') return 'bt-print';
-  if (dma==='Podcast') return 'bt-podcast';
-  if (dma==='Foreign Affairs') return 'bt-foreign';
-  if (dma==='Environment') return 'bt-environment';
-  if (dma==='Veterans') return 'bt-veterans';
-  if (dma==='Ways and Means') return 'bt-ways';
-  if (dma==='Fox Schedule') return 'bt-tv';
-  return 'bt-print';
-}
-
-function renderPress() {
-  const q = document.getElementById('dir-search').value.toLowerCase();
-  const filtered = PRESS.filter(r => {
-    const matchFilter = currentFilter==='all' || r.dma===currentFilter || r.type===currentFilter;
-    const matchQ = !q || Object.values(r).join(' ').toLowerCase().includes(q);
-    return matchFilter && matchQ;
-  });
-  filtered.sort((a,b) => {
-    const av=(a[currentSort.col]||'').toLowerCase();
-    const bv=(b[currentSort.col]||'').toLowerCase();
-    return currentSort.asc ? av.localeCompare(bv) : bv.localeCompare(av);
-  });
-  document.getElementById('results-count').textContent = `${filtered.length} contacts`;
-  document.getElementById('dir-tbody').innerHTML = filtered.map(r => `
-    <tr>
-      <td class="dir-name">${r.name||'—'}</td>
-      <td class="dir-outlet">${r.org}${r.show?`<br><span style="font-size:10px;color:var(--text-dim)">${r.show}</span>`:''}</td>
-      <td><span class="beat-tag ${dmaTagClass(r.dma)}">${r.dma}</span></td>
-      <td style="font-size:10px;color:var(--text-dim)">${r.type}</td>
-      <td style="font-size:11px;color:var(--text-sec)">${r.role||'—'}</td>
-      <td class="dir-phone">${r.phone||'—'}</td>
-      <td class="dir-email">${r.email?`${r.email}<button class="copy-btn" onclick="copyEmail('${r.email}',this)">copy</button>`:'—'}</td>
-    </tr>
-  `).join('');
-}
-
-function setFilter(f,btn) {
-  currentFilter=f;
-  document.querySelectorAll('#view-press .dir-filter').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderPress();
-}
-function filterDir() { renderPress(); }
-function sortTable(col) {
-  if (currentSort.col===col) currentSort.asc=!currentSort.asc;
-  else { currentSort.col=col; currentSort.asc=true; }
-  renderPress();
-}
-function copyEmail(email,btn) {
-  navigator.clipboard.writeText(email).then(()=>{
-    btn.textContent='copied!';btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('copied');},1500);
-  });
-}
-
-let officialCountyFilter = 'all';
-function renderOfficials() {
-  const q = document.getElementById('off-search').value.toLowerCase();
-  const filtered = OFFICIALS.filter(o => {
-    const matchCounty = officialCountyFilter==='all'||o.county===officialCountyFilter;
-    const matchQ = !q||Object.values(o).join(' ').toLowerCase().includes(q);
-    return matchCounty && matchQ;
-  });
-  document.getElementById('off-count').textContent = `${filtered.length} contacts`;
-  document.getElementById('off-tbody').innerHTML = filtered.map(o=>`
-    <tr>
-      <td class="dir-name">${o.name}</td>
-      <td class="dir-outlet">${o.jurisdiction}</td>
-      <td style="font-size:11px;color:var(--text-sec)">${o.position}</td>
-      <td class="dir-phone">${o.phone||'—'}</td>
-      <td class="dir-email">${o.email?`${o.email}<button class="copy-btn" onclick="copyEmail('${o.email}',this)">copy</button>`:'—'}</td>
-    </tr>
-  `).join('');
-}
-function setOfficialFilter(f,btn) {
-  officialCountyFilter=f;
-  document.querySelectorAll('#view-officials .dir-filter').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderOfficials();
-}
-function filterOfficials() { renderOfficials(); }
-
-function showPanel(id) {
-  document.getElementById('view-landing').style.display='none';
-  document.querySelectorAll('.res-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('view-'+id).classList.add('active');
-  window.scrollTo(0,0);
-  if (id==='press') renderPress();
-  if (id==='officials') renderOfficials();
-}
-function showLanding() {
-  document.getElementById('view-landing').style.display='block';
-  document.querySelectorAll('.res-panel').forEach(p=>p.classList.remove('active'));
-  window.scrollTo(0,0);
-}
-
-document.getElementById('count-press').textContent = PRESS.length + ' contacts';
-document.getElementById('count-officials').textContent = OFFICIALS.length + ' officials';
-</script>
-
-<script>
-// ── LIVE CHYRON (matches dashboard) ──────────────────────────
-(function(){
-  const GUARDIAN_KEY = '94981b8b-9fdc-4fa5-bb48-1992aad9bfa6';
-  const CLIPS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUhXu1o6z68hw9uY1nuAikdoTPswTPxgLcicD8rkz-xm_j_Al3N9U4EJMjtCiTonT0y-22QfS_8R2I/pub?output=csv';
-  const SECTIONS = [{tag:'us-news',label:'US NEWS'},{tag:'politics',label:'POLITICS'},{tag:'world',label:'WORLD'},{tag:'business',label:'BUSINESS'}];
-
-  function parseCSV(text){
-    const rows=[];const lines=text.trim().split('\n');
-    const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
-    for(let i=1;i<lines.length;i++){
-      const fields=[];let cur='',inQ=false;
-      for(const ch of lines[i]){if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){fields.push(cur.trim());cur='';}else cur+=ch;}
-      fields.push(cur.trim());
-      if(fields.length>=2&&fields[0]){const obj={};headers.forEach((h,j)=>obj[h]=(fields[j]||'').replace(/^"|"$/g,''));rows.push(obj);}
-    }return rows;
-  }
-
-  async function initChyron(){
-    const inner=document.querySelector('.chyron-inner');
-    if(!inner)return;
-    let items=[];
-
-    // 1. Try clips sheet first
-    try{
-      const res=await fetch(CLIPS_CSV+'&t='+Date.now(),{cache:'no-store'});
-      if(res.ok){const text=await res.text();const lines=text.trim().split('\n');
-        if(lines.length>1){const rows=parseCSV(text);
-          const dates=[...new Set(rows.map(r=>r.date))].sort().reverse();
-          rows.filter(r=>r.date===dates[0]).forEach(r=>{if(r.headline&&r.headline.length>8)items.push({title:r.headline,label:r.outlet||'CLIPS',link:r.url||'#'});});
-        }
-      }
-    }catch(e){}
-
-    // 2. Try Guardian
-    if(items.length<4){
-      try{
-        const reqs=SECTIONS.map(s=>fetch(`https://content.guardianapis.com/search?section=${s.tag}&api-key=${GUARDIAN_KEY}&page-size=6&order-by=newest&show-fields=headline`,{cache:'no-store'}).then(r=>r.json()).then(d=>{(d?.response?.results||[]).forEach(r=>{items.push({title:(r.fields?.headline||r.webTitle||'').replace(/ \| .*/,'').trim(),link:r.webUrl||'#',label:s.label});});}).catch(()=>{}));
-        await Promise.allSettled(reqs);
-      }catch(e){}
-    }
-
-    if(items.length<4)return; // keep static fallback
-
-    items=items.sort(()=>Math.random()-.5);
-    const makeItem=({title,label,link})=>{
-      const safe=title.replace(/"/g,'&quot;').toUpperCase().slice(0,130);
-      const href=(link||'#').replace(/'/g,'%27');
-      return `<div class="chyron-item" onclick="if('${href}'!=='#')window.open('${href}','_blank')" style="cursor:pointer"><span class="chyron-label">${label}</span>${safe}</div><div class="chyron-item"><span class="chyron-dot"></span></div>`;
-    };
-    const half=items.map(makeItem).join('');
-    inner.innerHTML=half+half;
-    const totalChars=items.reduce((n,i)=>n+i.title.length,0);
-    inner.style.animationDuration=Math.max(40,Math.min(90,Math.round(totalChars*0.28)))+'s';
-  }
-  initChyron();
-  setInterval(initChyron,15*60*1000);
-})();
+document.getElementById('navDate').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 </script>
 </body>
 </html>
