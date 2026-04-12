@@ -67,6 +67,17 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 .t-purple .tile-title{color:#cdd0f0}
 .t-purple .tile-sub{color:#5a6090}
 
+/* Calendar tile — slightly special to hint at its richness */
+.tile-cal-badge {
+  position:absolute;
+  top:10px;right:12px;
+  font-size:7.5px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;
+  background:rgba(184,150,62,0.18);
+  color:#b8963e;
+  padding:2px 6px;border-radius:3px;
+}
+
 /* ── APPROVALS ──────────────────────────────────────────────────────────── */
 .approvals-section{margin-top:18px}
 .approvals-divider{display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -90,110 +101,27 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 .k-pill.sky{background:rgba(107,174,214,0.28)}
 
 /* ── MENTIONS CAROUSEL ──────────────────────────────────────────────────── */
-.mentions-carousel-section{
-  margin:24px 0 0;
-  padding-top:20px;
-  border-top:1px solid rgba(255,255,255,0.06);
-}
-.mc-label-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:12px;
-}
-.mc-eyebrow{
-  font-size:9px;
-  font-weight:700;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  color:#8b0000;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.mc-eyebrow-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#8b0000;
-  animation:mc-pulse 2s ease-in-out infinite;
-}
-@keyframes mc-pulse{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:.5;transform:scale(.8)}
-}
-.mc-view-all{
-  font-size:9px;font-weight:700;letter-spacing:.07em;
-  text-transform:uppercase;color:#4a4a42;
-  text-decoration:none;transition:color .15s;
-}
+.mentions-carousel-section{margin:24px 0 0;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)}
+.mc-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.mc-eyebrow{font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8b0000;display:flex;align-items:center;gap:6px}
+.mc-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:#8b0000;animation:mc-pulse 2s ease-in-out infinite}
+@keyframes mc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.mc-view-all{font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#4a4a42;text-decoration:none;transition:color .15s}
 .mc-view-all:hover{color:#b8963e}
-
-/* Stage — fixed height so page doesn't jump */
-.mc-stage{
-  position:relative;
-  height:100px;
-  cursor:pointer;
-}
-
-.mc-slide{
-  position:absolute;
-  inset:0;
-  opacity:0;
-  transition:opacity 1.2s ease;
-  pointer-events:none;
-  background:#120808;
-  border:1px solid rgba(139,0,0,0.2);
-  border-left:3px solid #8b0000;
-  border-radius:5px;
-  padding:13px 18px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-.mc-slide.active{opacity:1;pointer-events:auto;}
-
+.mc-stage{position:relative;height:100px;cursor:pointer}
+.mc-slide{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease;pointer-events:none;background:#120808;border:1px solid rgba(139,0,0,0.2);border-left:3px solid #8b0000;border-radius:5px;padding:13px 18px;display:flex;flex-direction:column;justify-content:space-between}
+.mc-slide.active{opacity:1;pointer-events:auto}
 .mc-slide-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:5px}
-.mc-slide-outlet{
-  font-size:8px;font-weight:700;letter-spacing:.08em;
-  text-transform:uppercase;color:#c06060;
-  background:rgba(139,0,0,0.15);
-  padding:2px 7px;border-radius:3px;
-  white-space:nowrap;flex-shrink:0;
-}
-.mc-slide-headline{
-  font-size:13px;font-weight:600;
-  color:#e8c8c8;line-height:1.3;flex:1;
-}
-.mc-slide-excerpt{
-  font-size:10.5px;color:#885858;
-  line-height:1.45;font-style:italic;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.mc-slide-footer{
-  display:flex;align-items:center;gap:14px;margin-top:6px;
-}
-.mc-stat{
-  font-size:9px;font-weight:700;letter-spacing:.06em;
-  color:#4a4a42;text-transform:uppercase;
-}
+.mc-slide-outlet{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#c06060;background:rgba(139,0,0,0.15);padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.mc-slide-headline{font-size:13px;font-weight:600;color:#e8c8c8;line-height:1.3;flex:1}
+.mc-slide-excerpt{font-size:10.5px;color:#885858;line-height:1.45;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-slide-footer{display:flex;align-items:center;gap:14px;margin-top:6px}
+.mc-stat{font-size:9px;font-weight:700;letter-spacing:.06em;color:#4a4a42;text-transform:uppercase}
 .mc-stat span{color:#885858;font-weight:400;text-transform:none;letter-spacing:0}
-
-/* Pip dots */
 .mc-pip-row{display:flex;gap:5px;margin-top:10px;justify-content:center}
-.mc-pip{
-  width:20px;height:2px;border-radius:1px;
-  background:rgba(255,255,255,0.08);
-  cursor:pointer;transition:background .4s;
-}
-.mc-pip.active{background:#8b0000;}
-
-/* No mentions fallback */
-.mc-empty{
-  padding:24px 18px;font-size:11px;
-  color:#4a4a42;letter-spacing:.05em;
-  text-transform:uppercase;text-align:center;
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:5px;
-}
+.mc-pip{width:20px;height:2px;border-radius:1px;background:rgba(255,255,255,0.08);cursor:pointer;transition:background .4s}
+.mc-pip.active{background:#8b0000}
+.mc-empty{padding:24px 18px;font-size:11px;color:#4a4a42;letter-spacing:.05em;text-transform:uppercase;text-align:center;border:1px solid rgba(255,255,255,0.05);border-radius:5px}
 </style>
 </head>
 <body>
@@ -263,12 +191,14 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
         </div>
         <div class="tile-sub">55 lists · real send history</div>
       </a>
-      <a href="dashboard_v2.html" class="tile t-gold">
+      <!-- CALENDAR TILE — updated href -->
+      <a href="calendar.html" class="tile t-gold">
+        <span class="tile-cal-badge">2026</span>
         <div>
           <div class="tile-tag">Schedule</div>
           <div class="tile-title">Calendar</div>
         </div>
-        <div class="tile-sub">Hearings · Votes · Milestones</div>
+        <div class="tile-sub">Session · Observances · Legislative</div>
       </a>
     </div>
 
@@ -340,7 +270,6 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
         <div class="approvals-divider-label">Approvals</div>
         <div class="approvals-divider-line"></div>
       </div>
-
       <div class="grid-2">
         <a href="social-approvals.html" class="approval-tile">
           <div class="approval-header">
@@ -356,7 +285,6 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
             <div class="k-col"><div class="k-col-label">Posted</div><div class="k-pill"></div><div class="k-pill"></div><div class="k-pill"></div></div>
           </div>
         </a>
-
         <a href="strategy.html" class="approval-tile">
           <div class="approval-header">
             <div class="approval-title">Strategy</div>
@@ -376,10 +304,7 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
     <!-- MENTIONS CAROUSEL -->
     <div class="mentions-carousel-section">
       <div class="mc-label-row">
-        <span class="mc-eyebrow">
-          <span class="mc-eyebrow-dot"></span>
-          Mast Mentions
-        </span>
+        <span class="mc-eyebrow"><span class="mc-eyebrow-dot"></span>Mast Mentions</span>
         <a class="mc-view-all" href="mast-mentions.html">View all &rarr;</a>
       </div>
       <div class="mc-stage" id="mcStage">
@@ -392,160 +317,56 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 </div>
 
 <script>
-// ── DATE ────────────────────────────────────────────────────────────────────
 document.getElementById('navDate').textContent =
   new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 
-// ── CAROUSEL ─────────────────────────────────────────────────────────────────
 (function(){
   const SHEET_ID  = '15eRR2J10xIe1TRaXBJ4w4z-5IPag_m-NLPHROIbo4Bk';
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
-  const stage  = document.getElementById('mcStage');
-  const pipRow = document.getElementById('mcPips');
-  const empty  = document.getElementById('mcEmpty');
-
-  let mentions = [];
-  let current  = 0;
-  let timer    = null;
-  const INTERVAL = 7000;
-
-  function esc(s){
-    return String(s||'')
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function stripJunk(s){
-    return String(s||'')
-      .replace(/<[^>]+>/g,'')
-      .replace(/https?:\/\/\S+/g,'')
-      .replace(/\[.*?\]/g,'')
-      .replace(/\s{2,}/g,' ')
-      .trim();
-  }
-
-  function highlightMast(text){
-    return esc(stripJunk(text)).replace(
-      /(Brian Mast|Rep\.?\s*Mast|Mast)/g,
-      '<strong style="color:#ffffff;font-weight:700">$1</strong>'
-    );
-  }
-
-  // Split excerpt into sentences, return only those containing a Mast mention
-  function extractMastSentence(text){
-    if (!text) return '';
-    const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
-    const hits = sentences.filter(s => /Brian Mast|Rep\.?\s*Mast|\bMast\b/i.test(s));
-    return hits.length ? hits.join(' ').trim() : '';
-  }
-
+  const stage=document.getElementById('mcStage'),pipRow=document.getElementById('mcPips'),empty=document.getElementById('mcEmpty');
+  let mentions=[],current=0,timer=null;
+  const INTERVAL=7000;
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+  function stripJunk(s){return String(s||'').replace(/<[^>]+>/g,'').replace(/https?:\/\/\S+/g,'').replace(/\[.*?\]/g,'').replace(/\s{2,}/g,' ').trim()}
+  function highlightMast(t){return esc(stripJunk(t)).replace(/(Brian Mast|Rep\.?\s*Mast|Mast)/g,'<strong style="color:#ffffff;font-weight:700">$1</strong>')}
+  function extractMastSentence(t){if(!t)return'';const s=t.match(/[^.!?]+[.!?]*/g)||[t];const h=s.filter(x=>/Brian Mast|Rep\.?\s*Mast|\bMast\b/i.test(x));return h.length?h.join(' ').trim():''}
   async function load(){
-    try {
-      const res  = await fetch(SHEET_URL);
-      const text = await res.text();
-      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
-      mentions = json.table.rows
-        .map(r => {
-          // gviz returns timestamp col as "Date(2026,3,10,17,40,0)" — parse it
-          let tsRaw = r.c[0]?.v || '';
-          let dateStr = '';
-          if (typeof tsRaw === 'string' && tsRaw.startsWith('Date(')) {
-            const parts = tsRaw.replace('Date(','').replace(')','').split(',').map(Number);
-            const d = new Date(parts[0], parts[1], parts[2]);
-            dateStr = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-          }
-          // dateCollected is CM's own date string (col 4) — use it if present, else fall back
-          const dcRaw = r.c[4]?.v || '';
-          const dateCollected = dcRaw ? stripJunk(dcRaw) : dateStr;
-
-          return {
-            timestamp    : dateStr,
-            headline     : r.c[1]?.v || '',
-            outlet       : r.c[2]?.v || '',
-            market       : r.c[3]?.v || '',
-            dateCollected,
-            excerpt      : r.c[5]?.v || '',
-            audience     : r.c[6]?.v || '',
-            publicity    : r.c[7]?.v || '',
-          };
-        })
-        .filter(m => m.headline)
-        .reverse()   // newest first — sheet appends to bottom
-        .slice(0, 8);
-
+    try{
+      const res=await fetch(SHEET_URL);const text=await res.text();
+      const json=JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+      mentions=json.table.rows.map(r=>{
+        let tsRaw=r.c[0]?.v||'',dateStr='';
+        if(typeof tsRaw==='string'&&tsRaw.startsWith('Date(')){const p=tsRaw.replace('Date(','').replace(')','').split(',').map(Number);const d=new Date(p[0],p[1],p[2]);dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+        const dcRaw=r.c[4]?.v||'';const dateCollected=dcRaw?stripJunk(dcRaw):dateStr;
+        return{timestamp:dateStr,headline:r.c[1]?.v||'',outlet:r.c[2]?.v||'',market:r.c[3]?.v||'',dateCollected,excerpt:r.c[5]?.v||'',audience:r.c[6]?.v||'',publicity:r.c[7]?.v||''};
+      }).filter(m=>m.headline).reverse().slice(0,8);
       build();
-    } catch(e) {
-      empty.textContent = 'No mentions yet — alerts will appear here automatically.';
-    }
+    }catch(e){empty.textContent='No mentions yet — alerts will appear here automatically.'}
   }
-
   function build(){
-    // Clear existing slides (keep empty div for fallback)
-    stage.querySelectorAll('.mc-slide').forEach(s => s.remove());
-    pipRow.innerHTML = '';
-
-    if (!mentions.length) {
-      empty.style.display = 'block';
-      return;
-    }
-    empty.style.display = 'none';
-
-    mentions.forEach((m, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'mc-slide' + (i === 0 ? ' active' : '');
-
-      const cleanAudience  = stripJunk(m.audience);
-      const cleanPublicity = stripJunk(m.publicity);
-      const cleanDate      = stripJunk(m.dateCollected);
-      const cleanExcerpt = stripJunk(m.excerpt);
-      // Extract only the sentence(s) containing a Mast mention
-      const mastSentence = extractMastSentence(cleanExcerpt);
-
-      let footerHTML = '';
-      if (cleanAudience)  footerHTML += `<div class="mc-stat">Audience <span>${Number(cleanAudience.replace(/,/g,'')).toLocaleString()}</span></div>`;
-      if (cleanPublicity) footerHTML += `<div class="mc-stat">Est. Value <span>${esc(cleanPublicity)}</span></div>`;
-      if (cleanDate)      footerHTML += `<div class="mc-stat">Date <span>${esc(cleanDate)}</span></div>`;
-
-      slide.innerHTML = `
-        <div>
-          <div class="mc-slide-top">
-            <div class="mc-slide-headline">${highlightMast(m.headline)}</div>
-            <div class="mc-slide-outlet">${esc(stripJunk(m.outlet))}${m.market ? ' · ' + esc(stripJunk(m.market)) : ''}</div>
-          </div>
-          ${mastSentence ? `<div class="mc-slide-excerpt">"${highlightMast(mastSentence)}"</div>` : ''}
-        </div>
-        <div class="mc-slide-footer">${footerHTML}</div>
-      `;
-
-      slide.addEventListener('click', () => { window.location.href = 'mast-mentions.html'; });
+    stage.querySelectorAll('.mc-slide').forEach(s=>s.remove());pipRow.innerHTML='';
+    if(!mentions.length){empty.style.display='block';return}
+    empty.style.display='none';
+    mentions.forEach((m,i)=>{
+      const slide=document.createElement('div');slide.className='mc-slide'+(i===0?' active':'');
+      const cleanA=stripJunk(m.audience),cleanP=stripJunk(m.publicity),cleanD=stripJunk(m.dateCollected),mastSentence=extractMastSentence(stripJunk(m.excerpt));
+      let foot='';
+      if(cleanA)foot+=`<div class="mc-stat">Audience <span>${Number(cleanA.replace(/,/g,'')).toLocaleString()}</span></div>`;
+      if(cleanP)foot+=`<div class="mc-stat">Est. Value <span>${esc(cleanP)}</span></div>`;
+      if(cleanD)foot+=`<div class="mc-stat">Date <span>${esc(cleanD)}</span></div>`;
+      slide.innerHTML=`<div><div class="mc-slide-top"><div class="mc-slide-headline">${highlightMast(m.headline)}</div><div class="mc-slide-outlet">${esc(stripJunk(m.outlet))}${m.market?' · '+esc(stripJunk(m.market)):''}</div></div>${mastSentence?`<div class="mc-slide-excerpt">"${highlightMast(mastSentence)}"</div>`:''}</div><div class="mc-slide-footer">${foot}</div>`;
+      slide.addEventListener('click',()=>{window.location.href='mast-mentions.html'});
       stage.appendChild(slide);
-
-      // Pip
-      const pip = document.createElement('div');
-      pip.className = 'mc-pip' + (i === 0 ? ' active' : '');
-      pip.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); resetTimer(); });
+      const pip=document.createElement('div');pip.className='mc-pip'+(i===0?' active':'');
+      pip.addEventListener('click',e=>{e.stopPropagation();goTo(i);resetTimer()});
       pipRow.appendChild(pip);
     });
-
-    if (mentions.length > 1) startTimer();
+    if(mentions.length>1)startTimer();
   }
-
-  function goTo(n){
-    const slides = stage.querySelectorAll('.mc-slide');
-    const pips   = pipRow.querySelectorAll('.mc-pip');
-    if (!slides.length) return;
-    slides[current].classList.remove('active');
-    pips[current].classList.remove('active');
-    current = ((n % mentions.length) + mentions.length) % mentions.length;
-    slides[current].classList.add('active');
-    pips[current].classList.add('active');
-  }
-
-  function startTimer(){ timer = setInterval(() => goTo(current + 1), INTERVAL); }
-  function resetTimer(){ clearInterval(timer); startTimer(); }
-
-  load();
-  setInterval(load, 5 * 60 * 1000);
+  function goTo(n){const sl=stage.querySelectorAll('.mc-slide'),pi=pipRow.querySelectorAll('.mc-pip');if(!sl.length)return;sl[current].classList.remove('active');pi[current].classList.remove('active');current=((n%mentions.length)+mentions.length)%mentions.length;sl[current].classList.add('active');pi[current].classList.add('active')}
+  function startTimer(){timer=setInterval(()=>goTo(current+1),INTERVAL)}
+  function resetTimer(){clearInterval(timer);startTimer()}
+  load();setInterval(load,5*60*1000);
 })();
 </script>
 </body>
