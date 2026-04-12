@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>List Matcher — Mast Comms HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh;color:#e8e4d9}
+.nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,0.18)}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px;gap:0}
+.nav-logo{width:26px;height:26px;border-radius:50%;border:1.5px solid #b8963e;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
+.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;text-decoration:none}
+.nav-link:hover{color:#e8e4d9}
+.nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
+.nav-date{margin-left:auto;font-size:11px;color:#9a9585}
+
+.page-wrap{max-width:960px;margin:0 auto;padding:28px 32px 64px}
+.page-header{margin-bottom:28px}
+.page-header h1{font-family:'Instrument Serif',serif;font-size:1.75rem;color:#c9a84c;margin-bottom:4px}
+.page-header p{font-size:.78rem;color:#9a9585;max-width:580px;line-height:1.5}
+.prototype-badge{display:inline-flex;align-items:center;gap:5px;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(122,138,255,.12);color:#7a8aff;border:1px solid rgba(122,138,255,.2);padding:2px 8px;border-radius:3px;margin-top:8px}
+
+/* ── TWO-COLUMN LAYOUT ── */
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+
+/* ── LEFT: INPUT PANEL ── */
+.panel{background:#111e35;border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:20px}
+.panel-label{font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9a9585;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.panel-label span{color:#4a4a42;font-weight:400}
+
+/* topic chips */
+.topics-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.topic-chip{padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:#0a1628;font-size:.68rem;font-weight:600;color:#4a4a42;cursor:pointer;transition:all .14s;user-select:none}
+.topic-chip:hover{border-color:rgba(184,150,62,.3);color:#9a9585}
+.topic-chip.selected{background:rgba(184,150,62,.14);border-color:rgba(184,150,62,.4);color:#c9a84c}
+
+.or-divider{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4a42}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.05)}
+
+.text-input{width:100%;background:#0a1628;border:1px solid rgba(184,150,62,.2);border-radius:4px;padding:10px 12px;color:#e8e4d9;font-family:'Libre Franklin',sans-serif;font-size:.8rem;outline:none;resize:vertical;min-height:90px;transition:border-color .14s}
+.text-input:focus{border-color:rgba(184,150,62,.45)}
+.text-input::placeholder{color:#4a4a42}
+
+.match-btn{width:100%;margin-top:12px;padding:10px;border-radius:4px;border:none;background:#b8963e;color:#0a1628;font-family:'Libre Franklin',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .14s}
+.match-btn:hover{background:#c9a84c}
+
+/* urgency selector */
+.urgency-row{display:flex;gap:6px;margin-top:12px}
+.urgency-btn{flex:1;padding:6px 4px;border-radius:4px;border:1px solid rgba(255,255,255,.07);background:#0a1628;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4a4a42;cursor:pointer;text-align:center;transition:all .14s}
+.urgency-btn.sel-routine{border-color:rgba(61,184,122,.3);background:rgba(61,184,122,.1);color:#3db87a}
+.urgency-btn.sel-timely{border-color:rgba(184,150,62,.3);background:rgba(184,150,62,.1);color:#c9a84c}
+.urgency-btn.sel-urgent{border-color:rgba(208,64,64,.35);background:rgba(208,64,64,.1);color:#d04040}
+
+/* ── RIGHT: RESULTS PANEL ── */
+.results-empty{text-align:center;padding:40px 20px;color:#4a4a42;font-size:.78rem}
+.results-empty svg{opacity:.2;margin-bottom:12px}
+
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.results-title{font-size:.8rem;font-weight:700;color:#e8e4d9}
+.results-meta{font-size:.65rem;color:#4a4a42}
+
+/* reach summary bar */
+.reach-bar{background:#0a1628;border:1px solid rgba(184,150,62,.15);border-radius:5px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.reach-num{font-family:'Instrument Serif',serif;font-size:1.5rem;color:#c9a84c}
+.reach-label{font-size:.6rem;color:#9a9585;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.reach-breakdown{font-size:.62rem;color:#4a4a42;text-align:right;line-height:1.6}
+
+/* list result cards */
+.list-card{background:#0a1628;border:1px solid rgba(255,255,255,.05);border-radius:5px;padding:11px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px;transition:border-color .12s}
+.list-card:hover{border-color:rgba(184,150,62,.18)}
+.list-card.tier-primary{border-left:3px solid #b8963e}
+.list-card.tier-secondary{border-left:3px solid rgba(107,174,214,.5)}
+.list-card.tier-optional{border-left:3px solid rgba(255,255,255,.1)}
+
+.list-card-left{flex:1}
+.list-code{font-size:.72rem;font-weight:700;color:#c9a84c;letter-spacing:.05em;margin-bottom:2px}
+.list-card.tier-secondary .list-code{color:#6baed6}
+.list-card.tier-optional .list-code{color:#9a9585}
+.list-name{font-size:.75rem;color:#e8dfc0;margin-bottom:3px}
+.list-card.tier-optional .list-name{color:#9a9585}
+.list-tags{display:flex;gap:4px;flex-wrap:wrap}
+.list-tag{font-size:.55rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:2px;background:rgba(255,255,255,.05);color:#4a4a42}
+.list-tag.relevance-high{background:rgba(184,150,62,.12);color:#9a8c6a}
+.list-tag.relevance-med{background:rgba(107,174,214,.1);color:#5a8090}
+
+.list-card-right{text-align:right;flex-shrink:0}
+.list-subs{font-size:.82rem;font-weight:700;color:#e8e4d9}
+.list-card.tier-optional .list-subs{color:#9a9585}
+.list-sub-label{font-size:.58rem;color:#4a4a42;text-transform:uppercase;letter-spacing:.06em}
+.list-recency{font-size:.6rem;margin-top:4px}
+.recency-cold{color:#d04040}
+.recency-warm{color:#c9a84c}
+.recency-hot{color:#3db87a}
+.recency-never{color:#8b0000;font-weight:700}
+
+.tier-label{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4a42;margin:12px 0 6px;padding-left:2px}
+
+.copy-row{margin-top:16px;padding:10px 14px;background:rgba(184,150,62,.07);border:1px solid rgba(184,150,62,.15);border-radius:5px}
+.copy-row-label{font-size:.6rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9a8c6a;margin-bottom:6px}
+.copy-codes{font-size:.72rem;color:#c9a84c;word-break:break-all;line-height:1.6;font-family:monospace}
+.copy-btn{margin-top:8px;padding:5px 12px;border-radius:3px;border:1px solid rgba(184,150,62,.3);background:transparent;color:#c9a84c;font-size:.62rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .13s}
+.copy-btn:hover{background:rgba(184,150,62,.12)}
+
+/* warning banner for cold/never lists */
+.gap-banner{margin-top:12px;padding:10px 14px;background:rgba(208,64,64,.08);border:1px solid rgba(208,64,64,.2);border-radius:5px;font-size:.7rem;color:#c06060;line-height:1.5}
+.gap-banner strong{color:#d04040}
+</style>
+</head>
+<body>
+
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="dashboard_v2.html" class="nav-logo">P</a>
+    <a href="dashboard_v2.html" class="nav-link">Dashboard</a>
+    <a href="list-matcher.html" class="nav-link active">List Matcher</a>
+    <a href="rapid-response.html" class="nav-link">Rapid Response</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <div class="page-header">
+    <h1>Blog-to-List Matcher</h1>
+    <p>Select the topic(s) your blog or newsletter covers and get a recommended send list — ranked by relevance and reach, with recency warnings for cold audiences.</p>
+    <div class="prototype-badge">⚙ Prototype — for review &amp; feedback</div>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT: INPUT -->
+    <div>
+      <div class="panel">
+        <div class="panel-label">1. Select topics <span>(pick all that apply)</span></div>
+        <div class="topics-grid" id="topicsGrid"></div>
+
+        <div class="or-divider">or describe your content</div>
+
+        <textarea class="text-input" id="freeText" placeholder="e.g. 'Blog about WRDA funding and Everglades restoration milestones' or paste a headline…" rows="4"></textarea>
+
+        <div class="panel-label" style="margin-top:16px;margin-bottom:8px">2. Send urgency</div>
+        <div class="urgency-row" id="urgencyRow">
+          <button class="urgency-btn" data-urgency="routine" onclick="setUrgency(this)">Routine</button>
+          <button class="urgency-btn sel-timely" data-urgency="timely" onclick="setUrgency(this)">Timely</button>
+          <button class="urgency-btn" data-urgency="urgent" onclick="setUrgency(this)">Urgent</button>
+        </div>
+
+        <button class="match-btn" onclick="runMatch()">→ Find Matching Lists</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: RESULTS -->
+    <div id="resultsCol">
+      <div class="panel">
+        <div class="results-empty">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <div>Select topics and click<br><strong style="color:#9a9585">Find Matching Lists</strong></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// DATA — Affiliation list directory with metadata
+// Drawn from parsed blog archive and outreach tracker
+// ─────────────────────────────────────────────────────────────────────────────
+const LISTS = [
+  // code, name, subscribers, lastSendMonthsAgo (null=never), topics[]
+  {code:'POL-R',   name:'Republican Political General',        subs:80000,  last:0,   topics:['general','border','economy','veterans','military','healthcare','education','obbb','doge']},
+  {code:'NR',      name:'Natural Resources / Florida Water',   subs:145000, last:9,   topics:['water','everglades','environment','wrda','fishing','outdoors','manatee','estuaries']},
+  {code:'BIO.FISHERMAN', name:'Fishing Enthusiasts',          subs:87000,  last:null, topics:['fishing','water','environment','outdoors','estuaries']},
+  {code:'BIO.OUTDOORS',  name:'Outdoor Recreation',           subs:97000,  last:null, topics:['outdoors','fishing','environment','water','parks']},
+  {code:'VET',     name:'Veterans & Military Families',        subs:62000,  last:2,   topics:['veterans','military','dod','va','gold-star','police','medals']},
+  {code:'SEN',     name:'Seniors / Medicare',                  subs:40000,  last:null, topics:['seniors','healthcare','medicare','social-security','obbb','economy']},
+  {code:'GOV',     name:'Government Reform / DOGE',            subs:39000,  last:null, topics:['doge','government','spending','economy','border']},
+  {code:'ECON',    name:'Economic Issues',                     subs:49000,  last:null, topics:['economy','obbb','tax','jobs','small-business','spending']},
+  {code:'TAX',     name:'Tax & Financial Policy',              subs:46000,  last:null, topics:['tax','obbb','economy','small-business','spending']},
+  {code:'EDU',     name:'Education & School Choice',           subs:28000,  last:5,   topics:['education','school-choice','parents','healthcare']},
+  {code:'BORDER',  name:'Border Security & Immigration',       subs:55000,  last:1,   topics:['border','immigration','police','doge','military']},
+  {code:'HLTH',    name:'Healthcare',                          subs:34000,  last:7,   topics:['healthcare','seniors','medicare','veterans','mental-health']},
+  {code:'BRIG',    name:'Brightline / Transportation',         subs:18000,  last:3,   topics:['brightline','transportation','infrastructure']},
+  {code:'ENV',     name:'Environment & Conservation',          subs:41000,  last:6,   topics:['environment','water','everglades','estuaries','fishing','outdoors','manatee']},
+  {code:'ANTI',    name:'Antisemitism / Israel',               subs:22000,  last:4,   topics:['antisemitism','israel','foreign-policy']},
+  {code:'SMALL-BIZ',name:'Small Business Owners',             subs:31000,  last:8,   topics:['small-business','economy','tax','obbb','jobs']},
+  {code:'LAW',     name:'Law Enforcement / First Responders',  subs:29000,  last:2,   topics:['police','border','military','veterans','gold-star']},
+  {code:'MIL-FAMILY',name:'Military Families / Gold Star',    subs:19000,  last:3,   topics:['gold-star','military','veterans','dod','medals']},
+  {code:'MENTAL',  name:'Mental Health / PTSD',                subs:16000,  last:10,  topics:['mental-health','veterans','healthcare','seniors']},
+  {code:'INFRA',   name:'Infrastructure & Water Projects',     subs:24000,  last:6,   topics:['wrda','water','everglades','infrastructure','brightline']},
+];
+
+// Topics available for selection — label, value, color hint
+const TOPICS = [
+  {label:'Water / Everglades',    val:'water',         color:'sky'},
+  {label:'Veterans',              val:'veterans',      color:'gold'},
+  {label:'Military',              val:'military',      color:'gold'},
+  {label:'Gold Star / Fallen',    val:'gold-star',     color:'gold'},
+  {label:'Border / Immigration',  val:'border',        color:'crimson'},
+  {label:'Economy / Jobs',        val:'economy',       color:'green'},
+  {label:'OBBB / Tax Cuts',       val:'obbb',          color:'green'},
+  {label:'DOGE / Gov Reform',     val:'doge',          color:'purple'},
+  {label:'Healthcare',            val:'healthcare',    color:'sky'},
+  {label:'Seniors / Medicare',    val:'seniors',       color:'sky'},
+  {label:'WRDA / Infrastructure', val:'wrda',          color:'sky'},
+  {label:'Fishing / Outdoors',    val:'fishing',       color:'green'},
+  {label:'Environment',           val:'environment',   color:'green'},
+  {label:'Education',             val:'education',     color:'purple'},
+  {label:'Small Business',        val:'small-business',color:'gold'},
+  {label:'Police / Law Enforce.', val:'police',        color:'crimson'},
+  {label:'Estuaries / Manatee',   val:'estuaries',     color:'sky'},
+  {label:'Brightline',            val:'brightline',    color:'purple'},
+  {label:'Israel / Antisemitism', val:'antisemitism',  color:'crimson'},
+  {label:'Mental Health / PTSD',  val:'mental-health', color:'sky'},
+  {label:'Tax Policy',            val:'tax',           color:'gold'},
+  {label:'DOD / Defense',         val:'dod',           color:'gold'},
+  {label:'Foreign Policy',        val:'foreign-policy',color:'purple'},
+  {label:'General / WIR',         val:'general',       color:'gold'},
+];
+
+// ─── FREE-TEXT KEYWORD MAP ───────────────────────────────────────────────────
+const KEYWORD_MAP = [
+  {kw:['water','lake o','okeechobee','everglades','losom','cerp','sfwmd','algae','blue-green'],topic:'water'},
+  {kw:['wrda','water resources','army corps','canaveral'],topic:'wrda'},
+  {kw:['veteran','va','vea','purple heart','gold star','fallen','kia','final honors','medal of sacrifice'],topic:'veterans'},
+  {kw:['military','armed forces','ndaa','dod','troops','soldier','marine','navy','army','coast guard'],topic:'military'},
+  {kw:['gold star','fallen hero','final honors','kia'],topic:'gold-star'},
+  {kw:['border','immigration','ice','dhs','asylum','fentanyl','cartel','coyote','287g'],topic:'border'},
+  {kw:['economy','jobs','gdp','unemployment','inflation','cpi','wages'],topic:'economy'},
+  {kw:['obbb','one big beautiful bill','tax cut','wftc','working families'],topic:'obbb'},
+  {kw:['tax','irs','filing','deduction','rate'],topic:'tax'},
+  {kw:['doge','government waste','spending','deficit','debt','accountability','reform'],topic:'doge'},
+  {kw:['healthcare','hospital','insurance','medicaid','aca','drug price'],topic:'healthcare'},
+  {kw:['senior','medicare','social security','retirement','aging'],topic:'seniors'},
+  {kw:['fish','fishing','angler','bass','snook','redfish','tarpon'],topic:'fishing'},
+  {kw:['outdoor','hunting','trail','park','conservation','wildlife'],topic:'outdoors'},
+  {kw:['environment','pollution','clean water','pfas','epa'],topic:'environment'},
+  {kw:['estuar','manatee','indian river lagoon','irl','st. lucie','caloosahatchee'],topic:'estuaries'},
+  {kw:['education','school choice','parent','curriculum','dei'],topic:'education'},
+  {kw:['small business','entrepreneur','sba','main street'],topic:'small-business'},
+  {kw:['police','law enforcement','officer','sheriff','first responder','deputy'],topic:'police'},
+  {kw:['brightline','rail','train','transit','fdot'],topic:'brightline'},
+  {kw:['israel','antisemit','hamas','hostage','jewish','holocaust'],topic:'antisemitism'},
+  {kw:['mental health','ptsd','suicide','veteran crisis','22 a day'],topic:'mental-health'},
+  {kw:['foreign policy','nato','ukraine','taiwan','china','iran','north korea'],topic:'foreign-policy'},
+  {kw:['week in review','wir','this week','roundup'],topic:'general'},
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let selectedTopics = new Set();
+let urgency = 'timely';
+
+// ─── BUILD TOPIC CHIPS ───────────────────────────────────────────────────────
+function buildTopics(){
+  const grid = document.getElementById('topicsGrid');
+  TOPICS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-chip';
+    btn.textContent = t.label;
+    btn.dataset.val = t.val;
+    btn.addEventListener('click', () => {
+      if(selectedTopics.has(t.val)){ selectedTopics.delete(t.val); btn.classList.remove('selected'); }
+      else { selectedTopics.add(t.val); btn.classList.add('selected'); }
+    });
+    grid.appendChild(btn);
+  });
+}
+
+function setUrgency(btn){
+  document.querySelectorAll('.urgency-btn').forEach(b => b.className='urgency-btn');
+  urgency = btn.dataset.urgency;
+  btn.classList.add(`sel-${urgency}`);
+}
+
+// ─── FREE TEXT → TOPICS ──────────────────────────────────────────────────────
+function parseTopicsFromText(text){
+  const lower = text.toLowerCase();
+  const found = new Set();
+  KEYWORD_MAP.forEach(({kw, topic}) => {
+    if(kw.some(k => lower.includes(k))) found.add(topic);
+  });
+  return found;
+}
+
+// ─── SCORING ─────────────────────────────────────────────────────────────────
+function scoreList(list, topics){
+  let score = 0;
+  let matchCount = 0;
+  topics.forEach(t => {
+    if(list.topics.includes(t)){ score += 10; matchCount++; }
+  });
+  if(!matchCount) return 0;
+  // Recency bonus/penalty
+  if(list.last === null) score -= 5; // never sent — slight complexity penalty but still show
+  else if(list.last > 6) score -= 2;
+  else if(list.last <= 1) score += 3;
+  return score;
+}
+
+// ─── MAIN MATCH ──────────────────────────────────────────────────────────────
+function runMatch(){
+  // Combine chip selections + free text
+  const allTopics = new Set(selectedTopics);
+  const freeText = document.getElementById('freeText').value.trim();
+  if(freeText){
+    const parsed = parseTopicsFromText(freeText);
+    parsed.forEach(t => allTopics.add(t));
+  }
+
+  if(!allTopics.size){
+    alert('Please select at least one topic or describe your content.');
+    return;
+  }
+
+  // Score every list
+  const scored = LISTS.map(l => ({...l, score: scoreList(l, allTopics)}))
+    .filter(l => l.score > 0)
+    .sort((a,b) => b.score - a.score);
+
+  // Tier them
+  const max = scored[0]?.score || 1;
+  const primary   = scored.filter(l => l.score >= max * 0.75);
+  const secondary = scored.filter(l => l.score >= max * 0.4 && l.score < max * 0.75);
+  const optional  = scored.filter(l => l.score > 0 && l.score < max * 0.4);
+
+  // Reach calc
+  const primaryReach   = primary.reduce((s,l)=>s+l.subs,0);
+  const totalReach     = scored.reduce((s,l)=>s+l.subs,0);
+  const coldCount      = scored.filter(l => l.last === null || l.last > 6).length;
+  const neverCount     = scored.filter(l => l.last === null).length;
+
+  renderResults(primary, secondary, optional, primaryReach, totalReach, coldCount, neverCount, allTopics);
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function fmt(n){ return n>=1000000?(n/1000000).toFixed(1)+'M':n>=1000?Math.round(n/1000)+'K':n; }
+
+function recencyLabel(last){
+  if(last===null) return '<span class="recency-never">⚠ Never sent</span>';
+  if(last===0)    return '<span class="recency-hot">Sent this month</span>';
+  if(last<=2)     return `<span class="recency-hot">${last}mo ago</span>`;
+  if(last<=5)     return `<span class="recency-warm">${last}mo ago</span>`;
+  return `<span class="recency-cold">Last sent ${last}mo ago</span>`;
+}
+
+function renderListCard(list, tier, topics){
+  const matchedTopics = list.topics.filter(t => topics.has(t));
+  const tagsHTML = matchedTopics.slice(0,3).map(t => {
+    const label = TOPICS.find(x=>x.val===t)?.label || t;
+    return `<span class="list-tag relevance-high">${label}</span>`;
+  }).join('');
+
+  return `
+    <div class="list-card tier-${tier}">
+      <div class="list-card-left">
+        <div class="list-code">${list.code}</div>
+        <div class="list-name">${list.name}</div>
+        <div class="list-tags">${tagsHTML}</div>
+      </div>
+      <div class="list-card-right">
+        <div class="list-subs">${fmt(list.subs)}</div>
+        <div class="list-sub-label">subscribers</div>
+        <div class="list-recency">${recencyLabel(list.last)}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderResults(primary, secondary, optional, primaryReach, totalReach, coldCount, neverCount, allTopics){
+  const allLists = [...primary, ...secondary, ...optional];
+  const codes = primary.map(l=>l.code).join(', ');
+  const secondaryCodes = secondary.map(l=>l.code).join(', ');
+
+  let html = `
+    <div class="results-header">
+      <div class="results-title">Recommended Send Lists</div>
+      <div class="results-meta">${allLists.length} lists matched</div>
+    </div>
+    <div class="reach-bar">
+      <div>
+        <div class="reach-num">${fmt(primaryReach)}</div>
+        <div class="reach-label">Primary reach</div>
+      </div>
+      <div class="reach-breakdown">
+        Total with secondary: ${fmt(totalReach)}<br>
+        ${primary.length} primary · ${secondary.length} secondary · ${optional.length} optional
+      </div>
+    </div>
+  `;
+
+  if(primary.length){
+    html += `<div class="tier-label">Primary — send to these</div>`;
+    primary.forEach(l => html += renderListCard(l,'primary',allTopics));
+  }
+  if(secondary.length){
+    html += `<div class="tier-label">Secondary — consider adding</div>`;
+    secondary.forEach(l => html += renderListCard(l,'secondary',allTopics));
+  }
+  if(optional.length){
+    html += `<div class="tier-label">Optional — partial relevance</div>`;
+    optional.forEach(l => html += renderListCard(l,'optional',allTopics));
+  }
+
+  // Copy row
+  html += `
+    <div class="copy-row">
+      <div class="copy-row-label">Primary list codes to copy</div>
+      <div class="copy-codes" id="codeText">${codes}</div>
+      ${secondaryCodes ? `<div class="copy-codes" style="color:#6baed6;margin-top:4px">${secondaryCodes} <span style="color:#4a4a42">(secondary)</span></div>` : ''}
+      <button class="copy-btn" onclick="copyCodes()">Copy primary codes</button>
+    </div>
+  `;
+
+  // Cold list warning
+  if(neverCount > 0){
+    const neverNames = allLists.filter(l=>l.last===null).map(l=>`${l.code} (${fmt(l.subs)} subs)`).join(', ');
+    html += `
+      <div class="gap-banner">
+        <strong>⚠ ${neverCount} matched list${neverCount>1?'s':''} have never been sent to:</strong><br>
+        ${neverNames}<br>
+        <span style="color:#9a9585">Consider including — this content is directly relevant to audiences you haven't reached.</span>
+      </div>
+    `;
+  } else if(coldCount > 0){
+    const coldNames = allLists.filter(l=>l.last>6).map(l=>`${l.code} (${l.last}mo)`).join(', ');
+    html += `
+      <div class="gap-banner" style="border-color:rgba(184,150,62,.2);background:rgba(184,150,62,.06);color:#9a8c6a">
+        <strong style="color:#c9a84c">↑ ${coldCount} cold list${coldCount>1?'s':''} matched:</strong> ${coldNames}<br>
+        <span style="color:#6a5a2a">These audiences are relevant but haven't been targeted recently — good opportunity.</span>
+      </div>
+    `;
+  }
+
+  const col = document.getElementById('resultsCol');
+  col.innerHTML = `<div class="panel">${html}</div>`;
+}
+
+function copyCodes(){
+  const txt = document.getElementById('codeText')?.textContent || '';
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if(btn){ btn.textContent='✓ Copied!'; setTimeout(()=>btn.textContent='Copy primary codes',2000); }
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('navDate').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+buildTopics();
+</script>
+</body>
+</html>
