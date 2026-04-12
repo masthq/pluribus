@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapid Response — Mast HQ</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh;color:#e8e4d9}
+.nav-outer{background:#0a1628;border-bottom:1px solid rgba(184,150,62,.18)}
+.nav-inner{max-width:960px;margin:0 auto;padding:0 32px;display:flex;align-items:center;height:42px}
+.nav-logo{width:26px;height:26px;border-radius:50%;border:1.5px solid #b8963e;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;color:#b8963e;margin-right:20px;flex-shrink:0;text-decoration:none}
+.nav-link{font-size:11px;font-weight:700;letter-spacing:.07em;color:#9a9585;padding:0 14px;height:42px;display:flex;align-items:center;border-bottom:2px solid transparent;text-transform:uppercase;text-decoration:none;white-space:nowrap}
+.nav-link:hover{color:#e8e4d9}
+.nav-link.active{color:#e8e4d9;border-bottom-color:#b8963e}
+.nav-date{margin-left:auto;font-size:11px;color:#9a9585}
+.page-wrap{max-width:960px;margin:0 auto;padding:24px 32px 64px}
+.page-header{margin-bottom:20px}
+.page-header h1{font-family:'Instrument Serif',serif;font-size:1.75rem;color:#c9a84c;margin-bottom:4px}
+.page-header p{font-size:.76rem;color:#9a9585;max-width:640px;line-height:1.5}
+.proto-badge{display:inline-flex;align-items:center;gap:5px;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(122,138,255,.1);color:#7a8aff;border:1px solid rgba(122,138,255,.18);padding:2px 8px;border-radius:3px;margin-top:7px}
+
+/* SOURCE LEGEND */
+.source-legend{display:flex;align-items:center;gap:18px;margin-bottom:20px;padding:10px 14px;background:#111e35;border:1px solid rgba(255,255,255,.06);border-radius:5px;flex-wrap:wrap}
+.source-legend-title{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4a42;margin-right:4px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:.65rem;color:#9a9585}
+.legend-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.sw-blog  {background:rgba(184,150,62,.6)}
+.sw-social{background:rgba(107,174,214,.5)}
+.sw-frame {background:rgba(255,255,255,.12)}
+
+/* TOPIC SELECTOR */
+.topic-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:22px}
+.topic-pill{padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:#111e35;font-size:.67rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#4a4a42;cursor:pointer;transition:all .13s;user-select:none;display:flex;align-items:center;gap:6px}
+.topic-pill:hover{border-color:rgba(255,255,255,.14);color:#9a9585}
+.topic-pill .tp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.topic-pill.active{color:#e8e4d9;border-color:transparent}
+.topic-pill[data-topic="water"].active    {background:rgba(107,174,214,.15);border-color:rgba(107,174,214,.3);color:#6baed6}
+.topic-pill[data-topic="water"] .tp-dot   {background:#6baed6}
+.topic-pill[data-topic="veterans"].active {background:rgba(184,150,62,.14);border-color:rgba(184,150,62,.3);color:#c9a84c}
+.topic-pill[data-topic="veterans"] .tp-dot{background:#b8963e}
+.topic-pill[data-topic="border"].active   {background:rgba(208,64,64,.11);border-color:rgba(208,64,64,.26);color:#d04040}
+.topic-pill[data-topic="border"] .tp-dot  {background:#d04040}
+.topic-pill[data-topic="economy"].active  {background:rgba(61,184,122,.11);border-color:rgba(61,184,122,.26);color:#3db87a}
+.topic-pill[data-topic="economy"] .tp-dot {background:#3db87a}
+.topic-pill[data-topic="obbb"].active     {background:rgba(61,184,122,.11);border-color:rgba(61,184,122,.26);color:#3db87a}
+.topic-pill[data-topic="obbb"] .tp-dot    {background:#3db87a}
+.topic-pill[data-topic="doge"].active     {background:rgba(122,138,255,.11);border-color:rgba(122,138,255,.22);color:#9aa4f0}
+.topic-pill[data-topic="doge"] .tp-dot    {background:#7a8aff}
+.topic-pill[data-topic="healthcare"].active{background:rgba(107,174,214,.14);border-color:rgba(107,174,214,.3);color:#6baed6}
+.topic-pill[data-topic="healthcare"] .tp-dot{background:#6baed6}
+.topic-pill[data-topic="police"].active   {background:rgba(139,0,0,.18);border-color:rgba(139,0,0,.32);color:#c06060}
+.topic-pill[data-topic="police"] .tp-dot  {background:#8b0000}
+.topic-pill[data-topic="military"].active {background:rgba(184,150,62,.14);border-color:rgba(184,150,62,.3);color:#c9a84c}
+.topic-pill[data-topic="military"] .tp-dot{background:#b8963e}
+.topic-pill[data-topic="israel"].active   {background:rgba(208,64,64,.11);border-color:rgba(208,64,64,.26);color:#d04040}
+.topic-pill[data-topic="israel"] .tp-dot  {background:#d04040}
+
+/* MAIN LAYOUT */
+.main-layout{display:grid;grid-template-columns:240px 1fr;gap:14px;align-items:start}
+
+/* LEFT NAV */
+.section-nav{background:#111e35;border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:4px;position:sticky;top:14px}
+.sec-nav-item{padding:8px 11px;border-radius:4px;cursor:pointer;transition:background .12s;display:flex;align-items:center;gap:9px}
+.sec-nav-item:hover{background:#162440}
+.sec-nav-item.active{background:#181406}
+.sec-nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sec-nav-label{font-size:.68rem;font-weight:700;color:#9a9585}
+.sec-nav-item.active .sec-nav-label{color:#c9a84c}
+.sec-nav-sub{font-size:.58rem;color:#4a4a42;margin-top:1px}
+
+/* STATS */
+.stats-row{display:flex;gap:8px;margin-bottom:12px}
+.stat-box{flex:1;background:#0a1628;border:1px solid rgba(255,255,255,.05);border-radius:4px;padding:9px 11px;text-align:center}
+.stat-num{font-family:'Instrument Serif',serif;font-size:1.25rem;color:#c9a84c}
+.stat-label{font-size:.56rem;color:#4a4a42;text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* SECTION CARDS */
+.section-card{background:#111e35;border:1px solid rgba(255,255,255,.06);border-radius:6px;margin-bottom:10px;overflow:hidden}
+.section-header{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}
+.section-header:hover{background:#162440}
+.section-accent{width:3px;height:26px;border-radius:2px;flex-shrink:0}
+.section-eyebrow{font-size:.56rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4a42;margin-bottom:2px}
+.section-title{font-size:.87rem;font-weight:700;color:#e8dfc0}
+.section-chevron{margin-left:auto;color:#4a4a42;font-size:.78rem;transition:transform .18s}
+.section-card.open .section-chevron{transform:rotate(90deg)}
+.section-body{display:none;padding:16px}
+.section-card.open .section-body{display:block}
+
+/* ── SOURCE BADGE ── */
+.source-badge{display:inline-flex;align-items:center;gap:4px;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:2px;vertical-align:middle;margin-left:6px;flex-shrink:0}
+.badge-blog  {background:rgba(184,150,62,.18);color:#9a8c6a}
+.badge-social{background:rgba(107,174,214,.14);color:#5a8090}
+
+/* ── SOURCED DATE STAMP ── */
+.sourced-stamp{font-size:.56rem;color:#4a4a42;font-style:italic;margin-left:auto;white-space:nowrap;padding-left:8px}
+
+/* ── TALKING POINTS ── */
+.tp-list{list-style:none;display:flex;flex-direction:column;gap:5px}
+.tp-item{display:flex;align-items:flex-start;gap:9px;padding:8px 11px;background:#0a1628;border:1px solid rgba(255,255,255,.05);border-radius:4px;font-size:.74rem;color:#e8dfc0;line-height:1.5}
+.tp-bullet{width:5px;height:5px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.tp-right{display:flex;align-items:flex-start;gap:6px;margin-left:auto;flex-shrink:0;padding-left:8px}
+.tp-copy{padding:2px 8px;border-radius:2px;border:none;background:rgba(255,255,255,.05);color:#4a4a42;font-size:.56rem;font-weight:700;cursor:pointer;transition:all .12s;white-space:nowrap}
+.tp-copy:hover{background:rgba(184,150,62,.1);color:#c9a84c}
+
+/* ── ARCHIVE QUOTES ── */
+.archive-section-label{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4a42;margin:14px 0 6px;padding-left:2px}
+.archive-section-label:first-child{margin-top:0}
+.quote-card{border-radius:4px;padding:11px 13px;margin-bottom:6px;position:relative}
+.quote-card.q-blog  {background:rgba(184,150,62,.06);border:1px solid rgba(184,150,62,.14);border-left:3px solid rgba(184,150,62,.4)}
+.quote-card.q-social{background:rgba(107,174,214,.05);border:1px solid rgba(107,174,214,.12);border-left:3px solid rgba(107,174,214,.35)}
+.quote-card-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px}
+.quote-text{font-size:.76rem;color:#e8dfc0;line-height:1.6;flex:1;font-style:italic}
+.quote-card-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.quote-stamp{font-size:.58rem;color:#4a4a42}
+.q-blog .quote-stamp{color:#7a6a3a}
+.q-social .quote-stamp{color:#4a7080}
+.quote-copy-btn{padding:3px 9px;border-radius:2px;border:1px solid rgba(255,255,255,.07);background:transparent;color:#4a4a42;font-size:.56rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .12s}
+.quote-copy-btn:hover{background:rgba(184,150,62,.1);color:#c9a84c;border-color:rgba(184,150,62,.2)}
+
+/* ── MESSAGE FRAMES ── */
+.frame-label{font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4a42;margin:14px 0 6px;padding-left:2px}
+.frame-label:first-child{margin-top:0}
+.message-frame{background:#0a1628;border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:11px 13px;margin-bottom:6px}
+.frame-header{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.frame-type-tag{font-size:.56rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:rgba(255,255,255,.06);color:#9a9585}
+.frame-sourced{font-size:.56rem;color:#4a4a42;font-style:italic;margin-left:auto}
+.frame-text{font-size:.76rem;color:#e8dfc0;line-height:1.65;white-space:pre-wrap}
+.frame-actions{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.frame-copy-btn{padding:4px 10px;border-radius:3px;border:1px solid rgba(184,150,62,.2);background:transparent;color:#9a8c6a;font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .12s}
+.frame-copy-btn:hover{background:rgba(184,150,62,.1);color:#c9a84c}
+.char-count{font-size:.56rem;color:#4a4a42}
+.char-over{color:#d04040}
+
+/* NO MATCH */
+.no-topic-msg{text-align:center;padding:44px 24px;color:#4a4a42;font-size:.76rem}
+</style>
+</head>
+<body>
+
+<div class="nav-outer">
+  <div class="nav-inner">
+    <a href="mast-hq.html" class="nav-logo">P</a>
+    <a href="mast-hq.html" class="nav-link">Mast HQ</a>
+    <a href="political-universe.html" class="nav-link">Political Universe</a>
+    <a href="clipdrop.html" class="nav-link">Clip Drop</a>
+    <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <h1>Rapid Response Toolkit</h1>
+    <p>Approved message frames, talking points, and real archive quotes by topic. Select a topic to load its kit.</p>
+    <div class="proto-badge">⚙ Prototype — for review &amp; feedback</div>
+  </div>
+
+  <!-- SOURCE LEGEND -->
+  <div class="source-legend">
+    <span class="source-legend-title">Source key:</span>
+    <div class="legend-item"><div class="legend-swatch sw-blog"></div><span><strong style="color:#c9a84c">Gold border</strong> = pulled from blog archive (2020–2026)</span></div>
+    <div class="legend-item"><div class="legend-swatch sw-social"></div><span><strong style="color:#6baed6">Blue border</strong> = pulled from social media docs (2024–2026)</span></div>
+    <div class="legend-item"><div class="legend-swatch sw-frame"></div><span><strong style="color:#9a9585">No border</strong> = template frame (not a direct quote)</span></div>
+    <div class="legend-item" style="margin-left:auto;font-size:.58rem;color:#4a4a42;font-style:italic">"Sourced MM/YYYY" = month &amp; year of original document</div>
+  </div>
+
+  <!-- TOPIC PILLS -->
+  <div class="topic-row" id="topicRow"></div>
+
+  <!-- CONTENT AREA -->
+  <div id="mainArea">
+    <div class="no-topic-msg">Select a topic above to load its messaging kit</div>
+  </div>
+</div>
+
+<script>
+const TOPICS = [
+  {val:'water',     label:'Water / Everglades', dot:'#6baed6'},
+  {val:'veterans',  label:'Veterans',           dot:'#b8963e'},
+  {val:'border',    label:'Border / Immigration',dot:'#d04040'},
+  {val:'economy',   label:'Economy',            dot:'#3db87a'},
+  {val:'obbb',      label:'One Big Beautiful Bill',dot:'#3db87a'},
+  {val:'doge',      label:'DOGE / Gov Reform',  dot:'#7a8aff'},
+  {val:'healthcare',label:'Healthcare / Seniors',dot:'#6baed6'},
+  {val:'police',    label:'Police / Law Enforce.',dot:'#8b0000'},
+  {val:'military',  label:'Defense / Military', dot:'#b8963e'},
+  {val:'israel',    label:'Israel / Antisemitism',dot:'#d04040'},
+];
+
+// ── TOOLKIT DATA ─────────────────────────────────────────────────────────────
+// source: 'blog' = gold, 'social' = blue, 'frame' = template (no border)
+// sourced: 'MM YYYY' displayed as "Sourced MM/YYYY"
+const TOOLKITS = {
+
+water:{
+  color:'#6baed6', accent:'rgba(107,174,214,.4)',
+  stats:[
+    {num:'177', label:'social posts, 2024–26'},
+    {num:'47+', label:'water blogs, 2020–26'},
+    {num:'145K', label:'NR list (9mo cold)'},
+  ],
+  talkingPoints:[
+    {text:"Lake Okeechobee harmful algal blooms directly threaten FL-21 waterways — Mast has fought for lower, sustained lake levels since day one in Congress.", source:'blog', sourced:'Oct 2021'},
+    {text:"The EAA Reservoir is the single most important water quality project for South Florida. The office has tracked Army Corps delays publicly and called them out repeatedly.", source:'blog', sourced:'Jul 2025'},
+    {text:"SFWMD monthly meetings are a standing touchpoint — Mast attends and holds agencies publicly accountable. These are content opportunities every month.", source:'blog', sourced:'Jul 2021'},
+    {text:"Clean water is a property rights and economic issue — algae blooms destroy home values, close beaches, and kill the fishing economy across Martin and St. Lucie Counties.", source:'blog', sourced:'Jun 2022'},
+    {text:"Constituents who visit DC to discuss FL-21's estuaries, water priorities, or Everglades restoration always make for strong content.", source:'social', sourced:'Mar 2026'},
+    {text:"National Estuaries Week (September) is observed 5× in the Mast archive — one of the highest-frequency FL-21 observances. Plan content in advance.", source:'blog', sourced:'Sep 2024'},
+    {text:"WRDA is biennial — 2026 is a WRDA year. T&I Committee is the venue. Every WRDA markup and passage is a major content moment.", source:'blog', sourced:'Jan 2026'},
+  ],
+  archive:[
+    {text:"Constituents who come up to Washington to talk to me about their work and the issues that matter to them — like particle physics, Florida's estuaries, thoracic surgery, or anything in between — always inspire me.", source:'social', sourced:'Mar 2026'},
+    {text:"It's 2026, which means the biennial WRDA — or Water Resources Development Act — will be written & debated by @TransportGOP. I'm looking forward to continuing our communities' fight for clean water.", source:'social', sourced:'Jan 2026'},
+    {text:"Lake Okeechobee burns: The Army Corps is discharging polluted water into our estuaries — again. This isn't just an environmental problem. It kills fish, tanks property values, and closes beaches.", source:'blog', sourced:'Jul 2021'},
+    {text:"We secured historic CERP funding — the most ever allocated for Everglades restoration. This is the result of years of fighting through every budget cycle.", source:'blog', sourced:'May 2024'},
+    {text:"Eighty years ago, the world witnessed the absolute horrors of Auschwitz. On this International Holocaust Remembrance Day, we must all commit: Never Again.", source:'social', sourced:'Jan 2026'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Algae / discharge event',   sourced:'Template',
+     text:`The Army Corps is discharging polluted water from Lake O into our estuaries — again.\n\nThis isn't just an environmental problem. It kills fish, tanks property values, and closes beaches.\n\nI won't stop fighting until we have year-round lower lake levels. #LakeO #FL21`},
+    {type:'Tweet',    label:'WRDA win / funding milestone', sourced:'Template',
+     text:`Historic news for FL-21: [AMOUNT] in WRDA funding is now secured for Everglades restoration.\n\nThis is the largest investment in South Florida water infrastructure in [X] years.\n\nMore: [LINK]`},
+    {type:'Blog open',label:'General water blog opener', sourced:'Template',
+     text:`If you live in Palm Beach, Martin, or St. Lucie County, you know what it means when the water turns green.\n\nI've spent [X] years in Congress fighting to give our communities clean water — not just as an environmental priority, but as an economic and public health imperative. Here's where things stand.`},
+  ],
+},
+
+veterans:{
+  color:'#b8963e', accent:'rgba(184,150,62,.4)',
+  stats:[
+    {num:'123', label:'social posts, 2024–26'},
+    {num:'60+', label:'veterans blogs, 2020–26'},
+    {num:'62K', label:'VET list subscribers'},
+  ],
+  talkingPoints:[
+    {text:"Rep. Mast is a combat veteran who lost both legs in Afghanistan — veterans advocacy is personal, not political. Lead with that when the topic warrants.", source:'blog', sourced:'Jan 2022'},
+    {text:"VA benefits backlog is down 60% under this administration. That's a concrete, citable win with a sourced number.", source:'social', sourced:'Jan 2026'},
+    {text:"The Medal of Sacrifice Act passed unanimously on the House floor — recognizing every spouse, child, and department that feels the losses of fallen law enforcement and first responders.", source:'social', sourced:'Feb 2026'},
+    {text:"The Final Honors Act ensures fallen service members receive proper burial honors regardless of administrative backlog.", source:'blog', sourced:'Jan 2025'},
+    {text:"22 veterans die by suicide every day. September is Suicide Prevention Awareness Month — Mast's office has covered it with veteran-specific framing.", source:'social', sourced:'Sep 2025'},
+    {text:"Gold Star Spouses Day (April 5) and Month of the Military Child (all of April) are both observed in the archive and strong content opportunities.", source:'blog', sourced:'Apr 2024'},
+    {text:"The Green & Gold Congressional Aide Program is open to veterans, military spouses, and Gold Star family members — recurring district recruitment opportunity.", source:'social', sourced:'Mar 2026'},
+  ],
+  archive:[
+    {text:"The numbers don't lie. Under this administration and with @SecVetAffairs at the helm, we're doing more for our veterans and making sure they get the benefits they deserve. VA benefits backlog down 60%.", source:'social', sourced:'Jan 2026'},
+    {text:"The Medal of Sacrifice Act just passed unanimously on the House floor. It's about recognizing the debt — and every spouse, son, daughter, loved one, or department that feels these losses every single day.", source:'social', sourced:'Feb 2026'},
+    {text:"My district office is accepting applications for the Green & Gold Congressional Aide Program. If you're a veteran, military spouse, or Gold Star family member, you're eligible to apply.", source:'social', sourced:'Mar 2026'},
+    {text:"From tank drivers to ship drivers, Marines to Green Berets and all my brothers and sisters in arms — I couldn't love you more. Thank you from the bottom of my heart.", source:'social', sourced:'Nov 2025'},
+    {text:"The One Big Beautiful Bill delivers for all of America's heroes. Billions for the VA — a 22% boost to care for 9M+ veterans. This will upgrade facilities, expand PTSD care, and deliver the support they earned.", source:'social', sourced:'Aug 2025'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Veterans Day / Memorial Day', sourced:'Template',
+     text:`To every veteran who served, every family who sacrificed, and every Gold Star family who gave everything:\n\nThank you. We will never forget.\n\n#VeteransDay #FL21`},
+    {type:'Tweet',    label:'VA accountability win', sourced:'Template',
+     text:`VA benefits backlog: down 60%.\n\nWhen you actually hold the VA accountable, this is what happens.\n\nOur veterans kept their oath. We have to keep ours.`},
+    {type:'Blog open',label:'Veterans legislation blog opener', sourced:'Template',
+     text:`I left both of my legs on a battlefield in Afghanistan. So when I tell you that our veterans deserve better, I mean it from the inside out.\n\n[Topic]. Here's what I'm doing about it — and what you can do to help.`},
+  ],
+},
+
+border:{
+  color:'#d04040', accent:'rgba(208,64,64,.4)',
+  stats:[
+    {num:'294', label:'social posts, 2024–26'},
+    {num:'35+', label:'border blogs, 2020–26'},
+    {num:'55K', label:'BORDER list subscribers'},
+  ],
+  talkingPoints:[
+    {text:"73% of Americans believe entering the U.S. without permission is breaking the law. 61% support sending illegal immigrants back to their country. These are sourced poll numbers from the office's own content.", source:'social', sourced:'Feb 2026'},
+    {text:"Palm Beach, Martin, and St. Lucie Counties are all 287(g) partners — authorized and enabled to partner with federal agencies on immigration enforcement. Cite local when possible.", source:'social', sourced:'Mar 2026'},
+    {text:"Dalilah's Law (CDL licensing for illegal aliens) passed out of T&I Committee — advancing to the House floor. Track its progress as a recurring content hook.", source:'social', sourced:'Mar 2026'},
+    {text:"As much as the far left tries to incite chaos on our streets, crime is still going down. Upholding the rule of law, supporting law enforcement, and ensuring justice produces results.", source:'social', sourced:'Feb 2026'},
+    {text:"Democrats attacking ICE aren't just hurting immigration enforcement — they're hurting the dedicated Americans who work there and all of us who rely on them.", source:'social', sourced:'Mar 2026'},
+    {text:"Fentanyl is the #1 killer of Americans aged 18–45. The vast majority enters through the southern border. This is a public health frame, not just a security frame.", source:'blog', sourced:'Nov 2024'},
+  ],
+  archive:[
+    {text:"When it comes to border safety, Americans are in overwhelming agreement: 73% believe entering the U.S. without permission is breaking the law. 61% support sending illegal immigrants back to their country.", source:'social', sourced:'Feb 2026'},
+    {text:"I'm proud to say that all of Palm Beach, Martin, and St. Lucie Counties are all 287(g) partners — they're enabled and authorized to partner with federal agencies on important immigration enforcement work.", source:'social', sourced:'Mar 2026'},
+    {text:"BREAKING: Dalilah's Law just advanced through @GOPTransport. This marks a step closer to safer roads, stronger standards, and a system that protects America's drivers. Next — the House floor.", source:'social', sourced:'Mar 2026'},
+    {text:"As much as the far left tries to incite chaos & violence on our streets, crime is still going down. Upholding the rule of law, supporting those who put on the uniform, and ensuring our justice system works produces results.", source:'social', sourced:'Feb 2026'},
+    {text:"Democrats aren't even affecting Immigration & Customs Enforcement — they're hurting the dedicated Americans serving in ICE and all of us that rely on them to keep our nation running.", source:'social', sourced:'Mar 2026'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'287(g) / local partnership',  sourced:'Template',
+     text:`All three FL-21 counties — Palm Beach, Martin, and St. Lucie — are 287(g) partners.\n\nThat means local law enforcement is authorized to work alongside federal agencies on immigration enforcement.\n\nFlorida is doing its part. Washington needs to do its part too.`},
+    {type:'Tweet',    label:'Democrat obstruction', sourced:'Template',
+     text:`Democrats just [voted against/blocked/defunded] [border measure].\n\nThey had a chance to secure the border. They chose not to.\n\nMy constituents in FL-21 deserve better.`},
+    {type:'Blog open',label:'Border blog opener', sourced:'Template',
+     text:`The numbers don't lie.\n\n[STAT — poll, enforcement metric, crime data].\n\nHere's what's actually happening at the southern border right now — and why it matters for FL-21.`},
+  ],
+},
+
+economy:{
+  color:'#3db87a', accent:'rgba(61,184,122,.4)',
+  stats:[
+    {num:'79', label:'social posts, 2024–26'},
+    {num:'40+', label:'economy blogs, 2020–26'},
+    {num:'134K', label:'ECON+TAX+GOV (all cold)'},
+  ],
+  talkingPoints:[
+    {text:"65% of FL-21 residents surveyed said they experienced an unreasonable rise in prescription costs since Obamacare became law. That's a direct constituent data point.", source:'social', sourced:'Jan 2026'},
+    {text:"Car prices are DOWN. Automakers reported their best year for sales since 2019. That's a concrete economic win worth citing when the left pushes inflation narratives.", source:'social', sourced:'Feb 2026'},
+    {text:"The OBBB / Working Families Tax Cuts protect every American from a massive tax increase that would have hit January 1 without action.", source:'blog', sourced:'Feb 2026'},
+    {text:"Tariff and trade misinformation is flying from the far left and liberal media. The office has directly addressed this with myth vs. fact framing.", source:'social', sourced:'Apr 2025'},
+    {text:"Small businesses are the backbone of FL-21. Reducing regulatory burden directly means more jobs and higher wages in Palm Beach, Martin, and St. Lucie.", source:'blog', sourced:'May 2023'},
+    {text:"$134K in combined untouched reach across ECON, TAX, and GOV lists — all cold or never-sent. Any economy content is a list-matching opportunity.", source:'blog', sourced:'Apr 2026'},
+  ],
+  archive:[
+    {text:"I asked residents of #FL21 if they've experienced an unreasonable rise in prescription costs since Obamacare became law: An overwhelming 65% said YES. It's clear that America deserves a fair & fresh approach to healthcare.", source:'social', sourced:'Jan 2026'},
+    {text:"More good news: car prices are DOWN. People are paying less for their vehicles, and at the same time automakers reported their best year for sales since 2019. Everybody wins when you unleash American manufacturing.", source:'social', sourced:'Feb 2026'},
+    {text:"Scare tactics from the far-left and liberal media are out of control. Misinformation is flying — especially about tariffs, the budget deal, and so-called 'cuts' to Social Security and Medicare. We're setting the record straight.", source:'social', sourced:'Apr 2025'},
+    {text:"It was a historic night as we heard from @POTUS during his first State of the Union as the 47th President. He covered everything from economic wins and ending conflicts around the globe, to defending the homeland and lowering costs.", source:'social', sourced:'Mar 2026'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Good economic data', sourced:'Template',
+     text:`New numbers are out — and they're good for FL-21.\n\n[STAT — jobs, prices, CPI, sales data].\n\nWhen we cut regulations, lower taxes, and unleash American energy, this is what happens.`},
+    {type:'Tweet',    label:'Myth vs. fact / misinformation', sourced:'Template',
+     text:`Let's set the record straight on [tariffs / OBBB / Medicare].\n\nMYTH: [liberal claim]\nFACT: [actual number or outcome]\n\nThe misinformation stops here.`},
+    {type:'Blog open',label:'Economy blog opener', sourced:'Template',
+     text:`Numbers don't lie.\n\n[STAT from jobs/CPI/Fed/sales report].\n\nHere's what that means for families in Palm Beach, Martin, and St. Lucie Counties — and what I'm doing in Congress to protect your pocketbook.`},
+  ],
+},
+
+obbb:{
+  color:'#3db87a', accent:'rgba(61,184,122,.4)',
+  stats:[
+    {num:'50', label:'social posts, 2025–26'},
+    {num:'20+', label:'OBBB blogs, 2025–26'},
+    {num:'190K', label:'SEN+ECON+TAX — all cold'},
+  ],
+  talkingPoints:[
+    {text:"98% of FL-21 constituents surveyed said they saw a bigger tax refund this year. That's a direct, sourced audience data point from Mast's own social poll.", source:'social', sourced:'Mar 2026'},
+    {text:"Many Florida families could see refunds increase by $1,000 or more thanks to OBBB. Cite with 'projected' language.", source:'social', sourced:'Mar 2026'},
+    {text:"OBBB is the most consequential legislation for working families in a generation — tipped workers, seniors, small businesses all benefit directly.", source:'social', sourced:'Jan 2026'},
+    {text:"The SEN list (40K subscribers focused on seniors/Medicare) has never received OBBB messaging. That's a direct, actionable gap given OBBB's Social Security protections.", source:'blog', sourced:'Apr 2026'},
+    {text:"OBBB supports new families by investing in newborns from Day One. Affirms seniors by protecting Social Security. Multiple audience hooks in one bill.", source:'social', sourced:'Aug 2025'},
+    {text:"Myth vs. Fact: OBBB doesn't add to the deficit — tariff revenues, spending cuts, and reversed Biden-era regulations offset costs.", source:'social', sourced:'Aug 2025'},
+  ],
+  archive:[
+    {text:"98 percent of you said you saw a bigger tax refund this year. That's the One Big Beautiful Bill working. Your hard work. Your money.", source:'social', sourced:'Mar 2026'},
+    {text:"Now's the time to file your taxes and see the One Big Beautiful Bill at work. With the April 15 deadline approaching, many Florida families could see refunds increase by $1,000 or more.", source:'social', sourced:'Mar 2026'},
+    {text:"We're lowering costs and standing up for workers, tipped employees, and seniors. Hard-working American families deserve to come first.", source:'social', sourced:'Jan 2026'},
+    {text:"ICYMI: the One Big Beautiful Bill works for the American people. ✅Supports new families by investing in newborns from Day One. ✅Affirms our promise to seniors by protecting Social Security.", source:'social', sourced:'Aug 2025'},
+    {text:"MYTH: Opponents claim that the One Big Beautiful Bill adds to the deficit. FACT: Through tariff revenues, cutting wasteful spending, and reversing Biden-era regulations, the OBBB is fiscally responsible.", source:'social', sourced:'Aug 2025'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Tax refund / constituent poll result', sourced:'Template',
+     text:`We asked FL-21 — 98% said they saw a bigger tax refund this year.\n\nThat's the One Big Beautiful Bill working.\n\nYour hard work. Your money. Staying where it belongs.`},
+    {type:'Tweet',    label:'General OBBB win', sourced:'Template',
+     text:`The One Big Beautiful Bill delivers for FL-21:\n\n✅ Bigger tax refunds for working families\n✅ Tax relief for tipped workers and seniors\n✅ Protection for Social Security\n\nThis is what Republican governance looks like.`},
+    {type:'Blog open',label:'OBBB blog opener', sourced:'Template',
+     text:`The numbers are in — and they're good for FL-21.\n\n[STAT about tax savings or economic impact].\n\nThe One Big Beautiful Bill delivers real relief to real families. Here's exactly what it means for Palm Beach, Martin, and St. Lucie Counties.`},
+  ],
+},
+
+doge:{
+  color:'#7a8aff', accent:'rgba(122,138,255,.4)',
+  stats:[
+    {num:'37', label:'social posts, 2024–26'},
+    {num:'25+', label:'gov reform blogs, 2020–26'},
+    {num:'39K', label:'GOV list — never sent'},
+  ],
+  talkingPoints:[
+    {text:"DOGE-style accountability needs to be made permanent through legislation — not just an executive initiative. Congressional action is the endgame.", source:'blog', sourced:'Jan 2025'},
+    {text:"$10M in financial aid was stolen under Democrat governors. Oversight matters — that's a citable, concrete example of why accountability isn't optional.", source:'social', sourced:'Jan 2026'},
+    {text:"No more American tax dollars should be spent if it does not serve the interests of the American people. Rubio used that exact framing in Foreign Affairs Committee.", source:'social', sourced:'May 2025'},
+    {text:"The State Department oversight hearing ran 26+ hours — debating major legislation ensuring every dollar and every action of State serves U.S. interests.", source:'social', sourced:'Sep 2025'},
+    {text:"The GOV list (39K subscribers) has never been sent to. Any DOGE or government waste content is a direct opportunity to activate that audience.", source:'blog', sourced:'Apr 2026'},
+    {text:"Brightline and FEC: Mast's message at the Florida Inland Navigation District meeting was clear — transparency and accountability, not blank checks.", source:'social', sourced:'Feb 2026'},
+  ],
+  archive:[
+    {text:"Oversight matters. Ten million dollars in financial aid stolen under Democrat governors is unacceptable — and this is exactly why we fight for accountability.", source:'social', sourced:'Jan 2026'},
+    {text:"No more American tax dollars should be spent if it does not serve the interests of the American people. Thank you, @SecRubio, for joining the House Foreign Affairs Committee to discuss cutting waste.", source:'social', sourced:'May 2025'},
+    {text:"This week, we had a marathon meeting of @HouseForeignGOP: we spent more than 26 hours debating major legislation ensuring the State Department is held accountable and every dollar and every action serves U.S. interests.", source:'social', sourced:'Sep 2025'},
+    {text:"A complete disregard for those they swore to serve. The Biden-Harris administration repeatedly showed us they are anything but 'for the people.' Taxpayer dollars should be spent responsibly.", source:'social', sourced:'Apr 2025'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'DOGE finding / waste exposed', sourced:'Template',
+     text:`DOGE just found [FINDING].\n\nThis is exactly the kind of waste that's driven up the national debt and your tax bill for decades.\n\nWe need to root it all out — and make these reforms permanent.`},
+    {type:'Blog open',label:'Government waste blog opener', sourced:'Template',
+     text:`Your tax dollars paid for [FINDING].\n\nI wish I was making this up.\n\nThis is why I've voted against [spending measure] and why I'll keep demanding accountability from every agency that spends your money.`},
+  ],
+},
+
+healthcare:{
+  color:'#6baed6', accent:'rgba(107,174,214,.4)',
+  stats:[
+    {num:'10', label:'social posts, 2024–26'},
+    {num:'30+', label:'healthcare blogs, 2020–26'},
+    {num:'40K', label:'SEN list — never sent'},
+  ],
+  talkingPoints:[
+    {text:"65% of FL-21 residents said they experienced an unreasonable rise in prescription costs since Obamacare. That's a direct constituent survey result.", source:'social', sourced:'Jan 2026'},
+    {text:"ACA drug prices skyrocketed — Americans were promised affordability in 2010 and got the opposite. That contrast is the core healthcare frame.", source:'social', sourced:'Jan 2026'},
+    {text:"California proposed spending $8B+ on healthcare for undocumented immigrants — the CBO estimates that money could fund 99% of CHIP for a decade. That's a sharp contrast cite.", source:'social', sourced:'Oct 2025'},
+    {text:"Florida spent $660M on healthcare for illegal immigrants while Florida residents foot the bill. FL-specific cite available.", source:'social', sourced:'Apr 2025'},
+    {text:"September is Suicide Prevention Awareness Month — 'just like on the battlefield, we have to look out for each other' is Mast's framing from the archive.", source:'social', sourced:'Sep 2025'},
+    {text:"The SEN list (40K, senior/Medicare-focused) has never been sent to. Healthcare content is the most direct match for that audience.", source:'blog', sourced:'Apr 2026'},
+  ],
+  archive:[
+    {text:"Back in 2010, Americans were promised that the Affordable Care Act would deliver affordable, reliable healthcare. Instead, drug prices skyrocketed.", source:'social', sourced:'Jan 2026'},
+    {text:"September is Suicide Prevention Awareness Month, and to those who are struggling: help is always available. Just like on the battlefield, we have to look out for each other.", source:'social', sourced:'Sep 2025'},
+    {text:"@USCBO estimates that the money Democrats propose to spend on healthcare for undocumented aliens could fund 99% of the Children's Health Insurance Program for the next decade.", source:'social', sourced:'Oct 2025'},
+    {text:"Florida spent $660M on healthcare for illegal immigrants — as hospitals are ordered to verify legal status. Floridians are paying for this. Enough is enough.", source:'social', sourced:'Apr 2025'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Drug pricing / ACA critique', sourced:'Template',
+     text:`Americans were promised affordable healthcare in 2010. Instead, 65% of FL-21 residents say their prescription costs are unreasonably high.\n\nThe ACA failed. We need a real solution.`},
+    {type:'Tweet',    label:'Seniors / Medicare protection', sourced:'Template',
+     text:`Medicare and Social Security are promises made to every American who paid into the system.\n\nI won't let Washington break that promise.\n\nHere's where I stand: [LINK]`},
+    {type:'Blog open',label:'Healthcare blog opener', sourced:'Template',
+     text:`In FL-21, a significant share of residents rely on Medicare. That's not a statistic — those are your neighbors, your parents, and your friends.\n\nHere's what's happening in Washington that directly affects their coverage — and what I'm doing about it.`},
+  ],
+},
+
+police:{
+  color:'#8b0000', accent:'rgba(139,0,0,.5)',
+  stats:[
+    {num:'72', label:'social posts, 2024–26'},
+    {num:'9×', label:'National Police Week covered'},
+    {num:'29K', label:'LAW list subscribers'},
+  ],
+  talkingPoints:[
+    {text:"Rep. Mast has recognized National Police Week every year in office — it's a consistent, high-priority observance. Content should go out each day of that week.", source:'blog', sourced:'May 2024'},
+    {text:"The office lost eight FBI law enforcement officers in January 2026 alone. Naming them individually and honoring their sacrifice is standard practice.", source:'social', sourced:'Feb 2026'},
+    {text:"Mast honored Butch Waller's widow, Denise, as his SOTU guest — bringing a fallen officer's family into a national moment. That's the model for police content.", source:'social', sourced:'Feb 2026'},
+    {text:"All three FL-21 counties are 287(g) partners. Quoting local sheriffs (Del Toro, PBC Sheriff) adds credibility and local reach on law enforcement content.", source:'social', sourced:'Mar 2026'},
+    {text:"The National Peace Officers' Memorial Day resolution — Mast supported ensuring it's permanently honored. A low-lift recurring content and vote opportunity.", source:'social', sourced:'Feb 2026'},
+    {text:"When law enforcement officers are allowed to do their jobs, communities are safer. Residents, tourists, and workers all benefit.", source:'social', sourced:'Jul 2025'},
+  ],
+  archive:[
+    {text:"We lost eight @FBI law enforcement officers during the first month of 2026. These brave Americans put their lives on the line for us, and they deserve our nation's respect.", source:'social', sourced:'Feb 2026'},
+    {text:"I'm honored to have Denise Waller join me for @POTUS's State of the Union. Denise lost her husband, Butch, when he was killed in the line of duty. Butch's sacrifice will never be forgotten.", source:'social', sourced:'Feb 2026'},
+    {text:"When we're in crisis, first responders answer the call. Some give their lives — their service and sacrifice matters. I'm proud to support the resolution ensuring the National Peace Officers' Memorial is permanently honored.", source:'social', sourced:'Feb 2026'},
+    {text:"I'm proud to say that all of Palm Beach, Martin, and St. Lucie Counties are 287(g) partners — they're enabled and authorized to partner with federal agencies on important immigration enforcement work.", source:'social', sourced:'Mar 2026'},
+    {text:"My prayers are with the families of the fallen and the @PBCountySheriff officer in recovery. Our law enforcement officers are the bravest in the country.", source:'social', sourced:'Feb 2026'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'National Police Week', sourced:'Template',
+     text:`This week, we honor the men and women in uniform who put their lives on the line every day to keep our communities safe.\n\n[Name of fallen officer if applicable]\n\nThank you — and to every family left behind, FL-21 stands with you. #NationalPoliceWeek`},
+    {type:'Tweet',    label:'Fallen officer tribute', sourced:'Template',
+     text:`We lost [Officer Name], [Rank], [Department], [date].\n\nThey answered the call. They gave everything.\n\nGod bless their family and every officer serving FL-21's communities.`},
+    {type:'Blog open',label:'Law enforcement blog opener', sourced:'Template',
+     text:`Every day, men and women in Palm Beach, Martin, and St. Lucie Counties put on a badge and a uniform, kiss their families goodbye, and go to work knowing they might not come home.\n\nThat kind of courage deserves more than words. Here's what I'm doing to back the blue in Congress.`},
+  ],
+},
+
+military:{
+  color:'#b8963e', accent:'rgba(184,150,62,.4)',
+  stats:[
+    {num:'48', label:'social posts, 2024–26'},
+    {num:'50+', label:'defense blogs, 2020–26'},
+    {num:'62K', label:'VET list subscribers'},
+  ],
+  talkingPoints:[
+    {text:"Sgt. 1st Class Noah Tietjens, Sgt. 1st Class Nicole Amor — named fallen service members from 2026 archive. Always name them when honoring the fallen.", source:'social', sourced:'Mar 2026'},
+    {text:"The FY26 Defense Bill sends a clear bipartisan message that America backs its troops with more than words — it funds equipment, technology, and support.", source:'social', sourced:'Jul 2025'},
+    {text:"Iran's 'Ghost Fleet' vessels pose an environmental threat to the Gulf of America — a T&I hearing angle Mast pressed in January 2026 with USCG Rear Admiral Barata.", source:'social', sourced:'Jan 2026'},
+    {text:"The U.S. Coast Guard Birthday is August 4. Mast has recognized USCG every year — a recurring, FL-21-relevant military observance given coastal geography.", source:'blog', sourced:'Aug 2025'},
+    {text:"The 7 KIA in a single operation (March 2026) shows that honoring fallen service members by name is a content responsibility, not just an opportunity.", source:'social', sourced:'Mar 2026'},
+    {text:"NDAA is Mast's most important annual legislative vehicle via Armed Services — every markup, amendment, and passage is a content moment.", source:'blog', sourced:'Jul 2025'},
+  ],
+  archive:[
+    {text:"Sgt. 1st Class Noah Tietjens, Sgt. 1st Class First Class Nicole Amor. They volunteered to serve their nation, protected American lives, and ultimately sacrificed theirs. God bless every soldier, sailor, airman, Marine, and Guardian.", source:'social', sourced:'Mar 2026'},
+    {text:"Our nation's men and women in uniform deserve the best equipment, technology, and support we can offer. The FY26 Defense Bill sends a clear bipartisan message that America backs its troops.", source:'social', sourced:'Jul 2025'},
+    {text:"In today's @TransportGOP hearing, I asked USCG Rear Admiral David C. Barata on whether Iran's 'Ghost Fleet' vessels pose an environmental threat to the Gulf of America.", source:'social', sourced:'Jan 2026'},
+    {text:"Last week, I spoke with a @USCG official and a @USGAO representative during a @TransportGOP hearing focused on maritime safety and environmental protection in our coastal waters.", source:'social', sourced:'Jan 2026'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Fallen service members tribute', sourced:'Template',
+     text:`We lost [Names] in [operation/incident].\n\nThey volunteered to serve their nation. They protected American lives. They gave theirs.\n\nGod bless every soldier, sailor, airman, Marine, and Guardian. We will never forget. 🇺🇸`},
+    {type:'Tweet',    label:'NDAA / defense win', sourced:'Template',
+     text:`The NDAA [passed committee / passed the floor] with [Mast amendment/provision] included.\n\n[What it does — one sentence].\n\nStrong defense means a safer America. I'll fight for every dollar and policy that keeps our military the strongest in the world.`},
+    {type:'Blog open',label:'Defense blog opener', sourced:'Template',
+     text:`America's strength is not an accident. It is the result of the men and women who choose to serve — and of leaders in Washington who refuse to let them down.\n\n[Topic]. Here's where I stand.`},
+  ],
+},
+
+israel:{
+  color:'#d04040', accent:'rgba(208,64,64,.4)',
+  stats:[
+    {num:'143', label:'social posts, 2024–26'},
+    {num:'15+', label:'Israel/antisemitism blogs'},
+    {num:'22K', label:'ANTI list subscribers'},
+  ],
+  talkingPoints:[
+    {text:"Holocaust Remembrance Day (January 27): eighty years since Auschwitz was liberated. Mast has posted on this date consistently — never miss it.", source:'social', sourced:'Jan 2026'},
+    {text:"Millie Selinger survived the Holocaust after her family was forced into ghettos — and lost over 40 loved ones. Personal survivor stories are the strongest content format for this topic.", source:'social', sourced:'Apr 2025'},
+    {text:"Antisemitism is not a 'both sides' issue. It is wrong. Always. That's the consistent framing across the entire archive — don't soften it.", source:'blog', sourced:'Apr 2025'},
+    {text:"Jewish congregations in FL-21 gather for Passover Seder — this is a constituency acknowledgment moment with direct constituent relevance.", source:'social', sourced:'Apr 2026'},
+    {text:"Hanukkah is a celebration of overcoming darkness. Through centuries of oppression and persecution, the Jewish people have remained resilient — that framing connects to current events.", source:'social', sourced:'Dec 2025'},
+    {text:"The Israeli Embassy attack that killed Yaron Lischinsky and Sarah Milgrim (2025) was called out as 'antisemitic terror' by name — don't hedge when it's terrorism.", source:'social', sourced:'May 2025'},
+  ],
+  archive:[
+    {text:"Eighty years ago, the world witnessed the absolute horrors of Auschwitz as Allied forces liberated the concentration camp. On this International Holocaust Remembrance Day, we must all commit: Never Again.", source:'social', sourced:'Jan 2026'},
+    {text:"At sunset this evening, Jewish congregations across our communities will gather to share the Seder & retell the exodus of the Israelites from Egypt. It is the story of resiliency and liberation from oppression.", source:'social', sourced:'Apr 2026'},
+    {text:"Millie Selinger was just a year old when her family was forced into the ghettos. With nothing but pure courage & will, her family survived the Holocaust — and we must honor that courage by standing against antisemitism today.", source:'social', sourced:'Apr 2025'},
+    {text:"I am outraged by the antisemitic terror attack that claimed the lives of Yaron Lischinsky and Sarah Milgrim. These two young people had their whole lives ahead of them.", source:'social', sourced:'May 2025'},
+    {text:"Wishing all who celebrate a meaningful Passover. May this season of freedom remind us of the strength of faith, the resilience of the Jewish people, and the enduring value of liberty. Chag Pesach Sameach.", source:'social', sourced:'Apr 2025'},
+  ],
+  frames:[
+    {type:'Tweet',    label:'Holocaust Remembrance Day', sourced:'Template',
+     text:`Today is International Holocaust Remembrance Day.\n\nEighty years since Auschwitz was liberated. Six million Jews murdered. The world said "never again."\n\nWe must mean it — in our schools, our institutions, and our foreign policy.\n\n#HolocaustRemembranceDay`},
+    {type:'Tweet',    label:'Antisemitism — direct condemnation', sourced:'Template',
+     text:`Antisemitism is not a 'both sides' issue.\n\nIt is wrong. Always.\n\n[Specific incident or context].`},
+    {type:'Blog open',label:'Israel/antisemitism blog opener', sourced:'Template',
+     text:`Let me be direct: antisemitism is not a "both sides" issue. It is wrong. Always.\n\nHere's what's happening [context] — and what I'm doing to fight back.`},
+  ],
+},
+
+}; // end TOOLKITS
+
+// ── UI LOGIC ──────────────────────────────────────────────────────────────────
+let activeTopic = null;
+
+function buildTopicRow(){
+  const row = document.getElementById('topicRow');
+  TOPICS.forEach(t => {
+    const pill = document.createElement('button');
+    pill.className = 'topic-pill';
+    pill.dataset.topic = t.val;
+    pill.innerHTML = `<span class="tp-dot" style="background:${t.dot}"></span>${t.label}`;
+    pill.addEventListener('click', () => selectTopic(t.val));
+    row.appendChild(pill);
+  });
+}
+
+function selectTopic(val){
+  activeTopic = val;
+  document.querySelectorAll('.topic-pill').forEach(p => p.classList.toggle('active', p.dataset.topic===val));
+  renderKit(val);
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') }
+function escAttr(s){ return s.replace(/'/g,"\\'").replace(/\n/g,'\\n') }
+
+function sourceBadge(src){
+  if(src==='blog')   return `<span class="source-badge badge-blog">Blog</span>`;
+  if(src==='social') return `<span class="source-badge badge-social">Social</span>`;
+  return '';
+}
+
+function renderKit(topic){
+  const kit = TOOLKITS[topic];
+  if(!kit){ document.getElementById('mainArea').innerHTML='<div class="no-topic-msg">No kit for this topic yet.</div>'; return; }
+
+  let html = `<div class="main-layout">`;
+
+  // LEFT NAV
+  html += `<div class="section-nav">
+    <div class="sec-nav-item active" onclick="scrollTo('tp')">
+      <span class="sec-nav-dot" style="background:${kit.color}"></span>
+      <div><div class="sec-nav-label">Talking Points</div><div class="sec-nav-sub">${kit.talkingPoints.length} points</div></div>
+    </div>
+    <div class="sec-nav-item" onclick="scrollTo('archive')">
+      <span class="sec-nav-dot" style="background:${kit.color}"></span>
+      <div><div class="sec-nav-label">Archive Quotes</div><div class="sec-nav-sub">${kit.archive.length} entries</div></div>
+    </div>
+    <div class="sec-nav-item" onclick="scrollTo('frames')">
+      <span class="sec-nav-dot" style="background:${kit.color}"></span>
+      <div><div class="sec-nav-label">Message Frames</div><div class="sec-nav-sub">${kit.frames.length} templates</div></div>
+    </div>
+  </div>`;
+
+  // RIGHT CONTENT
+  html += `<div>`;
+
+  // Stats
+  html += `<div class="stats-row">`;
+  kit.stats.forEach(s => html += `<div class="stat-box"><div class="stat-num">${s.num}</div><div class="stat-label">${s.label}</div></div>`);
+  html += `</div>`;
+
+  // TALKING POINTS
+  html += `<div class="section-card open" id="sec-tp">
+    <div class="section-header" onclick="toggle('tp')">
+      <div class="section-accent" style="background:${kit.color}"></div>
+      <div><div class="section-eyebrow">Messaging</div><div class="section-title">Talking Points</div></div>
+      <span class="section-chevron">›</span>
+    </div>
+    <div class="section-body"><ul class="tp-list">`;
+  kit.talkingPoints.forEach(tp => {
+    html += `<li class="tp-item">
+      <span class="tp-bullet" style="background:${kit.color}"></span>
+      <span>${esc(tp.text)}</span>
+      <div class="tp-right">
+        ${sourceBadge(tp.source)}
+        <span class="sourced-stamp">Sourced ${tp.sourced}</span>
+        <button class="tp-copy" onclick="copyT(this,'${escAttr(tp.text)}')">Copy</button>
+      </div>
+    </li>`;
+  });
+  html += `</ul></div></div>`;
+
+  // ARCHIVE QUOTES
+  html += `<div class="section-card open" id="sec-archive">
+    <div class="section-header" onclick="toggle('archive')">
+      <div class="section-accent" style="background:${kit.color}"></div>
+      <div><div class="section-eyebrow">Real archive quotes</div><div class="section-title">Archive Quotes</div></div>
+      <span class="section-chevron">›</span>
+    </div>
+    <div class="section-body">`;
+  kit.archive.forEach(q => {
+    const qClass = q.source==='blog' ? 'q-blog' : 'q-social';
+    html += `<div class="quote-card ${qClass}">
+      <div class="quote-card-top">
+        <div class="quote-text">"${esc(q.text)}"</div>
+      </div>
+      <div class="quote-card-footer">
+        ${sourceBadge(q.source)}
+        <span class="quote-stamp">Sourced ${q.sourced}</span>
+        <button class="quote-copy-btn" onclick="copyT(this,'${escAttr(q.text)}')">Copy</button>
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  // MESSAGE FRAMES
+  html += `<div class="section-card open" id="sec-frames">
+    <div class="section-header" onclick="toggle('frames')">
+      <div class="section-accent" style="background:${kit.color}"></div>
+      <div><div class="section-eyebrow">Templates</div><div class="section-title">Message Frames</div></div>
+      <span class="section-chevron">›</span>
+    </div>
+    <div class="section-body">`;
+  kit.frames.forEach(f => {
+    const charCount = f.text.length;
+    const over = f.type==='Tweet' && charCount > 280;
+    html += `<div class="frame-label">${f.type} — ${f.label}</div>
+    <div class="message-frame">
+      <div class="frame-header">
+        <span class="frame-type-tag">${f.type}</span>
+        <span class="source-badge" style="background:rgba(255,255,255,.05);color:#4a4a42">Template</span>
+        <span class="frame-sourced">Sourced ${f.sourced}</span>
+      </div>
+      <div class="frame-text">${esc(f.text)}</div>
+      <div class="frame-actions">
+        <button class="frame-copy-btn" onclick="copyT(this,'${escAttr(f.text)}')">Copy text</button>
+        ${f.type==='Tweet'?`<span class="char-count ${over?'char-over':''}">${charCount}/280 chars${over?' — trim before posting':''}</span>`:''}
+      </div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  html += `</div></div>`; // close content div + main-layout
+
+  document.getElementById('mainArea').innerHTML = html;
+}
+
+function toggle(id){
+  const card = document.getElementById(`sec-${id}`);
+  if(card) card.classList.toggle('open');
+}
+function scrollTo(id){
+  document.querySelectorAll('.sec-nav-item').forEach(i => i.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const el = document.getElementById(`sec-${id}`);
+  if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('open'); }
+}
+function copyT(btn, text){
+  const decoded = text.replace(/\\n/g,'\n');
+  navigator.clipboard.writeText(decoded).then(()=>{
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    setTimeout(()=>btn.textContent=orig, 1800);
+  });
+}
+
+document.getElementById('navDate').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+buildTopicRow();
+selectTopic('water');
+</script>
+</body>
+</html>
