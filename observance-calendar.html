@@ -14,31 +14,7 @@
       min-height: 100vh;
     }
 
-    /* ── CHYRON ── */
-    
-    .chyron a { color: #fff; text-decoration: none; opacity: 0.7; }
-    .chyron a:hover { opacity: 1; }
-    .chyron-sep { opacity: 0.35; }
-
     /* ── NAV ── */
-    
-    
-    
-    .nav-links a {
-      color: var(--text-sec);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 6px 12px;
-      border-radius: 4px;
-      text-decoration: none;
-      transition: color 0.15s, background 0.15s;
-    }
-    .nav-links a:hover { color: var(--text); background: var(--navy-hover); }
-    .nav-links a.active { color: var(--gold); }
-
-    /* ── LAYOUT ── */
     
     /* ── PAGE HEADER ── */
                 .source-note {
@@ -388,11 +364,16 @@
 
   <!-- CHYRON -->
   <div class="chyron">
-    <span>MAST COMMS HQ</span>
-    <span class="chyron-sep">|</span>
-    <a href="index.html">Dashboard</a>
-    <span class="chyron-sep">|</span>
-    <a href="#">Internal Use Only</a>
+    <div class="chyron-inner">
+      <div class="chyron-item"><span class="chyron-label">PLANNING</span> Observance Calendar · 51 dates sourced from the blog archive</div>
+      <div class="chyron-dot"></div>
+      <div class="chyron-item"><span class="chyron-label">SOURCE</span> Parsed from 1,110 blog &amp; newsletter documents · 2020–2026</div>
+      <div class="chyron-dot"></div>
+      <div class="chyron-item"><span class="chyron-label">PLANNING</span> Observance Calendar · 51 dates sourced from the blog archive</div>
+      <div class="chyron-dot"></div>
+      <div class="chyron-item"><span class="chyron-label">SOURCE</span> Parsed from 1,110 blog &amp; newsletter documents · 2020–2026</div>
+      <div class="chyron-dot"></div>
+    </div>
   </div>
 
   <!-- NAV -->
@@ -412,11 +393,11 @@
 <div class="main-inner">
 
     <!-- HEADER -->
-    <h1>Observance Calendar</h1>
-      <p>Days, weeks, and months worth recognizing — sourced from Rep. Mast's blog and newsletter archive. Use this to plan content ahead of key commemorative dates.</p>
-      <div class="source-note">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 018 3zm-.5 2.5v3.25l2.5 1.5.5-.85-2-1.2V5.5h-1z" fill="currentColor"/></svg>
-        Parsed from 1,110 blog/newsletter documents (2020–2026) — 51 observances identified
+    <div class="section-label">Observance Calendar</div>
+    <div style="font-size:.7rem;color:var(--text-dim);margin-bottom:6px">Days worth recognizing — sourced from Rep. Mast's blog and newsletter archive (2020–2026)</div>
+    <div class="source-note">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1a5 5 0 110 10A5 5 0 018 3zm-.5 2.5v3.25l2.5 1.5.5-.85-2-1.2V5.5h-1z" fill="currentColor"/></svg>
+      Parsed from 1,110 blog/newsletter documents · 51 observances identified
     </div>
 
     <!-- UPCOMING STRIP (populated by JS) -->
