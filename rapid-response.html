@@ -69,6 +69,15 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 .sec-nav-label{font-size:.68rem;font-weight:700;color:#9a9585}
 .sec-nav-item.active .sec-nav-label{color:#c9a84c}
 .sec-nav-sub{font-size:.58rem;color:#4a4a42;margin-top:1px}
+.sec-nav-divider{height:1px;background:rgba(255,255,255,.06);margin:4px 6px}
+.sec-nav-matcher{
+  text-decoration:none;
+  border:1px solid rgba(192,96,96,.2);
+  border-radius:4px;
+  background:rgba(139,0,0,.08);
+  margin-top:2px;
+}
+.sec-nav-matcher:hover{background:rgba(139,0,0,.15)!important;border-color:rgba(192,96,96,.35)}
 
 /* STATS */
 .stats-row{display:flex;gap:8px;margin-bottom:12px}
@@ -135,6 +144,60 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
 
 /* NO MATCH */
 .no-topic-msg{text-align:center;padding:44px 24px;color:#4a4a42;font-size:.76rem}
+
+/* ── GLOBAL SEARCH ── */
+.search-bar-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:#111e35;border:1px solid rgba(184,150,62,.25);
+  border-radius:6px;padding:8px 14px;margin-bottom:16px;
+  transition:border-color .15s;
+}
+.search-bar-wrap:focus-within{border-color:rgba(184,150,62,.55)}
+.search-icon{font-size:.6rem;font-weight:700;letter-spacing:.06em;
+  color:#b8963e;background:rgba(184,150,62,.12);
+  padding:2px 6px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.search-input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:#e8e4d9;font-family:'Libre Franklin',sans-serif;font-size:.78rem;
+}
+.search-input::placeholder{color:#4a4a42}
+.search-meta{font-size:.6rem;color:#4a4a42;white-space:nowrap;flex-shrink:0}
+.search-clear{background:none;border:none;color:#4a4a42;cursor:pointer;
+  font-size:.75rem;padding:2px 4px;transition:color .12s;flex-shrink:0;display:none}
+.search-clear:hover{color:#9a9585}
+
+/* SEARCH RESULTS PANEL */
+.search-results-panel{
+  background:#111e35;border:1px solid rgba(184,150,62,.18);
+  border-radius:6px;margin-bottom:16px;overflow:hidden;
+}
+.search-results-header{
+  padding:9px 16px;border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#4a4a42;display:flex;align-items:center;justify-content:space-between;
+}
+.search-result-item{
+  padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.04);
+  cursor:pointer;transition:background .12s;display:flex;align-items:flex-start;gap:12px;
+}
+.search-result-item:last-child{border-bottom:none}
+.search-result-item:hover{background:#162440}
+.sri-topic{
+  font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;background:rgba(255,255,255,.06);
+  color:#4a4a42;flex-shrink:0;white-space:nowrap;margin-top:1px;
+}
+.sri-type{
+  font-size:.56rem;color:#4a4a42;flex-shrink:0;
+  white-space:nowrap;margin-top:3px;
+}
+.sri-text{font-size:.74rem;color:#e8dfc0;line-height:1.5;flex:1}
+.sri-text mark{background:rgba(184,150,62,.28);color:#e8dfc0;border-radius:2px;padding:0 1px}
+.sri-copy{padding:3px 9px;border-radius:2px;border:1px solid rgba(255,255,255,.07);
+  background:transparent;color:#4a4a42;font-size:.56rem;font-weight:700;
+  cursor:pointer;transition:all .12s;flex-shrink:0;white-space:nowrap}
+.sri-copy:hover{background:rgba(184,150,62,.1);color:#c9a84c;border-color:rgba(184,150,62,.2)}
+.search-no-results{padding:20px 16px;text-align:center;font-size:.72rem;color:#4a4a42;font-style:italic}
 </style>
 </head>
 <body>
@@ -154,7 +217,7 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
   <div class="page-header">
     <h1>Rapid Response Toolkit</h1>
     <p>Approved message frames, talking points, and real archive quotes by topic. Select a topic to load its kit.</p>
-    <div class="proto-badge">⚙ Prototype — for review &amp; feedback</div>
+
   </div>
 
   <!-- SOURCE LEGEND -->
@@ -165,6 +228,15 @@ body{background:#0a1628;font-family:'Libre Franklin',sans-serif;min-height:100vh
     <div class="legend-item"><div class="legend-swatch sw-frame"></div><span><strong style="color:#9a9585">No border</strong> = template frame (not a direct quote)</span></div>
     <div class="legend-item" style="margin-left:auto;font-size:.58rem;color:#4a4a42;font-style:italic">"Sourced MM/YYYY" = month &amp; year of original document</div>
   </div>
+
+  <!-- GLOBAL SEARCH -->
+  <div class="search-bar-wrap">
+    <div class="search-icon">⌘F</div>
+    <input type="text" class="search-input" id="globalSearch" placeholder="Search all topics — talking points, archive quotes, frames…" autocomplete="off" spellcheck="false" oninput="onSearch(event)">
+    <div class="search-meta" id="searchMeta"></div>
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
+  <div id="searchResults" class="search-results-panel" style="display:none"></div>
 
   <!-- TOPIC PILLS -->
   <div class="topic-row" id="topicRow"></div>
@@ -550,18 +622,26 @@ function renderKit(topic){
 
   // LEFT NAV
   html += `<div class="section-nav">
-    <div class="sec-nav-item active" onclick="scrollTo('tp')">
+    <div class="sec-nav-item active" onclick="scrollToSection(this,'tp')">
       <span class="sec-nav-dot" style="background:${kit.color}"></span>
       <div><div class="sec-nav-label">Talking Points</div><div class="sec-nav-sub">${kit.talkingPoints.length} points</div></div>
     </div>
-    <div class="sec-nav-item" onclick="scrollTo('archive')">
+    <div class="sec-nav-item" onclick="scrollToSection(this,'archive')">
       <span class="sec-nav-dot" style="background:${kit.color}"></span>
       <div><div class="sec-nav-label">Archive Quotes</div><div class="sec-nav-sub">${kit.archive.length} entries</div></div>
     </div>
-    <div class="sec-nav-item" onclick="scrollTo('frames')">
+    <div class="sec-nav-item" onclick="scrollToSection(this,'frames')">
       <span class="sec-nav-dot" style="background:${kit.color}"></span>
       <div><div class="sec-nav-label">Message Frames</div><div class="sec-nav-sub">${kit.frames.length} templates</div></div>
     </div>
+    <div class="sec-nav-divider"></div>
+    <a class="sec-nav-item sec-nav-matcher" href="list-matcher.html?topic=${topic}" onclick="passTopicToMatcher(event,'${topic}')">
+      <span class="sec-nav-dot" style="background:#c06060"></span>
+      <div>
+        <div class="sec-nav-label" style="color:#c06060">Find Lists for This Topic</div>
+        <div class="sec-nav-sub">Open List Matcher → pre-filled</div>
+      </div>
+    </a>
   </div>`;
 
   // RIGHT CONTENT
@@ -651,11 +731,14 @@ function toggle(id){
   const card = document.getElementById(`sec-${id}`);
   if(card) card.classList.toggle('open');
 }
-function scrollTo(id){
+function scrollToSection(btn, id){
   document.querySelectorAll('.sec-nav-item').forEach(i => i.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  btn.classList.add('active');
   const el = document.getElementById(`sec-${id}`);
-  if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); el.classList.add('open'); }
+  if(!el) return;
+  el.classList.add('open');
+  const top = el.getBoundingClientRect().top + window.pageYOffset - 72;
+  window.scrollTo({top, behavior:'smooth'});
 }
 function copyT(btn, text){
   const decoded = text.replace(/\\n/g,'\n');
@@ -664,6 +747,129 @@ function copyT(btn, text){
     btn.textContent = '✓';
     setTimeout(()=>btn.textContent=orig, 1800);
   });
+}
+
+// ── GLOBAL SEARCH ──────────────────────────────────────────────────────────
+// Builds a flat index of every piece of content across all topics
+function buildSearchIndex(){
+  const index = [];
+  for(const [topicVal, kit] of Object.entries(TOOLKITS)){
+    const topicMeta = TOPICS.find(t => t.val === topicVal);
+    const topicLabel = topicMeta?.label || topicVal;
+    kit.talkingPoints.forEach(tp => {
+      index.push({topic:topicVal, topicLabel, type:'Talking Point', source:tp.source, sourced:tp.sourced, text:tp.text});
+    });
+    kit.archive.forEach(q => {
+      index.push({topic:topicVal, topicLabel, type:'Archive Quote', source:q.source, sourced:q.sourced, text:q.text});
+    });
+    kit.frames.forEach(f => {
+      index.push({topic:topicVal, topicLabel, type:`Frame: ${f.type}`, source:'frame', sourced:f.sourced, text:f.text, label:f.label});
+    });
+  }
+  return index;
+}
+
+const SEARCH_INDEX = buildSearchIndex();
+
+function highlight(text, query){
+  if(!query) return esc(text);
+  const escaped_q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`(${escaped_q})`, 'gi');
+  return esc(text).replace(re, '<mark>$1</mark>');
+}
+
+let searchTimeout = null;
+function onSearch(e){
+  const q = e.target.value.trim();
+  const clearBtn = document.getElementById('searchClear');
+  const meta = document.getElementById('searchMeta');
+  const panel = document.getElementById('searchResults');
+
+  clearBtn.style.display = q ? 'block' : 'none';
+
+  if(!q){ panel.style.display='none'; meta.textContent=''; return; }
+
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const lower = q.toLowerCase();
+    const hits = SEARCH_INDEX.filter(item =>
+      item.text.toLowerCase().includes(lower) ||
+      item.topicLabel.toLowerCase().includes(lower) ||
+      item.type.toLowerCase().includes(lower) ||
+      (item.label && item.label.toLowerCase().includes(lower))
+    );
+
+    meta.textContent = `${hits.length} result${hits.length!==1?'s':''}`;
+
+    if(!hits.length){
+      panel.style.display = 'block';
+      panel.innerHTML = `
+        <div class="search-results-header"><span>Search results</span><span>${hits.length} found</span></div>
+        <div class="search-no-results">No matches for "${q}"</div>`;
+      return;
+    }
+
+    let html = `<div class="search-results-header"><span>Search results</span><span>${hits.length} found — click any result to jump to that topic</span></div>`;
+    hits.slice(0,25).forEach(item => {
+      const srcBadge = item.source==='blog'
+        ? `<span class="source-badge badge-blog" style="font-size:.5rem;padding:1px 5px">Blog</span>`
+        : item.source==='social'
+        ? `<span class="source-badge badge-social" style="font-size:.5rem;padding:1px 5px">Social</span>`
+        : '';
+      html += `
+        <div class="search-result-item" onclick="jumpToTopic('${item.topic}')">
+          <div>
+            <div class="sri-topic">${item.topicLabel}</div>
+            <div class="sri-type" style="margin-top:3px">${item.type}</div>
+          </div>
+          <div class="sri-text">${highlight(item.text.slice(0,200), q)}${item.text.length>200?'…':''}</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+            ${srcBadge}
+            <button class="sri-copy" onclick="event.stopPropagation();copyT(this,'${item.text.replace(/'/g,"\\'").replace(/\n/g,'\\n')}')">Copy</button>
+          </div>
+        </div>`;
+    });
+    if(hits.length > 25) html += `<div class="search-no-results" style="padding:10px">…and ${hits.length-25} more results. Refine your search.</div>`;
+
+    panel.innerHTML = html;
+    panel.style.display = 'block';
+  }, 180);
+}
+
+function jumpToTopic(topicVal){
+  selectTopic(topicVal);
+  // Scroll past the search area to the kit
+  const main = document.getElementById('mainArea');
+  if(main){
+    const top = main.getBoundingClientRect().top + window.pageYOffset - 72;
+    window.scrollTo({top, behavior:'smooth'});
+  }
+}
+
+function clearSearch(){
+  const input = document.getElementById('globalSearch');
+  input.value = '';
+  document.getElementById('searchClear').style.display = 'none';
+  document.getElementById('searchMeta').textContent = '';
+  document.getElementById('searchResults').style.display = 'none';
+  input.focus();
+}
+
+// Keyboard shortcut: Cmd+F / Ctrl+F focuses the search box
+document.addEventListener('keydown', e => {
+  if((e.metaKey || e.ctrlKey) && e.key === 'f'){
+    e.preventDefault();
+    document.getElementById('globalSearch').focus();
+    document.getElementById('globalSearch').select();
+  }
+});
+
+// ── LIST MATCHER HANDOFF ──────────────────────────────────────────────────
+// Stores the current topic in sessionStorage so List Matcher can read it
+// Also navigates — the href on the anchor handles the actual navigation
+function passTopicToMatcher(e, topic){
+  sessionStorage.setItem('rr_topic', topic);
+  // Let the href navigate normally
 }
 
 document.getElementById('navDate').textContent =
