@@ -7,14 +7,12 @@
 <link rel="stylesheet" href="design-tokens.css">
 <style>
 
-/* ─── PAGE SHELL ──────────────────────────────────────────────────────────── */
-
 /* ─── MENTIONS HEADER ─────────────────────────────────────────────────────── */
 .mentions-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
@@ -26,21 +24,9 @@
   text-transform: uppercase;
   margin-bottom: 4px;
 }
-.mentions-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text);
-}
-.mentions-sub {
-  font-size: 11px;
-  color: var(--text-sec);
-  margin-top: 3px;
-}
-.mentions-count {
-  font-size: 11px;
-  color: var(--text-sec);
-  font-weight: 600;
-}
+.mentions-title { font-size: 22px; font-weight: 700; color: var(--text); }
+.mentions-sub { font-size: 11px; color: var(--text-sec); margin-top: 3px; }
+.mentions-count { font-size: 11px; color: var(--text-sec); font-weight: 600; }
 
 /* ─── FILTER BAR ──────────────────────────────────────────────────────────── */
 .mentions-filters {
@@ -50,21 +36,14 @@
   margin-bottom: 18px;
   flex-wrap: wrap;
 }
-.mf-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .10em;
-  color: var(--text-sec);
-  text-transform: uppercase;
-  margin-right: 4px;
-}
+.mf-label { font-size: 9px; font-weight: 700; letter-spacing: .10em; color: var(--text-sec); text-transform: uppercase; margin-right: 4px; }
 .mf-btn {
   font-family: var(--font-sans);
   font-size: 10px;
   font-weight: 600;
   padding: 4px 10px;
   border-radius: var(--radius-sm);
-  border-bottom: 1px solid var(--border);
+  border: 1px solid var(--border-dim);
   background: transparent;
   color: var(--text-sec);
   cursor: pointer;
@@ -72,34 +51,38 @@
   transition: all .15s;
 }
 .mf-btn:hover { border-color: rgba(184,150,62,0.4); color: var(--text); }
-.mf-btn.active {
-  background: rgba(139,0,0,0.15);
-  border-color: rgba(139,0,0,0.4);
-  color: #e08080;
-}
+.mf-btn.active { background: rgba(139,0,0,0.15); border-color: rgba(139,0,0,0.4); color: #e08080; }
 .mf-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.08); margin: 0 2px; }
 .mf-search {
   margin-left: auto;
   background: var(--navy-card);
-  border-bottom: 1px solid var(--border);
+  border: 1px solid var(--border-dim);
   border-radius: var(--radius-sm);
   padding: 5px 10px;
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 11px;
   outline: none;
-  width: 180px;
+  width: 200px;
   transition: border-color .15s;
 }
 .mf-search:focus { border-color: rgba(184,150,62,0.45); }
 .mf-search::placeholder { color: var(--text-dim); }
 
-/* ─── MENTION CARDS ───────────────────────────────────────────────────────── */
-.mentions-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+/* ─── DUPLICATE NOTICE ────────────────────────────────────────────────────── */
+.dupe-notice {
+  font-size: 10px;
+  color: var(--text-dim);
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  margin-bottom: 14px;
+  display: none;
 }
+
+/* ─── MENTION CARDS ───────────────────────────────────────────────────────── */
+.mentions-grid { display: flex; flex-direction: column; gap: 6px; }
 
 .mention-card {
   background: var(--navy-card);
@@ -107,15 +90,13 @@
   border-left: 3px solid var(--crimson);
   border-radius: var(--radius-md);
   padding: 14px 16px;
-  cursor: pointer;
   transition: border-color .2s, background .2s;
-  text-decoration: none;
   display: block;
-  margin-bottom: 6px;
+  text-decoration: none;
 }
 .mention-card:hover {
   background: var(--navy-hover);
-  border-color: rgba(139,0,0,0.5);
+  border-color: rgba(139,0,0,0.45);
   border-left-color: var(--crimson-lt);
 }
 
@@ -133,31 +114,32 @@
   line-height: 1.35;
   flex: 1;
 }
-.mention-meta-row {
+.mention-badges {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 .mention-outlet {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .07em;
   text-transform: uppercase;
-  color: var(--crimson-lt);
+  color: var(--red-muted);
   background: rgba(139,0,0,0.12);
   padding: 2px 7px;
   border-radius: var(--radius-sm);
+  white-space: nowrap;
 }
 .mention-market {
   font-size: 9px;
   color: var(--text-sec);
   font-weight: 600;
+  white-space: nowrap;
 }
-.mention-date {
-  font-size: 9px;
-  color: var(--text-dim);
-}
+.mention-date { font-size: 9px; color: var(--text-dim); white-space: nowrap; }
 
 .mention-excerpt {
   font-size: 11.5px;
@@ -171,6 +153,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
 }
 .mention-stat {
   font-size: 9px;
@@ -185,34 +168,47 @@
   letter-spacing: 0;
   text-transform: none;
 }
+
+/* Source link button */
 .mention-link {
   margin-left: auto;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: .07em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--gold-lt);
+  background: rgba(184,150,62,0.10);
+  border: 1px solid rgba(184,150,62,0.3);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: color .15s;
+  transition: all .15s;
+  white-space: nowrap;
 }
-.mention-card:hover .mention-link { color: var(--gold); }
+.mention-link:hover {
+  background: rgba(184,150,62,0.20);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.mention-link-cm {
+  color: var(--text-dim);
+  background: transparent;
+  border-color: var(--border-dim);
+}
+.mention-link-cm:hover { color: var(--text-sec); border-color: rgba(255,255,255,.2); }
 
-/* ─── EMPTY STATE ─────────────────────────────────────────────────────────── */
+/* ─── EMPTY / LOADING ─────────────────────────────────────────────────────── */
 .mentions-empty {
   text-align: center;
   padding: 60px 20px;
   color: var(--text-dim);
   font-size: 12px;
+  display: none;
 }
-.mentions-empty-icon {
-  font-size: 28px;
-  margin-bottom: 10px;
-  opacity: .4;
-}
-
-/* ─── LOADING ─────────────────────────────────────────────────────────────── */
+.mentions-empty-icon { font-size: 28px; margin-bottom: 10px; opacity: .4; }
 .mentions-loading {
   text-align: center;
   padding: 40px;
@@ -229,7 +225,11 @@
 <!-- CHYRON -->
 <div class="chyron">
   <div class="chyron-inner" id="chyronInner">
-    <div class="chyron-item"><span class="chyron-label">LIVE</span> Loading headlines…</div>
+    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">MENTIONS</span> Loading latest mentions…</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">MENTIONS</span> Loading latest mentions…</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
   </div>
 </div>
 
@@ -253,7 +253,7 @@
     <div>
       <div class="mentions-eyebrow">Media · Monitoring</div>
       <div class="mentions-title">Mast Mentions</div>
-      <div class="mentions-sub">Critical Mention alerts · auto-updated every 5 min</div>
+      <div class="mentions-sub">Critical Mention alerts · auto-updated every 5 min · source links auto-populated</div>
     </div>
     <div class="mentions-count" id="mentionsCount">—</div>
   </div>
@@ -269,104 +269,45 @@
     <input class="mf-search" type="text" placeholder="Search mentions…" id="mentionSearch">
   </div>
 
+  <div class="dupe-notice" id="dupeNotice" style="display:none"></div>
   <div id="mentionsLoading" class="mentions-loading">Loading mentions…</div>
   <div class="mentions-grid" id="mentionsGrid"></div>
-  <div id="mentionsEmpty" class="mentions-empty" style="display:none">
+  <div id="mentionsEmpty" class="mentions-empty">
     <div class="mentions-empty-icon">📭</div>
     No mentions found.
   </div>
 
-</div><!-- end main-inner -->
-</div><!-- end main-outer -->
+</div>
+</div>
 
 <script>
-// ─── CONFIG ────────────────────────────────────────────────────────────────
 const SHEET_ID  = '15eRR2J10xIe1TRaXBJ4w4z-5IPag_m-NLPHROIbo4Bk';
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Sheet1`;
 
-// ─── DATE ──────────────────────────────────────────────────────────────────
 document.getElementById('navDate').textContent =
   new Date().toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
 
-// ─── STATE ─────────────────────────────────────────────────────────────────
 let allMentions = [];
 let activeFilter = 'all';
 let searchQuery  = '';
 
-// ─── FETCH FROM SHEET ──────────────────────────────────────────────────────
-async function fetchMentions() {
-  try {
-    const res  = await fetch(SHEET_URL);
-    const text = await res.text();
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
-    const rows = json.table.rows;
-
-    allMentions = rows.map(row => {
-      let tsRaw = row.c[0]?.v || '';
-      let dateStr = '';
-      if (typeof tsRaw === 'string' && tsRaw.startsWith('Date(')) {
-        const parts = tsRaw.replace('Date(','').replace(')','').split(',').map(Number);
-        const d = new Date(parts[0], parts[1], parts[2]);
-        dateStr = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-      }
-      const dcRaw = row.c[4]?.v || '';
-      const dateCollected = dcRaw ? stripJunk(dcRaw) : dateStr;
-
-      return {
-        timestamp    : dateStr,
-        headline     : row.c[1]?.v || '',
-        outlet       : row.c[2]?.v || '',
-        market       : row.c[3]?.v || '',
-        dateCollected,
-        excerpt      : row.c[5]?.v || '',
-        audience     : row.c[6]?.v || '',
-        publicity    : row.c[7]?.v || '',
-      };
-    })
-    .filter(m => m.headline)
-    .reverse(); // newest first
-
-    document.getElementById('mentionsLoading').style.display = 'none';
-    render();
-  } catch(e) {
-    document.getElementById('mentionsLoading').textContent = 'Could not load mentions. Check sheet permissions.';
-    console.error(e);
-  }
-}
-
-// ─── ENCODE LINK ───────────────────────────────────────────────────────────
-function encodeKey(m) {
-  return btoa(encodeURIComponent(`${m.outlet}||${m.headline}||${m.dateCollected}`));
-}
-
-// ─── HELPERS ───────────────────────────────────────────────────────────────
+// ── HELPERS ──────────────────────────────────────────────────────────────────
 function escHtml(str) {
   return String(str||'')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-
-// Strip any residual HTML tags and URLs from text coming out of the sheet
 function stripJunk(str) {
   return String(str||'')
-    .replace(/<[^>]+>/g, '')               // HTML tags
-    .replace(/https?:\/\/\S+/g, '')        // bare URLs
-    .replace(/\[.*?\]/g, '')               // [image] refs
-    .replace(/\s{2,}/g, ' ')              // collapse whitespace
-    .trim();
+    .replace(/<[^>]+>/g,'').replace(/https?:\/\/\S+/g,'')
+    .replace(/\[.*?\]/g,'').replace(/\s{2,}/g,' ').trim();
 }
-
-// Highlight "Brian Mast", "Rep. Mast", "Rep Mast", "Mast" in text
-// Returns HTML string — call AFTER escHtml on surrounding content
 function highlightMast(text) {
-  const escaped = escHtml(stripJunk(text));
-  return escaped.replace(
+  return escHtml(stripJunk(text)).replace(
     /(Brian Mast|Rep\.?\s*Mast|Mast)/g,
     '<strong style="color:#ffffff;font-weight:700">$1</strong>'
   );
 }
-
-// Return only the sentence(s) from the excerpt that contain a Mast mention
 function extractMastSentence(text) {
   if (!text) return '';
   const sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
@@ -374,20 +315,101 @@ function extractMastSentence(text) {
   return hits.length ? hits.join(' ').trim() : stripJunk(text).slice(0, 200);
 }
 
-// ─── RENDER ────────────────────────────────────────────────────────────────
+// ── DEDUPLICATION ────────────────────────────────────────────────────────────
+// Fingerprint = normalized headline + outlet. Keeps the FIRST occurrence (newest
+// after .reverse()), drops subsequent exact duplicates.
+function deduplicateMentions(mentions) {
+  const seen = new Set();
+  const unique = [];
+  let dupeCount = 0;
+  for (const m of mentions) {
+    // Normalize: lowercase, collapse whitespace, strip punctuation
+    const fp = (m.headline + '||' + m.outlet)
+      .toLowerCase()
+      .replace(/[^\w\s|]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (seen.has(fp)) {
+      dupeCount++;
+    } else {
+      seen.add(fp);
+      unique.push(m);
+    }
+  }
+  return { unique, dupeCount };
+}
+
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+async function fetchMentions() {
+  try {
+    const res  = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+    const rows = json.table.rows;
+
+    const raw = rows.map(row => {
+      let tsRaw = row.c[0]?.v || '';
+      let dateStr = '';
+      if (typeof tsRaw === 'string' && tsRaw.startsWith('Date(')) {
+        const parts = tsRaw.replace('Date(','').replace(')','').split(',').map(Number);
+        dateStr = new Date(parts[0], parts[1], parts[2])
+          .toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+      }
+      const dcRaw = row.c[4]?.v || '';
+      return {
+        timestamp     : dateStr,
+        headline      : row.c[1]?.v || '',
+        outlet        : row.c[2]?.v || '',
+        market        : row.c[3]?.v || '',
+        dateCollected : dcRaw ? stripJunk(dcRaw) : dateStr,
+        excerpt       : row.c[5]?.v || '',
+        audience      : row.c[6]?.v || '',
+        publicity     : row.c[7]?.v || '',
+        // Column I (index 8) — source URL, optional
+        sourceUrl     : row.c[8]?.v ? String(row.c[8].v).trim() : '',
+      };
+    })
+    .filter(m => m.headline)
+    .reverse(); // newest first
+
+    // Deduplicate
+    const { unique, dupeCount } = deduplicateMentions(raw);
+    allMentions = unique;
+
+    // Show dupe notice if any were removed
+    const dupeEl = document.getElementById('dupeNotice');
+    if (dupeCount > 0) {
+      dupeEl.textContent = `${dupeCount} duplicate${dupeCount > 1 ? 's' : ''} removed automatically.`;
+      dupeEl.style.display = 'block';
+    } else {
+      dupeEl.style.display = 'none';
+    }
+
+    document.getElementById('mentionsLoading').style.display = 'none';
+    render();
+    updateChyron();
+  } catch(e) {
+    document.getElementById('mentionsLoading').textContent = 'Could not load mentions. Check sheet permissions.';
+    console.error(e);
+  }
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
 function render() {
-  const grid = document.getElementById('mentionsGrid');
+  const grid  = document.getElementById('mentionsGrid');
   const empty = document.getElementById('mentionsEmpty');
   grid.innerHTML = '';
 
   let filtered = allMentions.filter(m => {
     if (activeFilter === 'today') {
       const today = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-      return m.timestamp === today || m.dateCollected.includes(new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'}));
+      return m.timestamp === today || m.dateCollected.includes(
+        new Date().toLocaleDateString('en-US', {month:'short', day:'numeric'})
+      );
     }
     if (activeFilter !== 'all') {
-      return (m.market || '').toLowerCase().includes(activeFilter.toLowerCase()) ||
-             (m.outlet || '').toLowerCase().includes(activeFilter.toLowerCase());
+      return (m.market||'').toLowerCase().includes(activeFilter.toLowerCase()) ||
+             (m.outlet||'').toLowerCase().includes(activeFilter.toLowerCase());
     }
     return true;
   });
@@ -411,39 +433,63 @@ function render() {
   empty.style.display = 'none';
 
   filtered.forEach(m => {
-    const key = encodeKey(m);
-    const card = document.createElement('a');
+    const card = document.createElement('div');
     card.className = 'mention-card';
-    card.href = `mast-mentions.html?ref=${key}`;
-    card.target = '_blank';
-    card.rel = 'noopener';
+
+    // Make whole card clickable if source URL present
+    if (m.sourceUrl) {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', e => {
+        if (!e.target.closest('a')) window.open(m.sourceUrl, '_blank', 'noopener');
+      });
+    }
 
     const dateStr = m.dateCollected || m.timestamp || '';
     const mastSentence = extractMastSentence(m.excerpt);
-    const cleanAudience = stripJunk(m.audience);
+    const cleanAudience  = stripJunk(m.audience);
     const cleanPublicity = stripJunk(m.publicity);
+
+    // Link button logic:
+    // - If sourceUrl in sheet → "Open Article ↗" (gold)
+    // - Else → "View in CM ↗" (dim, links to CM app search)
+    const cmSearchUrl = `https://app.criticalmention.com/app/#/mentions/search?q=${encodeURIComponent(m.headline.slice(0,60))}`;
+    const linkHTML = m.sourceUrl
+      ? `<a class="mention-link" href="${escHtml(m.sourceUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open Article ↗</a>`
+      : `<a class="mention-link mention-link-cm" href="${escHtml(cmSearchUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View in CM ↗</a>`;
 
     card.innerHTML = `
       <div class="mention-top">
         <div class="mention-headline">${highlightMast(m.headline)}</div>
-        <div class="mention-meta-row">
+        <div class="mention-badges">
           <span class="mention-outlet">${escHtml(stripJunk(m.outlet))}</span>
           ${m.market ? `<span class="mention-market">${escHtml(stripJunk(m.market))}</span>` : ''}
+          <span class="mention-date">${escHtml(dateStr)}</span>
         </div>
       </div>
       ${mastSentence ? `<div class="mention-excerpt">"${highlightMast(mastSentence)}"</div>` : ''}
       <div class="mention-footer">
         ${cleanAudience  ? `<div class="mention-stat">Audience <span>${Number(cleanAudience.replace(/,/g,'')).toLocaleString()}</span></div>` : ''}
         ${cleanPublicity ? `<div class="mention-stat">Est. Value <span>${escHtml(cleanPublicity)}</span></div>` : ''}
-        <div class="mention-stat" style="margin-left:0">Date <span>${escHtml(dateStr)}</span></div>
-        <div class="mention-link">Open in CM ↗</div>
+        ${linkHTML}
       </div>
     `;
     grid.appendChild(card);
   });
 }
 
-// ─── FILTERS ───────────────────────────────────────────────────────────────
+// ── CHYRON ────────────────────────────────────────────────────────────────────
+function updateChyron() {
+  if (!allMentions.length) return;
+  const inner = document.getElementById('chyronInner');
+  const items = allMentions.slice(0, 8).map(m => {
+    const label = m.outlet ? stripJunk(m.outlet).toUpperCase().slice(0, 20) : 'MENTION';
+    const hed = escHtml(stripJunk(m.headline).slice(0, 90));
+    return `<div class="chyron-item"><span class="chyron-label">${label}</span>${hed}${m.headline.length > 90 ? '…' : ''}</div><div class="chyron-item"><span class="chyron-dot"></span></div>`;
+  }).join('');
+  inner.innerHTML = items + items;
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
 document.querySelectorAll('.mf-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.mf-btn').forEach(b => b.classList.remove('active'));
@@ -452,34 +498,14 @@ document.querySelectorAll('.mf-btn').forEach(btn => {
     render();
   });
 });
-
 document.getElementById('mentionSearch').addEventListener('input', e => {
   searchQuery = e.target.value.trim();
   render();
 });
 
-// ─── CHYRON (reuse AP / Reuters pattern) ──────────────────────────────────
-async function loadChyron() {
-  const feeds = [
-    'https://feeds.feedburner.com/thedailybeast/politics',
-    'https://rss.politico.com/congress.xml',
-  ];
-  // Simple passthrough — just populate with mention headlines once loaded
-  setTimeout(() => {
-    if (allMentions.length) {
-      const inner = document.getElementById('chyronInner');
-      const items = allMentions.slice(0, 8).map(m =>
-        `<div class="chyron-item"><span class="chyron-label">MENTION</span>${escHtml(m.headline.slice(0,80))}${m.headline.length > 80 ? '…' : ''}<span class="chyron-dot"></span></div>`
-      ).join('');
-      inner.innerHTML = items + items; // double for seamless loop
-    }
-  }, 2000);
-}
-
-// ─── INIT ──────────────────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────────────────────
 fetchMentions();
-loadChyron();
-setInterval(fetchMentions, 5 * 60 * 1000); // refresh every 5 min
+setInterval(fetchMentions, 5 * 60 * 1000);
 </script>
 </body>
 </html>
