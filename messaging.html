@@ -4,33 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Messaging Archive · Pluribus</title>
-<link rel="stylesheet" href="design-tokens.css">
 <style>
-:root {
-  --navy:var(--navy);--navy-mid:var(--navy-mid);--navy-card:var(--navy-card);--navy-hover:var(--navy-hover);
-  --crimson:var(--crimson);--crimson-lt:#a31010;
-  --gold:var(--gold);--gold-lt:var(--gold-lt);--gold-dim:rgba(184,150,62,0.15);
-  --sky:var(--sky);--green:var(--green);
-  --text:var(--text);--text-sec:var(--text-sec);--text-dim:var(--text-dim);
-  --border:var(--border);--border-dim:var(--border-dim);
-}
-
-body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--text);min-height:100vh}
+*{margin:0;padding:0;box-sizing:border-box}
 
 /* TICKER */
-.ticker-bar{background:var(--crimson);padding:6px 0;overflow:hidden;position:relative}
-.ticker-bar::before{content:'LIVE';position:absolute;left:0;top:0;bottom:0;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:2px;padding:0 14px;display:flex;align-items:center;z-index:2}
-.ticker-wrap{display:flex;animation:ticker 38s linear infinite;width:max-content;padding-left:80px}
-.ticker-item{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;padding-right:28px;color:rgba(255,255,255,.95)}
-.ticker-item::after{content:'◆';margin-left:28px;color:var(--gold-lt);font-size:8px}
-@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+to{transform:translateX(-50%)}}
 
 /* NAV */
 
+
 /* PAGE HEADER */
+.page-header{padding:32px 32px 0;max-width:1440px;margin:0 auto}
 .breadcrumb{font-size:10px;font-weight:700;color:var(--text-dim);letter-spacing:.5px;margin-bottom:10px}
 .breadcrumb a{color:var(--gold-lt);text-decoration:none}
 .breadcrumb a:hover{color:var(--gold)}
+.page-title{font-size:32px;font-weight:900;color:#fff;line-height:1;letter-spacing:-0.5px;margin-bottom:6px}
+.page-desc{font-size:13px;color:#cdc8bf;font-family:'Instrument Serif',serif;font-style:italic;margin-bottom:24px}
+.page-rule{height:1px;background:var(--border);margin-bottom:0}
 
 /* LAYOUT */
 .archive-layout{display:grid;grid-template-columns:260px 1fr;gap:0;max-width:1440px;margin:0 auto;min-height:calc(100vh - 180px)}
@@ -56,7 +46,7 @@ body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--
 .content-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
 .content-tag{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;padding:3px 10px;border-radius:2px;border:1px solid var(--border-dim);color:var(--text-sec)}
 .content-tag.tag-brian{background:rgba(184,150,62,.1);border-color:rgba(184,150,62,.3);color:var(--gold-lt)}
-.content-tag.tag-conf{background:rgba(13,32,128,.15);border-color:rgba(13,32,128,.3);color:var(--purple-blue)}
+.content-tag.tag-conf{background:rgba(13,32,128,.15);border-color:rgba(13,32,128,.3);color:#7a8aff}
 .content-tag.tag-signed{background:rgba(0,120,60,.1);border-color:rgba(0,120,60,.2);color:var(--green)}
 .content-rule{height:1px;background:var(--border-dim);margin-bottom:24px}
 
@@ -66,7 +56,7 @@ body{font-family:'Libre Franklin',sans-serif;background:var(--navy);color:var(--
 .entry-card{background:var(--navy-card);border:1px solid var(--border-dim);border-radius:6px;padding:16px 18px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;transition:border-color .15s}
 .entry-card:hover{border-color:var(--border)}
 .entry-type-badge{font-size:8px;font-weight:900;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;flex-shrink:0;margin-top:2px}
-.badge-pr{background:rgba(139,0,0,.15);color:var(--red-medium)}
+.badge-pr{background:rgba(139,0,0,.15);color:#d04040}
 .badge-blog{background:rgba(107,174,214,.12);color:var(--sky)}
 .badge-media{background:rgba(184,150,62,.12);color:var(--gold-lt)}
 .badge-law{background:rgba(0,120,60,.12);color:var(--green)}
@@ -99,41 +89,46 @@ footer{background:var(--navy);border-top:1px solid var(--border-dim);padding:12p
 .footer-text{font-size:9px;color:var(--text-dim);font-weight:600;letter-spacing:.5px}
 .footer-text span{color:var(--gold)}
 </style>
+<link rel="stylesheet" href="design-tokens.css">
 </head>
 <body>
 
-<div class="ticker-bar">
-  <div class="ticker-wrap">
-    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
-    <span class="ticker-item">House passes defense supplemental 218–210</span>
-    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
-    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
-    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
-    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
-    <span class="ticker-item">Trump signs executive order on domestic energy production</span>
-    <span class="ticker-item">House passes defense supplemental 218–210</span>
-    <span class="ticker-item">Ways &amp; Means markup scheduled for Thursday</span>
-    <span class="ticker-item">Senate Finance Committee holds hearing on tax reconciliation</span>
-    <span class="ticker-item">White House releases fact sheet on tariff policy</span>
-    <span class="ticker-item">T&amp;I Committee advances infrastructure authorization bill</span>
+<div class="chyron">
+  <div class="chyron-inner">
+    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">DISTRICT</span> National Estuaries Week · FL-21 water priorities</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">LIVE</span><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> Mast leads veterans amendment in Armed Services markup</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">POLITICS</span> House clears first OBBB procedural hurdle</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
+    <div class="chyron-item"><span class="chyron-label">DISTRICT</span> National Estuaries Week · FL-21 water priorities</div>
+    <div class="chyron-item"><span class="chyron-dot"></span></div>
   </div>
+</div>
 </div>
 
 <div class="nav-outer">
   <div class="nav-inner">
     <a href="mast-hq.html" class="nav-logo">P</a>
-    <a href="mast-hq.html" class="nav-link active">Mast HQ</a>
+    <a href="mast-hq.html" class="nav-link">Mast HQ</a>
     <a href="political-universe.html" class="nav-link">Political Universe</a>
     <a href="clipdrop.html" class="nav-link">Clip Drop</a>
     <a href="mast-mentions.html" class="nav-link">Mast Mentions</a>
-    <div class="nav-date" id="navDate"></div>
+    <div class="nav-date" id="nav-date"></div>
   </div>
 </div>
 
-<div class="breadcrumb"><a href="political-universe.html">Political Universe</a> › Messaging Archive
-  <div class="section-label">Messaging Archive</div>
-    <div style="font-size:.7rem;color:var(--text-dim);margin-bottom:20px">Press releases, blogs, and media — organized by priority. Click any item to open the source on mast.house.gov.</div>
-</div>
+<div class="page-header">
+  <div class="breadcrumb"><a href="resources.html">Resources</a> › Messaging Archive</div>
+  <div class="page-title">Messaging Archive</div>
+  <div class="page-desc">Press releases, blogs, and media — organized by priority. Click any item to open the source on mast.house.gov.</div>
+  <div class="page-rule"></div>
 </div>
 
 <div class="archive-layout">
